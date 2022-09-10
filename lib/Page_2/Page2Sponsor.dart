@@ -16,7 +16,7 @@ class _Page2SponsorState extends State<Page2Sponsor> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: const Center(
-        child: Text("첫번째 페이지 입니다."),
+        child: Text("두 번째 페이지 입니다."),
       ),
     );
   }

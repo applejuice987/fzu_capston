@@ -16,7 +16,7 @@ class _Page2InfluencerState extends State<Page2Influencer> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: const Center(
-        child: Text("두번째 페이지 입니다."),
+        child: Text("두 번째 페이지 입니다."),
       ),
     );
   }

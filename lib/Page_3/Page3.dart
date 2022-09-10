@@ -18,7 +18,7 @@ class _Page3State extends State<Page3> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: const Center(
-        child: Text("세번째 페이지 입니다."),
+        child: Text("세 번째 페이지 입니다."),
       ),
     );
   }
