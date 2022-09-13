@@ -14,6 +14,10 @@ class LoginSponsor extends StatefulWidget {
 class _LoginSponsorState extends State<LoginSponsor> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Container(
+          alignment: Alignment.center,
+          child: Text("스폰서 로그인")),
+    );
   }
 }

@@ -14,6 +14,10 @@ class SignUpSponsor extends StatefulWidget {
 class _SignUpSponsorState extends State<SignUpSponsor> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Container(
+        alignment: Alignment.center,
+          child: Text("스폰서 회원가입")),
+    );
   }
 }

@@ -15,6 +15,10 @@ class FindAccount extends StatefulWidget {
 class _FindAccountState extends State<FindAccount> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Container(
+          alignment: Alignment.center,
+          child: Text("비밀번호 찾기 화면")),
+    );
   }
 }

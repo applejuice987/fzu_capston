@@ -14,6 +14,10 @@ class SignUpInfluencer extends StatefulWidget {
 class _SignUpInfluencerState extends State<SignUpInfluencer> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+        body: Container(
+        alignment: Alignment.center,
+        child: Text("인플루언서 회원가입")),
+    );
   }
 }
