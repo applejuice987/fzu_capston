@@ -6,18 +6,18 @@ import 'package:fzu/login/login_influencer/LoginInfluencer.dart';
 import 'package:fzu/login/login_sponsor/LoginSponsor.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MyApp2());
 }
 //TODO!! 기본 로그인 화면, 이 화면에서 인플루언서 로그인 화면과 광고주 로그인 화면으로 옮겨짐.
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp2 extends StatefulWidget {
+  const MyApp2({Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<MyApp2> createState() => _MyApp2State();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyApp2State extends State<MyApp2> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
