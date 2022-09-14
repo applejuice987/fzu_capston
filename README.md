@@ -35,5 +35,15 @@ https://m.blog.naver.com/cowbori/222081713773
 
 권택형 - 로그인 및 메인화면 관리.
 2022/09/13  로그인 화면 UI만 대충 구축
-            
+
+
+
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+// ...
+
+await Firebase.initializeApp(
+options: DefaultFirebaseOptions.currentPlatform,
+);
 
