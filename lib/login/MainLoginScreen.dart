@@ -78,7 +78,8 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
                   width: 300,
                   height: 40,
                   child: ElevatedButton(onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginSponsor()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                    const LoginSponsor()));
                   } , child: const Text("광고주 로그인")),
                 )
               ],
