@@ -54,8 +54,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int pageIndex = 0;
 
   List<Widget> pageList = <Widget>[
-    Page1Influencer(),
-    //Page1Sponsor(),
+    //Page1Influencer(),
+    Page1Sponsor(),
     Page2Influencer(),
     //Page2Sponsor(),
     Page3(),
