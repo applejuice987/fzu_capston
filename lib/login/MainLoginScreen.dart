@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,16 @@ class MainLoginScreen extends StatefulWidget {
 }
 
 class _MainLoginScreenState extends State<MainLoginScreen> {
+
+  void initState() {
+    super.initState();
+    Firebase.initializeApp().whenComplete(() {
+      print("completed");
+      setState(() {});
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +89,8 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
                   width: 300,
                   height: 40,
                   child: ElevatedButton(onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginSponsor()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                    const LoginSponsor()));
                   } , child: const Text("광고주 로그인")),
                 )
               ],
