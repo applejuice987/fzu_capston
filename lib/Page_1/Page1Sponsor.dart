@@ -24,7 +24,7 @@ class _Page1SponsorState extends State<Page1Sponsor> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
        children: [
-         Text('괃고모델 모집하기',style: Theme.of(context).textTheme.headline4
+         Text('광고모델 모집하기',style: Theme.of(context).textTheme.headline4
       ),
        Center(
          child: CircleAvatar(
