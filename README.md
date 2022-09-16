@@ -9,7 +9,7 @@ Column, Row 관련
 https://m.blog.naver.com/cowbori/222081713773
 
 캡스톤 시작
-
+asdfasdf
 2022년 8월 29일 1주차. 와이어 프레임 및 회의 진행
 
 2022년 9월 5일  2주차. 와이어 프레임 및 회의, 제작 시작
