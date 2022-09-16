@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 //TODO!! 여기서 광고주의 회원가입을 진행.
 
@@ -12,12 +14,117 @@ class SignUpSponsor extends StatefulWidget {
 }
 
 class _SignUpSponsorState extends State<SignUpSponsor> {
+
+  String loginValue = 'Sponser';
+  final idController = TextEditingController();
+  final passwordController = TextEditingController();
+  final passwordCheckController = TextEditingController();
+  final companyNameController = TextEditingController();
+
+  void singUpEmailAccount() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = (await
+        auth.createUserWithEmailAndPassword(
+          email: idController.text,
+          password: passwordController.text,)
+    ).user;
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        margin: const EdgeInsets.only(top: 60.0, left: 30.0, right: 30.0),
+        width: MediaQuery.of(context).size.width,
         alignment: Alignment.center,
-          child: Text("스폰서 회원가입")),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("$loginValue 회원가입", textAlign: TextAlign.left, style: TextStyle(fontSize: 40),),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text('ID'),
+                  SizedBox(width: MediaQuery.of(context).size.width*0.05,),
+                  Container(
+                    width: MediaQuery.of(context).size.width*0.55,
+                    child: TextField(decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        labelStyle: TextStyle(color: Colors.black)),
+                      controller: idController,),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text('Password'),
+                  SizedBox(width: MediaQuery.of(context).size.width*0.05,),
+                  Container(
+                    width: MediaQuery.of(context).size.width*0.55,
+                    child: TextField(decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        labelStyle: TextStyle(color: Colors.black)),
+                      controller: passwordController,),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text('Password 확인'),
+                  SizedBox(width: MediaQuery.of(context).size.width*0.05,),
+                  Container(
+                    width: MediaQuery.of(context).size.width*0.55,
+                    child: TextField(decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        labelStyle: TextStyle(color: Colors.black)),
+                      controller: passwordCheckController,),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text('기관명'),
+                  SizedBox(width: MediaQuery.of(context).size.width*0.05,),
+                  Container(
+                    width: MediaQuery.of(context).size.width*0.55,
+                    child: TextField(decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        labelStyle: TextStyle(color: Colors.black)),
+                      controller: companyNameController,),
+                  )
+                ],
+              ),
+
+              ElevatedButton(onPressed: () {singUpEmailAccount();}, child: Text('회원가입'))
+
+            ],
+          )),
     );
   }
 }
