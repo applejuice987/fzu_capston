@@ -14,12 +14,50 @@ class Page3 extends StatefulWidget {
 }
 
 class _Page3State extends State<Page3> {
+  final List<String> entries = <String>['A', 'N','tt','rr','A', 'N','tt','rr','A', 'N','tt','rr','A', 'N','tt','rr'];
+  final List<String> en = <String>['B', 'C','g','rr','A', 'N','tt','rr','A', 'N','tt','rr','A', 'N','tt','rr'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(
-        child: Text("세 번째 페이지 입니다."),
-      ),
+        body: ListView.builder(
+            scrollDirection: Axis.vertical,
+            padding: const EdgeInsets.all(5),
+            itemCount: en.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(children: [
+                          Container(
+                            height:100,
+                              margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                              child: Placeholder(
+                                  fallbackHeight: 100, fallbackWidth: 100)),
+                          Column(children: [
+                            Container(child: Text("${en[index]}")),
+                            Container(child: Text("${entries[index]}")),
+                          ])
+                        ,
+                        ]),
+
+                      );
+
+            }));
+  }
+
+  Scaffold buildScaffold() {
+    return Scaffold(
+      body: Column(children: <Widget>[
+        Row(children: [
+          Container(
+              width: 100,
+              child: Placeholder(fallbackHeight: 100, fallbackWidth: 100)),
+          Column(children: [
+            Container(child: const Text('이름 및 별명')),
+            Container(child: const Text('마지막채팅'))
+          ])
+        ])
+      ]),
     );
   }
 }
