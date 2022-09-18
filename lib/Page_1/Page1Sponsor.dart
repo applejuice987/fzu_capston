@@ -3,14 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fzu/Page_1/influItem.dart';
-
-
-
-
-
-
-
-
+import 'package:flutter/src/rendering/box.dart';
 
 final influItem = {
   "list": [
@@ -22,8 +15,6 @@ final influItem = {
 };
 influList? InfluList;
 
-
-
 //TODO!! 로그인 한 사람이 광고주 일 경우, 이 화면 출력
 
 class Page1Sponsor extends StatefulWidget {
@@ -34,38 +25,56 @@ class Page1Sponsor extends StatefulWidget {
 }
 
 class _Page1SponsorState extends State<Page1Sponsor> {
-  get bottomNavigationBar => null;
-
   @override
   Widget build(BuildContext context) {
     InfluList = influList?.fromJson(influItem);
 
-    return Scaffold(
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                height: 200,
-                alignment: AlignmentDirectional.center,
-                child: Text('광고모델 모집하기',
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline4),
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Colors.cyan[700],
+        body: SafeArea(
+          child: Column(children: <Widget>[
+            Container(
+
+              margin: EdgeInsets.only(top: 10, bottom: 35),
+              alignment: AlignmentDirectional.center,
+              child: Text('광고모델 모집하기',
+                  style: Theme.of(context).textTheme.headline4),
+            ),
+            Flexible(child:
+            PageView.builder(
+              controller: PageController(
+                initialPage: 0, //시작 페이지
               ),
-
-
-              Image.asset(InfluList!.list!.elementAt(0).image!),  //influList 의 0번째 요소의 image
-              Text(InfluList!.list!.elementAt(0).name!),  //influList 의 0번째 요소의 name
-
-            ]
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  child: Image.asset(
+                    InfluList!.list!.elementAt(index).image!,
+                    fit: BoxFit.fill,
+                  ),
+                );
+              },
+              itemCount: InfluList!.list!.length,
+            ),
+            ),
+          ]),
         ),
+    bottomNavigationBar: SafeArea(
+    child: ElevatedButton(
+    onPressed: () {},
+    style: ElevatedButton.styleFrom(
+    textStyle: Theme
+        .of(context)
+        .textTheme
+        .subtitle1
+    ),
+    child: Text('매칭하기'),
+
+    )
+
+
       ),
+    ),
     );
   }
-
 }
