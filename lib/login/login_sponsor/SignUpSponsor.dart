@@ -2,7 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:fzu/login/SignUpDatabaseHelper.dart';
+import 'package:fzu/main.dart';
 
 //TODO!! 여기서 광고주의 회원가입을 진행.
 
@@ -15,19 +16,23 @@ class SignUpSponsor extends StatefulWidget {
 
 class _SignUpSponsorState extends State<SignUpSponsor> {
 
-  String loginValue = 'Sponser';
+  String loginValue = 'Sponsor';
   final idController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordCheckController = TextEditingController();
   final companyNameController = TextEditingController();
 
-  void singUpEmailAccount() async {
+  void signUpEmailAccount() async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = (await
         auth.createUserWithEmailAndPassword(
           email: idController.text,
           password: passwordController.text,)
     ).user;
+    SignUpDatabaseHelper().backUpSponsorData(
+        idController.text, passwordController.text, companyNameController.text);
+    Navigator.push(context, MaterialPageRoute(builder: (context) =>
+    const MyApp()));
   }
 
 
@@ -49,7 +54,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('ID'),
+                  Text('Email'),
                   SizedBox(width: MediaQuery.of(context).size.width*0.05,),
                   Container(
                     width: MediaQuery.of(context).size.width*0.55,
@@ -121,7 +126,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
                 ],
               ),
 
-              ElevatedButton(onPressed: () {singUpEmailAccount();}, child: Text('회원가입'))
+              ElevatedButton(onPressed: () {signUpEmailAccount();}, child: Text('회원가입'))
 
             ],
           )),

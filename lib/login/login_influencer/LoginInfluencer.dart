@@ -1,7 +1,9 @@
-import 'package:flutter/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fzu/login/FindAccount.dart';
+import 'package:fzu/login/SignUpDatabaseHelper.dart';
 import 'package:fzu/login/login_influencer/SignUpInfluencer.dart';
 import 'package:fzu/main.dart';
 
@@ -17,6 +19,11 @@ class LoginInfluencer extends StatefulWidget {
 class _LoginInfluencerState extends State<LoginInfluencer> {
   final in_email_controller = TextEditingController();
   final in_pw_controller = TextEditingController();
+
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  var db = FirebaseFirestore.instance;
+  var q = "user_influencer";
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +56,7 @@ class _LoginInfluencerState extends State<LoginInfluencer> {
                     width: double.infinity,
                     height: 40,
                     child: ElevatedButton(onPressed: () {
-                      //TODO!! 파이어베이스 연동하고 로그인 넣어야함.;
+                      SignUpDatabaseHelper().loginFunc(in_email_controller.text, in_pw_controller.text, context);
                     }, child: const Text("로그인")),
                   ),
                   const SizedBox(height: 30),

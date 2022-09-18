@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fzu/login/FindAccount.dart';
+import 'package:fzu/login/SignUpDatabaseHelper.dart';
 import 'package:fzu/login/login_sponsor/SignUpSponsor.dart';
 import 'package:fzu/main.dart';
 
@@ -17,6 +20,12 @@ class LoginSponsor extends StatefulWidget {
 class _LoginSponsorState extends State<LoginSponsor> {
   final sp_email_controller = TextEditingController();
   final sp_pw_controller = TextEditingController();
+
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  var db = FirebaseFirestore.instance;
+  var q = "user_sponsor";
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +63,7 @@ class _LoginSponsorState extends State<LoginSponsor> {
                     height: 40,
                     child: ElevatedButton(
                         onPressed: () {
-                         //TODO!! 파이어베이스 연동하고 로그인 알고리즘 넣어야함.
+                          SignUpDatabaseHelper().loginFunc(sp_email_controller.text, sp_pw_controller.text, context);
                           },
                         child: const Text("로그인")),
                   ),

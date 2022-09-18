@@ -1,14 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:fzu/firebase_options.dart';
 import 'package:fzu/login/login_influencer/LoginInfluencer.dart';
 import 'package:fzu/login/login_sponsor/LoginSponsor.dart';
 
-void main() {
+import '../main.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp2());
 }
+
 //TODO!! 기본 로그인 화면, 이 화면에서 인플루언서 로그인 화면과 광고주 로그인 화면으로 옮겨짐.
 
 class MyApp2 extends StatefulWidget {
@@ -22,6 +28,16 @@ class _MyApp2State extends State<MyApp2> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+    User? FirebaseUser = FirebaseAuth.instance.currentUser;
+    Widget firstwidget ;
+
+    if(FirebaseUser != null){
+      firstwidget = const MyApp();
+    } else {
+      firstwidget = const MainLoginScreen();
+    }
+
     return MaterialApp(
       theme: ThemeData(
         // This is the theme of your application.
@@ -37,7 +53,7 @@ class _MyApp2State extends State<MyApp2> {
         primaryColor: Colors.cyanAccent,
           backgroundColor: Colors.cyanAccent
       ),
-      home: const MainLoginScreen(),
+      home: firstwidget,
     );
   }
 }
