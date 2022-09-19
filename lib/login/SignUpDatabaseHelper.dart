@@ -21,7 +21,6 @@ class SignUpDatabaseHelper {
         'pw': pw,
         'platform': platform,
       };
-
       db.collection("user_influencer").doc(email).set(backUpData);
   }
 
@@ -31,7 +30,6 @@ class SignUpDatabaseHelper {
       'pw': pw,
       'company': company,
     };
-
     db.collection("user_sponsor").doc(email).set(backUpData);
   }
 
