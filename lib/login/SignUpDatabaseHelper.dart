@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fzu/MySharedPreferences.dart';
 import '../main.dart';
 
 class SignUpDatabaseHelper {
@@ -33,13 +34,15 @@ class SignUpDatabaseHelper {
     db.collection("user_sponsor").doc(email).set(backUpData);
   }
 
-  Future<void> loginFunc(String email, String pw, BuildContext context) async{
+  Future<void> loginFunc(String email, String pw, BuildContext context, bool isInflu) async{
 
     try {
       final newUser = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
           email: email, password: pw);
       if (newUser.user != null) {
+        MySharedPreferences.instance.setBooleanValue("loggedin", true);
+        MySharedPreferences.instance.setBooleanValue("isInflu", isInflu);
         // ignore: use_build_context_synchronously
         Navigator.pushAndRemoveUntil(
             context,

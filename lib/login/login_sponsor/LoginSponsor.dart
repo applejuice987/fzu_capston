@@ -63,7 +63,7 @@ class _LoginSponsorState extends State<LoginSponsor> {
                     height: 40,
                     child: ElevatedButton(
                         onPressed: () {
-                          SignUpDatabaseHelper().loginFunc(sp_email_controller.text, sp_pw_controller.text, context);
+                          SignUpDatabaseHelper().loginFunc(sp_email_controller.text, sp_pw_controller.text, context, false);
                           },
                         child: const Text("로그인")),
                   ),
