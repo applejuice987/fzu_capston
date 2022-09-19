@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/login/SignUpDatabaseHelper.dart';
 import 'package:fzu/main.dart';
 
@@ -32,6 +33,8 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
       email: idController.text,
       password: passwordController.text,)
     ).user;
+    MySharedPreferences.instance.setBooleanValue("loggedin", true);
+    MySharedPreferences.instance.setBooleanValue("isInflu", true);
     SignUpDatabaseHelper().backUpInfluencerData(
         idController.text, passwordController.text, platformNameController.text);
     Navigator.push(context, MaterialPageRoute(builder: (context) =>

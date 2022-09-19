@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/login/SignUpDatabaseHelper.dart';
 import 'package:fzu/main.dart';
 
@@ -29,6 +30,8 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
           email: idController.text,
           password: passwordController.text,)
     ).user;
+    MySharedPreferences.instance.setBooleanValue("loggedin", true);
+    MySharedPreferences.instance.setBooleanValue("isInflu", false);
     SignUpDatabaseHelper().backUpSponsorData(
         idController.text, passwordController.text, companyNameController.text);
     Navigator.push(context, MaterialPageRoute(builder: (context) =>
