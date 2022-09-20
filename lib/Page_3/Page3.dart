@@ -94,7 +94,6 @@ class _Page3State extends State<Page3> {
                             children: <Widget>[
                               Text('testleft'),
                               Text('testright')
-
                             ],
                           )
                         ),
