@@ -88,6 +88,7 @@ class _Page3State extends State<Page3> {
                     builder:(BuildContext context){
                       return AlertDialog(
                         title:Text('다이얼로그 메시지'),
+
                         content:SingleChildScrollView(
                           child:ListBody(
                             children: <Widget>[

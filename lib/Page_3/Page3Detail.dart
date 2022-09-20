@@ -17,7 +17,6 @@ class _Page3DetailState extends State<Page3Detail> {
     return Scaffold(
       appBar: AppBar(
         title:Text('상대방이름')
-
       ),
 
     );
