@@ -17,23 +17,7 @@ class Page3 extends StatefulWidget {
 }
 
 class _Page3State extends State<Page3> {
-  final List<String> entries = <String>[
-    'A',
-    'N',
-    'tt',
-    'rr',
-    'A',
-    'N',
-    'tt',
-    'rr',
-    'A',
-    'N',
-    'tt',
-    'rr',
-    'A',
-    'N',
-    'tt',
-    'rr'
+  final List<String> entries = <String>['A', 'N', 'tt', 'rr', 'A', 'N', 'tt', 'rr', 'A', 'N', 'tt', 'rr', 'A', 'N', 'tt', 'rr'
   ];
   final List<String> en = <String>[
     'B',
@@ -99,7 +83,11 @@ class _Page3State extends State<Page3> {
                         ),
                         actions: <Widget>[
                           TextButton(onPressed:(){
-                            Navigator.of(context).pop();
+                            setState(() {
+                              en.removeAt(index);
+                              Navigator.of(context).pop();
+
+                            });
                           }, child: Text('ok')),
                           TextButton(onPressed:(){
                             Navigator.of(context).pop();
