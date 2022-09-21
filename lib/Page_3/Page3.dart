@@ -34,8 +34,7 @@ class _Page3State extends State<Page3> {
     'rr',
     'A',
     'N',
-    'tt',
-    'rr'
+    'tt', 'rr'
   ];
 
   @override
