@@ -35,46 +35,51 @@ class _Page1SponsorState extends State<Page1Sponsor> {
         body: SafeArea(
           child: Column(children: <Widget>[
             Container(
-
               margin: EdgeInsets.only(top: 10, bottom: 35),
               alignment: AlignmentDirectional.center,
               child: Text('광고모델 모집하기',
                   style: Theme.of(context).textTheme.headline4),
             ),
-            Flexible(child:
-            PageView.builder(
-              controller: PageController(
-                initialPage: 0, //시작 페이지
+            Expanded(
+              child: PageView.builder(
+                controller: PageController(
+                  initialPage: 0, //시작 페이지
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    child: Column(children: [
+                      Flexible(
+                        flex: 3,
+                        child: Container(
+                          height: 200,
+                          child: Image.asset(
+                            InfluList!.list!.elementAt(index).image!,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                          flex: 2,
+                          child: Container(
+                            color: Colors.blue,
+                            child: Text(InfluList!.list!.elementAt(index).name!,),
+                          ))
+                    ]),
+                  );
+                },
+
               ),
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  child: Image.asset(
-                    InfluList!.list!.elementAt(index).image!,
-                    fit: BoxFit.fill,
-                  ),
-                );
-              },
-              itemCount: InfluList!.list!.length,
-            ),
             ),
           ]),
         ),
-    bottomNavigationBar: SafeArea(
-    child: ElevatedButton(
-    onPressed: () {},
-    style: ElevatedButton.styleFrom(
-    textStyle: Theme
-        .of(context)
-        .textTheme
-        .subtitle1
-    ),
-    child: Text('매칭하기'),
-
-    )
-
-
+        bottomNavigationBar: SafeArea(
+            child: ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.subtitle1),
+          child: Text('매칭하기'),
+        )),
       ),
-    ),
     );
   }
 }
