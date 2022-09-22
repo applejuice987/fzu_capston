@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/Page_1/Page1Influencer.dart';
 import 'package:fzu/Page_1/Page1Sponsor.dart';
 import 'package:fzu/Page_2/Page2Influencer.dart';
@@ -10,7 +11,9 @@ import 'package:fzu/Page_4/Page4.dart';
 import 'package:fzu/firebase_options.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 
-void main() async{
+
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -69,6 +72,21 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int pageIndex = 0;
+  var asdf;
+
+  bool isInflu = false;
+  //bool isInflu = false;
+  var useremail = FirebaseAuth.instance.currentUser?.email.toString();
+
+
+  void initState() {
+    super.initState();
+    MySharedPreferences.instance.getBooleanValue("isInflu").then((value) => setState(() {
+      print('3-1$isInflu');
+      isInflu = value;
+      print('3-2$isInflu');
+    }));
+  }
 
   Widget build(BuildContext context) {
 
