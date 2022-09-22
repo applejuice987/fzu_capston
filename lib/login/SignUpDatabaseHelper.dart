@@ -54,18 +54,28 @@ class SignUpDatabaseHelper {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("이메일을 확인하세요")));
+        //flutterToast('이메일을 확인하세요.');
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("비번을 확인하세요")));
+        //flutterToast('비밀번호를 확인하세요.');
+      } else if (e.code == 'invalid-email') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("이메일 형식이 잘못되었습니다.")));
+      } else if (e.code == 'user-disabled') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("사용할 수 없는 계정입니다.")));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("오류가 발생했습니다. 다시 시도해주세요.")));
       }
     }
   }
-  void showToast(String message) {
+  void flutterToast(String message) {
     Fluttertoast.showToast(
         msg: message,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0,
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM);
+        gravity: ToastGravity.CENTER);
   }
 
 }

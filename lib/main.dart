@@ -78,7 +78,6 @@ class _MyHomePageState extends State<MyHomePage> {
   var asdf;
 
   bool isInflu = false;
-  //bool isInflu = false;
   var useremail = FirebaseAuth.instance.currentUser?.email.toString();
 
 
@@ -133,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.add), label: "First"),
           BottomNavigationBarItem(icon: Icon(Icons.delete), label: "Second"),
           BottomNavigationBarItem(icon: Icon(Icons.android), label: "Third"),
-          BottomNavigationBarItem(icon: Icon(Icons.apple), label: "Fourth"),
+          BottomNavigationBarItem(icon: Icon(Icons.person ), label: "Fourth"),
         ],
       ),
     );
