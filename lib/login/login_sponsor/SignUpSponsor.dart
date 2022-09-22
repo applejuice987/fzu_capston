@@ -62,7 +62,6 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
     }
     }
 
-  }
 
   void flutterToast(String message) {
     Fluttertoast.showToast(
@@ -134,8 +133,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.black)),
                         labelStyle: TextStyle(color: Colors.black)),
-                      controller: passwordController,
-                    ),
+                      controller: passwordController,),
                   )
                 ],
               ),
