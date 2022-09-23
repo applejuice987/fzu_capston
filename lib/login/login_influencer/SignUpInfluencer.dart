@@ -26,35 +26,47 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
   final passwordController = TextEditingController();
   final passwordCheckController = TextEditingController();
   final platformNameController = TextEditingController();
+  bool _passwordVisible = false;
 
   void signUpEmailAccount() async {
     final FirebaseAuth auth = FirebaseAuth.instance;
-    if (validateEmailStructure(idController.text)) {
-      if (validatePasswordStructure(passwordController.text)) { //비밀번호 조건에 맞을 경우
-        if (passwordController.text ==
-            passwordCheckController.text) { //비밀번호와 비밀번호 확인이 일치할 경우
+    try {
           final User? user = (await
           auth.createUserWithEmailAndPassword(
-            email: idController.text,
-            password: passwordController.text,)
+            email: email,
+            password: password,)
           ).user;
           MySharedPreferences.instance.setBooleanValue("loggedin", true);
           MySharedPreferences.instance.setBooleanValue("isInflu", true);
-          SignUpDatabaseHelper().backUpSponsorData(
-              idController.text, passwordController.text,
-              platformNameController.text);
+          SignUpDatabaseHelper().backUpInfluencerData(
+              email, password,
+              platformName);
           Navigator.push(context, MaterialPageRoute(builder: (context) =>
           const MyApp()));
-        } else { //비밀번호와 비밀번호 확인이 일치하지 않을 경우
-          flutterToast('입력하신 비밀번호가 일치하지 않습니다.');
-        }
-      } else { //비밀번호 조건에 맞지 않을 경우
-        flutterToast('비밀번호는 8자리 이상의 영문, 숫자, 특수문자가 포함되어야 합니다.');
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("이미 사용중인 이메일입니다.")));
+        _reduplicatedEmail = true;
+      } /*else if (e.code == 'invalid-email') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("이메일 형식이 잘못되었습니다.")));
+      }*/ else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("오류가 발생했습니다.")));
       }
-    } else {
-      flutterToast('이메일 형식에 맞게 작성해주세요.');
     }
+
   }
+
+  String email = '';
+  String password = '';
+  String passwordCheck = '';
+  String platformName = '';
+  String passwordPattern = r'^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+  String emailPattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  String emailHint = '이메일 형식으로 입력하세요.';
+  String passwordHint = '8~15자의 영문, 숫자, 특수문자를 포함해주세요.';
+  String passwordCheckHint = '동일한 비밀번호를 입력해주세요.';
+  String platformHint = '활동하는 플랫폼명을 입력해주세요.';
+  bool _reduplicatedEmail = false;
 
   void flutterToast(String message) {
     Fluttertoast.showToast(
@@ -80,6 +92,84 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
     //TODO 개발용으로 무조건 조건에 맞게 수정해둠, 추후에 true를 지우고 주석을 살리면 됨
   }
 
+  final formKey = GlobalKey<FormState>();
+
+  void initState() {
+    super.initState();
+    _passwordVisible = false;
+  }
+
+  renderTextFormField({
+    required String label,
+    required FormFieldSetter onSaved,
+    required FormFieldValidator validator,
+    required String value,
+    required String hint
+}) {
+    assert(onSaved != null);
+    assert(validator != null);
+
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12.0,
+                fontWeight: FontWeight.w700,
+              ),
+            )
+          ],
+        ),
+        TextFormField(
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: TextStyle(fontSize: 13),
+            suffixIcon: value == 'password' || value == 'passwordCheck'? IconButton(
+              icon: Icon(
+                _passwordVisible? Icons.visibility_off : Icons.visibility
+              ),
+              onPressed: () {
+                setState(() {
+                  _passwordVisible = !_passwordVisible;
+                });
+              },
+            ) : null
+          ),
+          onChanged: (text) {
+            if (value == 'password') {
+              password = text;
+            }
+          },
+          obscureText: value == 'password' || value == 'passwordCheck'? true : false,
+          onSaved: onSaved,
+          validator: validator,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+        )
+      ],
+    );
+  }
+
+  renderButton() {
+    return ElevatedButton(
+      onPressed: () async {
+        if(formKey.currentState!.validate()){
+          // validation 이 성공하면 true 가 리턴
+          formKey.currentState!.save();
+          signUpEmailAccount();
+        }
+
+      },
+      child: Text(
+        '회원가입',
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -93,84 +183,97 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text("$loginValue 회원가입", textAlign: TextAlign.left, style: TextStyle(fontSize: 35),),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Email'),
-                  SizedBox(width: size.width*0.05,),
-                  Container(
-                    width: size.width*0.55,
-                    child: TextField(decoration: const InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
-                        labelStyle: TextStyle(color: Colors.black)),
-                      controller: idController,),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Password'),
-                  SizedBox(width: size.width*0.05,),
-                  Container(
-                    width: size.width*0.55,
-                    child: TextField(decoration: const InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
-                        labelStyle: TextStyle(color: Colors.black)),
-                      controller: passwordController,),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Password 확인'),
-                  SizedBox(width: size.width*0.05,),
-                  Container(
-                    width: size.width*0.55,
-                    child: TextField(decoration: const InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
-                        labelStyle: TextStyle(color: Colors.black)),
-                      controller: passwordCheckController,),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('활동 플랫폼'),
-                  SizedBox(width: size.width*0.05,),
-                  Container(
-                    width: size.width*0.55,
-                    child: TextField(decoration: const InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
-                        labelStyle: TextStyle(color: Colors.black)),
-                      controller: platformNameController,),
-                  )
-                ],
-              ),
-
-              ElevatedButton(onPressed: () {signUpEmailAccount();}, child: Text('회원가입'))
+              Form(key: formKey,
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        renderTextFormField(
+                          label: 'Email',
+                          onSaved: (val) {
+                            setState(() {
+                              email = val as String;
+                            });
+                          },
+                          validator: (val) {
+                            if (val.length < 1) {
+                              return '이메일 주소를 입력해주세요.';
+                            }
+                            else if (!RegExp(emailPattern).hasMatch(val)) {
+                              return '이메일 형식이 잘못되었습니다.';
+                            }
+                            else if (_reduplicatedEmail) {
+                              return '중복된 이메일입니다.';
+                            }
+                            return null;
+                          },
+                          value: 'email',
+                          hint: emailHint
+                        ),
+                        renderTextFormField(
+                          label: 'Password',
+                          onSaved: (val) {
+                            setState(() {
+                              password = val as String;
+                              print(password);
+                            });
+                          },
+                          validator: (val) {
+                            if (val.length < 1) {
+                              return '비밀번호를 입력해주세요.';
+                            }
+                            else if(val.length < 8) {
+                              return null;/*'비밀번호는 8자 이상이어야 합니다.';*/
+                              //TODO 개발용으로 조건 무조건 통과하게 만듦, 추후에 null 지우고 주석부분 살리면 됨
+                            }
+                            else if (!RegExp(passwordPattern).hasMatch(val)) {
+                              return null;/*'비밀번호는 영문, 숫자, 특수문자를 포함하여야 합니다.';*/
+                              //TODO 개발용으로 조건 무조건 통과하게 만듦, 추후에 null 지우고 주석부분 살리면 됨
+                            }
+                            return null;
+                          },
+                          value: 'password',
+                          hint: passwordHint
+                        ),
+                        renderTextFormField(
+                          label: 'Password 확인',
+                          onSaved: (val) {
+                            setState(() {
+                              passwordCheck = val;
+                            });
+                          },
+                          validator: (val) {
+                            if (val.length < 1) {
+                              return '비밀번호를 확인해주세요.';
+                            }
+                            else if(val != password) {
+                              return '동일한 비밀번호를 입력해주세요.';
+                            }
+                            return null;
+                          },
+                          value: 'passwordCheck',
+                          hint: passwordCheckHint
+                        ),
+                        renderTextFormField(
+                          label: '활동 플랫폼',
+                          onSaved: (val) {
+                            setState(() {
+                              platformName = val;
+                            });
+                          },
+                          validator: (val) {
+                            if (val.length < 1) {
+                              return '활동 플랫폼을 입력해주세요.';
+                            }
+                            return null;
+                          },
+                          value: 'platformName',
+                          hint: platformHint
+                        ),
+                      renderButton(),
+                      ],
+                    ),
+                  ))
 
             ],
           )),
