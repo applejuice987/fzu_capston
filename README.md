@@ -9,7 +9,7 @@ Column, Row 관련
 https://m.blog.naver.com/cowbori/222081713773
 
 캡스톤 시작
-
+asdfasdf
 2022년 8월 29일 1주차. 와이어 프레임 및 회의 진행
 
 2022년 9월 5일  2주차. 와이어 프레임 및 회의, 제작 시작
@@ -27,16 +27,17 @@ https://m.blog.naver.com/cowbori/222081713773
 원정연
 
 
-정민수
+정민수-채팅기능
+2022/09/21 채팅목록 탭시 상세채팅방으로 넘어가기, 길게눌렀을떄 다이얼로그 띄우기
 
 
-손승호
+손승호  광고주시점 인플루언서와 매칭해주는 대략적인 인터페이스 제작
 
-
+hfdhfg
 권택형 - 로그인 및 메인화면 관리.
 2022/09/13  로그인 화면 UI만 대충 구축
 
-
+fgfgf
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';

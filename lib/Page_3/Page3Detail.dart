@@ -14,6 +14,12 @@ class Page3Detail extends StatefulWidget {
 class _Page3DetailState extends State<Page3Detail> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+
+      appBar: AppBar(
+        title:Text('상대방이름')
+      ),
+
+    );
   }
 }
