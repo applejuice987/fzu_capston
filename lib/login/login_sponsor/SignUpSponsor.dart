@@ -89,6 +89,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
     //TODO 개발용으로 무조건 조건에 맞게 수정해둠, 추후에 true를 지우고 주석을 살리면 됨
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
