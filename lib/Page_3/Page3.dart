@@ -20,20 +20,7 @@ class _Page3State extends State<Page3> {
   final List<String> entries = <String>['A', 'N', 'tt', 'rr', 'A', 'N', 'tt', 'rr', 'A', 'N', 'tt', 'rr', 'A', 'N', 'tt', 'rr'
   ];
   final List<String> en = <String>[
-    'B',
-    'C',
-    'g',
-    'rr',
-    'A',
-    'N',
-    'tt',
-    'rr',
-    'A',
-    'N',
-    'tt',
-    'rr',
-    'A',
-    'N', 'tt', 'rr'
+    'B', 'C', 'g', 'rr', 'A', 'N', 'tt', 'rr', 'A', 'N', 'tt', 'rr', 'A', 'N', 'tt', 'rr'
   ];
 
   @override
