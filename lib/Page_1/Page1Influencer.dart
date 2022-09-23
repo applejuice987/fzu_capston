@@ -19,6 +19,7 @@ class _Page1InfluencerState extends State<Page1Influencer> {
       body: Center(
 
 
+
         ),
       );
 
