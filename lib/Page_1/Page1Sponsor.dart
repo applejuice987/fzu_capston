@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+
 import 'package:fzu/Page_1/influItem.dart';
-import 'package:flutter/src/rendering/box.dart';
+
 
 final influItem = {
   "list": [

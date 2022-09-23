@@ -15,15 +15,12 @@ class _Page1InfluencerState extends State<Page1Influencer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.cyan[700],
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const Page1Sponsor()));
-          },
-          child: Text("tq"),
+
+
         ),
-      ),
-    );
+      );
+
   }
 }
