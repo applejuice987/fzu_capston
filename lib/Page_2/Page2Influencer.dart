@@ -14,10 +14,31 @@ class Page2Influencer extends StatefulWidget {
 class _Page2InfluencerState extends State<Page2Influencer> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: const Center(
-        child: Text("두 번째 페이지 입니다."),
+    return MaterialApp(
+      home: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            const SliverAppBar(
+              title: Text("새로운 광고모집을 추가하세요"),
+              floating: true,
+              flexibleSpace: Placeholder(),
+              expandedHeight: 100,
+            ),
+          SliverList(
+        delegate: SliverChildBuilderDelegate(
+        (context, index) => ListTile(title: Text("광고 제목")),
+    childCount: 20,
+    ),
+          ),
+    ],
+        ),
       ),
     );
   }
 }
+
+
+
+
+
+

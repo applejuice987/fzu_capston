@@ -15,9 +15,25 @@ class _Page2SponsorState extends State<Page2Sponsor> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(
-        child: Text("두 번째 페이지 입니다."),
-      ),
+        body: GridView.count(
+          crossAxisCount: 2,
+          childAspectRatio: (1/1.5),
+          children: List.generate(100, (index) {
+            return Container(
+              height: 1000,
+              margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                child: Column(
+                  children: [
+                    CircleAvatar(radius: 70,),
+                    SizedBox(height: 20,),
+                    Text('광고명'),
+                    Text('회사명'),
+                  ],
+                )
+            );
+          }
+          ),
+        )
     );
   }
 }
