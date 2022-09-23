@@ -50,7 +50,6 @@ class _Page3State extends State<Page3> {
                   ]),
 
                 ),
-
                 onTap: () {
                   Navigator.push(
                       context,
