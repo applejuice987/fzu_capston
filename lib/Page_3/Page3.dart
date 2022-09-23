@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:fzu/Page_3/Page3Detail.dart';
 
 //TODO!! 로그인의 관계 없이 같은 화면 출력
+
 //TODO!! 모든 채팅창 출력
 //TODO!! 3초 이상 누르면 삭제 하는 다이얼로그 출력
 
@@ -55,6 +56,7 @@ class _Page3State extends State<Page3> {
                       context,
                       MaterialPageRoute(builder: (_) => Page3Detail()));
                 },
+
                 onLongPress: ()=> showDialog(context: context,
                     barrierDismissible: false,
                     builder:(BuildContext context){
