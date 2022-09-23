@@ -80,7 +80,6 @@ class _Page1SponsorState extends State<Page1Sponsor> {
           child: Text('매칭하기'),
         )),
       ),
-    ),
     );
   }
 }

@@ -17,6 +17,7 @@ class _Page1InfluencerState extends State<Page1Influencer> {
     return Scaffold(
       backgroundColor: Colors.cyan[700],
       body: Center(
+        child:
         Text('인플루언서 1페이지')
 
 
