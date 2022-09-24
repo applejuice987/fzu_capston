@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fzu/MySharedPreferences.dart';
+import 'package:fzu/login/MainLoginScreen.dart';
 import 'package:fzu/login/SignUpDatabaseHelper.dart';
 import 'package:fzu/main.dart';
 
@@ -32,18 +33,20 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
         if (passwordController.text ==
             passwordCheckController.text) { //비밀번호와 비밀번호 확인이 일치할 경우
 
-            final User? user = (await
-            auth.createUserWithEmailAndPassword(
+            UserCredential result = (
+                await auth.createUserWithEmailAndPassword(
               email: idController.text,
               password: passwordController.text,)
-            ).user;
-            MySharedPreferences.instance.setBooleanValue("loggedin", true);
-            MySharedPreferences.instance.setBooleanValue("isInflu", false);
+            );
+            if(result.user != null){
+              auth.currentUser?.sendEmailVerification();
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("해당 이메일로 인증메일을 보냈습니다!")));
+              auth.signOut();
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MainLoginScreen()),(Route<dynamic> route) => false);
+            }
             SignUpDatabaseHelper().backUpSponsorData(
                 idController.text, passwordController.text,
                 companyNameController.text);
-            Navigator.push(context, MaterialPageRoute(builder: (context) =>
-            const MyApp()));
 
         } else { //비밀번호와 비밀번호 확인이 일치하지 않을 경우
           //flutterToast('입력하신 비밀번호가 일치하지 않습니다.');
