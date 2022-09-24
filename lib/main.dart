@@ -6,6 +6,7 @@ import 'package:fzu/Page_1/Page1Sponsor.dart';
 import 'package:fzu/Page_2/Page2Influencer.dart';
 import 'package:fzu/Page_2/Page2Sponsor.dart';
 import 'package:fzu/Page_2/Page2Sponsor2.dart';
+import 'package:fzu/Page_2/Page2Influencer2.dart';
 import 'package:fzu/Page_3/Page3.dart';
 import 'package:fzu/Page_4/Page4.dart';
 
@@ -56,10 +57,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> pageList = <Widget>[
     // Page1Influencer(),
-   Page1Sponsor(),
+    Page1Sponsor(),
     //Page2Influencer(),
     //Page2Sponsor(),
-    Page2Sponsor2(),
+    //Page2Sponsor2(),
+    Page2Influencer2(),
     Page3(),
     Page4()
   ];
