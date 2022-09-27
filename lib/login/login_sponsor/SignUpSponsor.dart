@@ -106,7 +106,6 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
   void dispose() {
     // Clean up the focus node when the Form is disposed.
     myFocusNode.dispose();
-
     super.dispose();
   }
 
