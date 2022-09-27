@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fzu/Page_2/Page2Sponsor2.dart';
 
-//TODO!! 로그인 한 사람이 인플루언서 일 경우, 이 화면 출력
+//TODO!! 로그인 한 사람이 스폰서 일 경우, 이 화면 출력
 
 class Page2Sponsor extends StatefulWidget {
   const Page2Sponsor({Key? key}) : super(key: key);
@@ -14,26 +15,31 @@ class Page2Sponsor extends StatefulWidget {
 class _Page2SponsorState extends State<Page2Sponsor> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: GridView.count(
-          crossAxisCount: 2,
-          childAspectRatio: (1/1.5),
-          children: List.generate(100, (index) {
-            return Container(
-              height: 1000,
-              margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                child: Column(
-                  children: [
-                    CircleAvatar(radius: 70,),
-                    SizedBox(height: 20,),
-                    Text('광고명'),
-                    Text('회사명'),
-                  ],
-                )
-            );
-          }
-          ),
-        )
+    return MaterialApp(
+      home: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            const SliverAppBar(
+              title: Text("새로운 광고모집을 추가하세요"),
+              floating: true,
+              flexibleSpace: Placeholder(),
+              expandedHeight: 100,
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) => ListTile(title: Text("광고 제목"),
+                    onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Page2Sponsor2()));
+                  },),
+                childCount: 20,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

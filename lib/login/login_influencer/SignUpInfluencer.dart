@@ -7,6 +7,8 @@ import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/login/SignUpDatabaseHelper.dart';
 import 'package:fzu/main.dart';
 
+import '../MainLoginScreen.dart';
+
 //TODO!! 여기서 인플루언서 회원가입을 진행.
 
 class SignUpInfluencer extends StatefulWidget {
@@ -31,18 +33,22 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
   void signUpEmailAccount() async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     try {
-          final User? user = (await
-          auth.createUserWithEmailAndPassword(
+          UserCredential result = (
+              await auth.createUserWithEmailAndPassword(
             email: email,
             password: password,)
-          ).user;
-          MySharedPreferences.instance.setBooleanValue("loggedin", true);
-          MySharedPreferences.instance.setBooleanValue("isInflu", true);
+          );
+          if(result.user != null) {
+            auth.currentUser?.sendEmailVerification();
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("해당 이메일로 인증메일을 보냈습니다!")));
+            auth.signOut();
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MainLoginScreen()),(Route<dynamic> route) => false);
+          }
           SignUpDatabaseHelper().backUpInfluencerData(
               email, password,
               platformName);
-          Navigator.push(context, MaterialPageRoute(builder: (context) =>
-          const MyApp()));
+          //Navigator.push(context, MaterialPageRoute(builder: (context) => const MyApp()));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("이미 사용중인 이메일입니다.")));

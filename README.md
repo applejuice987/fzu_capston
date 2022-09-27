@@ -38,7 +38,7 @@ hfdhfg
 2022/09/13  로그인 화면 UI만 대충 구축
 2022/09/18  파이어베이스 이메일 로그인 완성, 로그인 되어있을시 바로 메인화면 띄우기 완성
             DB구축 원정연이 푸쉬 안해서 다시 처음부터 만듦ㅋㅋ 
-
+2022/09/24  이메일 인증 및 비밀번호 재설정 완료.
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';

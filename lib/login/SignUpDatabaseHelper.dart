@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fzu/MySharedPreferences.dart';
+import 'package:fzu/login/MainLoginScreen.dart';
 import '../main.dart';
 
 class SignUpDatabaseHelper {
@@ -35,25 +36,33 @@ class SignUpDatabaseHelper {
   }
 
   Future<void> loginFunc(String email, String pw, BuildContext context, bool isInflu) async{
-
     try {
       final newUser = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
           email: email, password: pw);
-      if (newUser.user != null) {
-        MySharedPreferences.instance.setBooleanValue("loggedin", true);
-        MySharedPreferences.instance.setBooleanValue("isInflu", isInflu);
-        // ignore: use_build_context_synchronously
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const MyApp()),
-                (Route<dynamic> route) => false);
-      }
+      // if(newUser.user?.emailVerified == true){
+        if (newUser.user != null) {
+          MySharedPreferences.instance.setBooleanValue("loggedin", true);
+          MySharedPreferences.instance.setBooleanValue("isInflu", isInflu);
+          // ignore: use_build_context_synchronously
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const MyApp()),
+                  (Route<dynamic> route) => false);
+        }
+      // }
+      // else {
+      //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("이메일 인증을 진행해주세요!")));
+      //   FirebaseAuth.instance.signOut();
+      //   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MainLoginScreen()),(Route<dynamic> route) => false);
+      //
+      // }
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("이메일을 확인하세요")));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("이메일을 확인하세요")));
         //flutterToast('이메일을 확인하세요.');
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
@@ -67,7 +76,46 @@ class SignUpDatabaseHelper {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("오류가 발생했습니다. 다시 시도해주세요.")));
       }
     }
+
   }
+
+  Future<void> resetPassword(String email, BuildContext context) async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((value) =>
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius:
+                  BorderRadius.circular(10.0)),
+              title: Column(
+                crossAxisAlignment:
+                CrossAxisAlignment.start,
+                children: const <Widget>[
+                  Text("완료"),
+                ],),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment:
+                CrossAxisAlignment.start,
+                children: const <Widget>[
+                  Text("이메일을 확인해주세요.")
+                ],),
+              actions: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.black,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("확인"),
+                ),
+              ]);
+    }));
+  }
+
   void flutterToast(String message) {
     Fluttertoast.showToast(
         msg: message,
