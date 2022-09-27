@@ -80,20 +80,21 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
 
   bool validatePasswordStructure(String value) { //비밀번호 조건 확인 함수
     String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     return true/*regExp.hasMatch(value)*/;
     //TODO 개발용으로 무조건 조건에 맞게 수정해둠, 추후에 true를 지우고 주석을 살리면 됨
   }
 
   bool validateEmailStructure(String value) { //이메일 조건 확인 함수
     String  pattern = r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     return true/*regExp.hasMatch(value)*/;
     //TODO 개발용으로 무조건 조건에 맞게 수정해둠, 추후에 true를 지우고 주석을 살리면 됨
   }
 
   final formKey = GlobalKey<FormState>();
 
+  @override
   void initState() {
     super.initState();
     _passwordVisible = false;
@@ -215,7 +216,6 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
                           onSaved: (val) {
                             setState(() {
                               password = val as String;
-                              print(password);
                             });
                           },
                           validator: (val) {
