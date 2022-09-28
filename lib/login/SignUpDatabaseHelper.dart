@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fzu/MySharedPreferences.dart';
 import '../main.dart';
 
+
 class SignUpDatabaseHelper {
   String _currentUser = '';
   var db = FirebaseFirestore.instance;

@@ -26,9 +26,12 @@ List<ChatMessage> messages = [
 class _Page3DetailState extends State<Page3Detail> {
   final input_text = TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  String opponent_email='spo@spo.com';
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+     return Scaffold(
 
       appBar: AppBar(
         title:Text('상대방이름')
@@ -94,11 +97,16 @@ class _Page3DetailState extends State<Page3Detail> {
                   SizedBox(width: 15,),
                   FloatingActionButton(
                     onPressed: (){
-                      firestore.collection('chat_log').doc(FirebaseAuth.instance.currentUser?.email.toString()).set({
-                        'sender_email':'123@123.com',
-                        'receiver_email':'456@456.com',
+
+                      firestore.collection('chat_log').doc(opponent_email).collection(FirebaseAuth.instance.currentUser!.email.toString()).doc(DateTime.now().toString()).set({
+                        'sender_email':FirebaseAuth.instance.currentUser?.email.toString(),
                         'chat':input_text.text
                       });
+                      firestore.collection('chat_log').doc(FirebaseAuth.instance.currentUser?.email.toString()).collection(opponent_email).doc(DateTime.now().toString()).set({
+                        'sender_email':FirebaseAuth.instance.currentUser?.email.toString(),
+                        'chat':input_text.text
+                      });
+
                       input_text.text="";
                     },
                     child: Icon(Icons.send,color: Colors.white,size: 18,),
@@ -114,5 +122,5 @@ class _Page3DetailState extends State<Page3Detail> {
       ),
 
     );
-  }
+}
 }
