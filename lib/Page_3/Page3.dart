@@ -30,7 +30,7 @@ class _Page3State extends State<Page3> {
     return Scaffold(
 
         body: ListView.builder(
-            scrollDirection: Axis.vertical,
+            //scrollDirection: Axis.vertical,
             padding: const EdgeInsets.all(5),
             itemCount: en.length,
 

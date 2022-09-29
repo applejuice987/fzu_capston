@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -26,40 +28,123 @@ List<ChatMessage> messages = [
 class _Page3DetailState extends State<Page3Detail> {
   final input_text = TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  ScrollController _controller=ScrollController();
+
+// This is what you're looking for!
+
 
   String opponent_email='spo@spo.com';
-
+  //StreamController<String> streamController = StreamController<String>();
+  CollectionReference chat_log = FirebaseFirestore.instance.collection('chat_log').doc(FirebaseAuth.instance.currentUser?.email.toString()).collection('spo@spo.com');
+  List<DocumentSnapshot> item = [];
   @override
+
   Widget build(BuildContext context) {
      return Scaffold(
 
+
+
       appBar: AppBar(
-        title:Text('상대방이름')
+        title:Text(opponent_email)
       ),
       body: Stack(
+
+
         children: <Widget>[
-          ListView.builder( //채팅내용 출력
-            itemCount: messages.length,
-            shrinkWrap: true,
-            padding: EdgeInsets.only(top: 10,bottom: 10),
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index){
-              return Container(
-                padding: EdgeInsets.only(left: 14,right: 14,top: 10,bottom: 10),
-                child: Align(
-                  alignment: (messages[index].messageType == "receiver"?Alignment.topLeft:Alignment.topRight),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: (messages[index].messageType  == "receiver"?Colors.grey.shade200:Colors.blue[200]),
-                    ),
-                    padding: EdgeInsets.all(16),
-                    child: Text(messages[index].messageContent, style: TextStyle(fontSize: 15),),
-                  ),
-                ),
-              );
+          GestureDetector(
+            onTap:(){
+
+              FocusScope.of(context).unfocus();
+
+
             },
+            child:StreamBuilder<dynamic>(
+
+              //stream: streamController.stream,
+                stream: chat_log.snapshots(),
+
+
+                builder: (context,snapshot){
+                   //_scrollDown();
+
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text("Loading");
+                  }
+                  print(snapshot.data.docs.length);
+
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (_controller.hasClients) {
+                      _controller.jumpTo(_controller.position.maxScrollExtent);
+                    }
+                  });
+                  return SingleChildScrollView(
+                    controller: _controller,
+
+
+                    child: Column(
+
+                      children: <Widget>[
+
+
+
+                        ListView.builder( //채팅내용 출력
+                          //itemCount: messages.length,
+
+
+                          itemCount: snapshot.data.docs.length,
+                          shrinkWrap: true,
+                          padding: EdgeInsets.only(top: 10, bottom: 10),
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+
+
+                            return Container(
+                              padding: EdgeInsets.only(
+                                  left: 14, right: 14, top: 10, bottom: 10),
+                              child: Align(
+                                alignment: (snapshot.data.docs[index]['sender_email'] ==
+                                    opponent_email ? Alignment.topLeft : Alignment
+                                    .topRight),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: (snapshot.data.docs[index]['sender_email'] ==
+                                        opponent_email ? Colors.grey.shade200 : Colors
+                                        .blue[200]),
+                                  ),
+
+                                  padding: EdgeInsets.all(16),
+                                  //child: Text(messages[index].messageContent, style: TextStyle(fontSize: 15),),
+                                  child: Text(snapshot.data!.docs[index]['chat'],
+                                    style: TextStyle(fontSize: 15),),
+
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsetsDirectional.only(
+                                  top: 18, bottom: 18),
+                              child: Text("Powered By:",
+                                  style: new TextStyle(fontSize: 18.0)),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+
+
+                }
+            ),
           ),
+
           Align(//채팅 메세지 입력
             alignment: Alignment.bottomLeft,
             child: Container(
@@ -71,6 +156,7 @@ class _Page3DetailState extends State<Page3Detail> {
                 children: <Widget>[
                   GestureDetector(
                     onTap: (){
+                      _controller.jumpTo(_controller.position.maxScrollExtent);
                     },
                     child: Container(
                       height: 30,
@@ -84,9 +170,13 @@ class _Page3DetailState extends State<Page3Detail> {
                   ),
                   SizedBox(width: 15,),
                   Expanded(
+
                     child: TextField(
+
+
                       controller: input_text,
                       decoration: InputDecoration(
+
 
                           hintText: "Write message...",
                           hintStyle: TextStyle(color: Colors.black54),
@@ -106,6 +196,7 @@ class _Page3DetailState extends State<Page3Detail> {
                         'sender_email':FirebaseAuth.instance.currentUser?.email.toString(),
                         'chat':input_text.text
                       });
+
 
                       input_text.text="";
                     },
