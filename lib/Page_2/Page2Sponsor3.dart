@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,6 +39,14 @@ class sponsorup {
 class _Page2Sponsor3State extends State<Page2Sponsor3> {
   final _nameController = TextEditingController();
 
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+
+  late String titlebox;
+  late String contentbox;
+  late String docId = auth.currentUser!.email.toString();
+
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -61,7 +72,9 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
           child: Column(
             children: [
               Text("제목"),
-              TextFormField(),
+              TextFormField(
+                onChanged: (value) {titlebox = value;},
+              ),
               Text("내용"),
               TextFormField(
                 controller: _nameController,
@@ -79,7 +92,9 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
                       .textTheme
                       .bodyText2,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 6),
+
                 ),
+                onChanged: (value){contentbox = value;},
               ),
             ],
           ),
@@ -91,8 +106,9 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
          //height: submitButtonHeigh,
         child: ElevatedButton(
           onPressed: (){
-               sponsorup userModel1 = sponsorup(title: '제목1', content: '내용1');
-               sponsor.add(userModel1.toJson());
+               sponsorup sponsorModel1 = sponsorup(title: titlebox, content: contentbox);
+               sponsor.doc(docId).collection(titlebox).doc(titlebox).set(sponsorModel1.toJson());
+               Navigator.pop(context);
                //sponsor.add({'title': '제목1', 'content': '내용1'});
 
           },
@@ -109,3 +125,9 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
     );
   }
 }
+
+
+
+
+
+
