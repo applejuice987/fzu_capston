@@ -6,6 +6,7 @@ import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 import '../main.dart';
 
+
 class SignUpDatabaseHelper {
   String _currentUser = '';
   var db = FirebaseFirestore.instance;
