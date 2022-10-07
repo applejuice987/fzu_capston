@@ -24,6 +24,14 @@ class _LoginSponsorState extends State<LoginSponsor> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   var db = FirebaseFirestore.instance;
   var q = "user_sponsor";
+  bool _passwordObscure = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _passwordObscure = true;
+  }
 
 
   @override
@@ -50,9 +58,16 @@ class _LoginSponsorState extends State<LoginSponsor> {
                   ),
                   TextField(
                     controller: sp_pw_controller,
-                    obscureText: true,
-                    decoration: const InputDecoration(
+                    obscureText: _passwordObscure,
+                    decoration: InputDecoration(
                       labelText: "비밀번호",
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                          setState(() {
+                            _passwordObscure = !_passwordObscure;
+                          });
+                        },
+                            icon: Icon(_passwordObscure ? Icons.visibility : Icons.visibility_off))
                     ),
                   ),
                   SizedBox(
