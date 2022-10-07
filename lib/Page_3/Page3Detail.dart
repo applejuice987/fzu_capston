@@ -93,8 +93,7 @@ class _Page3DetailState extends State<Page3Detail> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
                                     color: (snapshot.data.docs[index]['sender_email'] ==
-                                        opponent_email ? Colors.grey.shade200 : Colors
-                                        .cyanAccent),
+                                        opponent_email ? Colors.grey.shade200 : Color(0xFFc9b9ec)),
                                   ),
 
                                   padding: EdgeInsets.all(16),
@@ -145,7 +144,7 @@ class _Page3DetailState extends State<Page3Detail> {
                       height: 30,
                       width: 30,
                       decoration: BoxDecoration(
-                        color: Colors.cyanAccent,
+                        color: Color(0xFFc9b9ec),
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Icon(Icons.add, color: Colors.white, size: 20, ),
@@ -179,12 +178,18 @@ class _Page3DetailState extends State<Page3Detail> {
                         'sender_email':FirebaseAuth.instance.currentUser?.email.toString(),
                         'chat':input_text.text
                       });
-
+                      firestore.collection('chat_log').doc(FirebaseAuth.instance.currentUser?.email.toString()).collection('dummy').doc(opponent_email).set({
+                        'last_chat':input_text.text
+                      });
+                      firestore.collection('chat_log').doc(opponent_email).collection('dummy').doc(FirebaseAuth.instance.currentUser!.email.toString()).set({
+                        'last_chat':input_text.text
+                      });
 
                       input_text.text="";
                     },
                     child: Icon(Icons.send,color: Colors.white,size: 18,),
-                    backgroundColor: Colors.cyanAccent,
+                    backgroundColor:Color(0xFFc9b9ec),
+
                     elevation: 0,
                   ),
                 ],

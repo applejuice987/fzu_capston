@@ -5,13 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/Page_3/Page3Detail.dart';
 
 //TODO!! 로그인의 관계 없이 같은 화면 출력
 
 //TODO!! 모든 채팅창 출력
 //TODO!! 3초 이상 누르면 삭제 하는 다이얼로그 출력
-
 class Page3 extends StatefulWidget {
   const Page3({Key? key}) : super(key: key);
 
@@ -21,21 +21,29 @@ class Page3 extends StatefulWidget {
 
 class _Page3State extends State<Page3> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final List<String> entries = <String>['A', 'N', 'tt', 'rr', 'A', 'N', 'tt', 'rr', 'A', 'N', 'tt', 'rr', 'A', 'N', 'tt', 'rr'
-  ];
-  final List<String> en = <String>[
-    'B', 'C', 'g', 'rr', 'A', 'N', 'tt', 'rr', 'A', 'N', 'tt', 'rr', 'A', 'N', 'tt', 'rr'
-  ];
+  CollectionReference chat_list = FirebaseFirestore.instance.collection('chat_log');
 
-  CollectionReference chat_list = FirebaseFirestore.instance.collection('chat_log').doc(FirebaseAuth.instance.currentUser?.email.toString()).collection('dummy');
 
 
   @override
   Widget build(BuildContext context) {
+    String my="";
+    MySharedPreferences.instance.getBooleanValue("isInflu").then((value) => setState(() {
+      if(value){
+        my="inf";
+      }else{
+        my="spo";
+      }
+
+    }));
+
+    print(0);
     return Scaffold(
 
+
         body: StreamBuilder<dynamic>(
-        stream: chat_list.snapshots(),
+
+        stream: chat_list.where("spo", isEqualTo: FirebaseAuth.instance.currentUser?.email.toString()).snapshots(),
         builder:(context,snapshot) {
 
           if(!snapshot.hasData) {
@@ -51,6 +59,10 @@ class _Page3State extends State<Page3> {
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   title: Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFFc9b9ec),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                     width: MediaQuery
                         .of(context)
                         .size
@@ -63,6 +75,7 @@ class _Page3State extends State<Page3> {
                               fallbackHeight: 100, fallbackWidth: 100)),
                       Column(children: [
                         Container(child: Text(snapshot.data!.docs[index].id)),
+                        Container(child: Text(snapshot.data!.docs[index]['lastchat'])),
 
                       ]),
                     ]),
@@ -92,7 +105,7 @@ class _Page3State extends State<Page3> {
                               actions: <Widget>[
                                 TextButton(onPressed: () {
                                   setState(() {
-                                    en.removeAt(index);
+
                                     Navigator.of(context).pop();
                                   });
                                 }, child: Text('ok')),
