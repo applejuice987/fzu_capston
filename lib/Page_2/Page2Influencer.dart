@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fzu/Page_2/Page2Influencer2.dart';
 
 //TODO!! 로그인 한 사람이 인플루언서 일 경우, 이 화면 출력
 
@@ -20,6 +21,11 @@ class _Page2InfluencerState extends State<Page2Influencer> {
           childAspectRatio: (1/1.5),
           children: List.generate(100, (index) {
             return Container(
+              child: InkWell(
+                onTap:() {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => Page2Influencer2()));
+                },
+              child: Container(
                 height: 1000,
                 margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                 child: Column(
@@ -28,12 +34,21 @@ class _Page2InfluencerState extends State<Page2Influencer> {
                     SizedBox(height: 20,),
                     Text('광고명'),
                     Text('회사명'),
-                  ],
-                )
+                ],
+                ),
+            ),
+              ),
             );
           }
+
           ),
         )
     );
   }
 }
+
+
+
+
+
+
