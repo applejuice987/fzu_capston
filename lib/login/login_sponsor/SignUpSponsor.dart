@@ -1,9 +1,13 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/login/SignUpDatabaseHelper.dart';
 import 'package:fzu/main.dart';
+import 'package:image_picker/image_picker.dart';
 
 //TODO!! 여기서 광고주의 회원가입을 진행.
 
@@ -22,8 +26,13 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
   final passwordCheckController = TextEditingController();
   final companyNameController = TextEditingController();
 
-  void signUpEmailAccount() async {
+  void signUpEmailAccount(dynamic image) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
+    var img64;
+    if (image != null) {
+      var bytes = File(image!.path).readAsBytesSync();
+      img64 = base64Encode(bytes);
+    }
     try {
             final User? user = (await
             auth.createUserWithEmailAndPassword(
@@ -34,9 +43,8 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
             MySharedPreferences.instance.setBooleanValue("isInflu", false);
             SignUpDatabaseHelper().backUpSponsorData(
                 email, password,
-                companyName);
-            Navigator.push(context, MaterialPageRoute(builder: (context) =>
-            const MyApp()));
+                companyName, img64);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MyApp()),(Route<dynamic> route) => false);
 
   } on FirebaseAuthException catch (e) {
     if (e.code == 'email-already-in-use') {
@@ -94,6 +102,9 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
   String companyHint = '업체명을 입력해주세요.';
   bool _reduplicatedEmail = false;
   late FocusNode myFocusNode;
+  final ImagePicker _picker = ImagePicker();
+  dynamic _imageFile;
+  bool _showImage = false;
 
   @override
   void initState() {
@@ -169,13 +180,13 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
     );
   }
 
-  renderButton() {
+  renderButton(dynamic image) {
     return ElevatedButton(
       onPressed: () async {
         if(formKey.currentState!.validate()){
           // validation 이 성공하면 true 리턴
           formKey.currentState!.save();
-          signUpEmailAccount();
+          signUpEmailAccount(image);
         }
 
       },
@@ -286,7 +297,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
                             value: 'platformName',
                             hint: companyHint
                         ),
-                        renderButton(),
+                        renderButton(_imageFile),
                       ],
                     ),
                   ))
@@ -294,4 +305,56 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
           )),
     );
   }
+
+  Widget bottomSheet() {
+    return Container(
+      height: 120,
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Column(
+        children: <Widget>[
+          const Text('사진 선택'),
+          const SizedBox(
+            height: 25,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              TextButton.icon(
+                onPressed: () {
+                  takePhoto(ImageSource.camera);
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.camera,
+                  size: 50,
+                ),
+                label: const Text('Camera'),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  takePhoto(ImageSource.gallery);
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.photo_library,
+                  size: 50,
+                ),
+                label: const Text('Gallery'),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  takePhoto(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(source: source, imageQuality: 30);
+    setState(() {
+      _imageFile = pickedFile;
+      _showImage = true;
+    });
+  }
+
 }

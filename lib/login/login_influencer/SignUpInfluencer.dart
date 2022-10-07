@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/login/SignUpDatabaseHelper.dart';
 import 'package:fzu/main.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../MainLoginScreen.dart';
 
@@ -30,8 +34,13 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
   final platformNameController = TextEditingController();
   bool _passwordVisible = false;
 
-  void signUpEmailAccount() async {
+  void signUpEmailAccount(dynamic image) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
+    var img64;
+    if (image != null) {
+      var bytes = File(image!.path).readAsBytesSync();
+      img64 = base64Encode(bytes);
+    }
     try {
           UserCredential result = (
               await auth.createUserWithEmailAndPassword(
@@ -47,7 +56,7 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
           }
           SignUpDatabaseHelper().backUpInfluencerData(
               email, password,
-              platformName);
+              platformName, img64);
           //Navigator.push(context, MaterialPageRoute(builder: (context) => const MyApp()));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
@@ -99,6 +108,9 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
   }
 
   final formKey = GlobalKey<FormState>();
+  final ImagePicker _picker = ImagePicker();
+  dynamic _imageFile;
+  bool _showImage = false;
 
   @override
   void initState() {
@@ -158,13 +170,13 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
     );
   }
 
-  renderButton() {
+  renderButton(dynamic image) {
     return ElevatedButton(
       onPressed: () async {
         if(formKey.currentState!.validate()){
           // validation 이 성공하면 true 가 리턴
           formKey.currentState!.save();
-          signUpEmailAccount();
+          signUpEmailAccount(image);
         }
 
       },
@@ -276,13 +288,99 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
                           value: 'platformName',
                           hint: platformHint
                         ),
-                      renderButton(),
+                        TextButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: ((builder) => bottomSheet()));
+                          },
+                          style: TextButton.styleFrom(
+                            primary: Colors.black,
+                            onSurface: Colors.grey,
+                            backgroundColor: Colors.grey,
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Visibility(
+                                visible: _showImage,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: const [
+                                    CircularProgressIndicator(),
+                                  ],
+                                ),
+                              ),
+                              Visibility(
+                                  visible: true,
+                                  child: _imageFile == null
+                                        ? const Text('+')
+                                        : Image(image: FileImage(File(_imageFile.path)),)
+                                  )
+                            ],
+                          ),
+                        ),
+                      renderButton(_imageFile),
                       ],
                     ),
-                  ))
+                  )),
+
 
             ],
           )),
     );
   }
+
+  Widget bottomSheet() {
+    return Container(
+      height: 120,
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Column(
+        children: <Widget>[
+          const Text('사진 선택'),
+          const SizedBox(
+            height: 25,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              TextButton.icon(
+                onPressed: () {
+                  takePhoto(ImageSource.camera);
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.camera,
+                  size: 50,
+                ),
+                label: const Text('Camera'),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  takePhoto(ImageSource.gallery);
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.photo_library,
+                  size: 50,
+                ),
+                label: const Text('Gallery'),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  takePhoto(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(source: source, imageQuality: 30);
+    setState(() {
+      _imageFile = pickedFile;
+      _showImage = true;
+    });
+  }
+
 }
