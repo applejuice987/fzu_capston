@@ -37,71 +37,110 @@ class _LoginInfluencerState extends State<LoginInfluencer> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: const EdgeInsets.fromLTRB(30, 0, 30, 30),
           alignment: Alignment.center,
           height: double.infinity,
+          color: const Color(0xffc9b9ec),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget> [
-              const Text("인플루언서님 안녕하세요!",style: TextStyle(fontSize: 25),),
               Column(
-                children: <Widget> [
-                  TextField(
-                    controller: in_email_controller,
-                    decoration: const InputDecoration(
-                      labelText: "이메일",
-                    ),
-                  ),
-                  TextField(
-                    controller: in_pw_controller,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: "비밀번호",
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _passwordObscure = !_passwordObscure;
-                              });
-                            },
-                            icon: Icon(_passwordObscure ? Icons.visibility : Icons.visibility_off))
-                    ),
-                  ),
-                  SizedBox(height: 10,),
-                  SizedBox(
+                children: [
+                  const Text("인플루언서님 안녕하세요!", style: TextStyle(fontSize: 30),),
+                  Container(
+                    height: 3,
                     width: double.infinity,
-                    height: 40,
-                    child: ElevatedButton(onPressed: () {
-                      SignUpDatabaseHelper().loginFunc(in_email_controller.text, in_pw_controller.text, context, true);
-                    }, child: const Text("로그인")),
-                  ),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(height: 30,
-                          child: TextButton(onPressed: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpInfluencer()));
-                          }, child: const Text("회원가입")),
-                        ),
-                        SizedBox(height: 30,
-                          child: TextButton(onPressed: (){
-                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MyApp()),(Route<dynamic> route) => false);
-                          }, child: const Text("메인으로 넘어가기")),
-                        ),
-                        SizedBox(height: 30,
-                          child: TextButton(onPressed: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const FindAccount()));
-                          }, child: const Text("비밀번호를 잊으셨나요?")),
-                        ),
-                      ],
-                    ),
+                    color: Colors.white,
+                    margin: const EdgeInsets.fromLTRB(50, 10, 50, 0),
                   ),
                 ],
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+                child: Column(
+                  children: <Widget> [
+                    TextField(
+                      controller: in_email_controller,
+                      decoration: buildInputDecoration("이메일", true)
+                    ),
+                    TextField(
+                      controller: in_pw_controller,
+                      obscureText: _passwordObscure,
+                      decoration: buildInputDecoration("비밀번호",false),
+                    ),
+                    const SizedBox(height: 10,),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 40,
+                      child: ElevatedButton(onPressed: () {
+                        SignUpDatabaseHelper().loginFunc(in_email_controller.text, in_pw_controller.text, context, true);
+                      }, style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            elevation: 15,
+                            shadowColor: Colors.black,
+                            side: const BorderSide(color: Colors.black, width : 1.5),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))
+                        ), child: const Text("로그인",style: TextStyle(color: Colors.black),),),
+                    ),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          SizedBox(height: 30,
+                            child: TextButton(onPressed: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpInfluencer()));
+                            }, child: const Text("회원가입",style: TextStyle(color: Colors.black),)),
+                          ),
+                          SizedBox(height: 30,
+                            child: TextButton(onPressed: (){
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MyApp()),(Route<dynamic> route) => false);
+                            }, child: const Text("메인으로 넘어가기", style: TextStyle(color: Colors.black),)),
+                          ),
+                          SizedBox(height: 30,
+                            child: TextButton(onPressed: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const FindAccount()));
+                            }, child: const Text("비밀번호를 잊으셨나요?", style: TextStyle(color: Colors.black),)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           )),
     );
+  }
+
+  InputDecoration buildInputDecoration(String asdf, bool istrue) {
+    if (istrue == false) {
+      return InputDecoration(
+          labelText: asdf,
+          focusColor: Colors.black,
+          enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)),
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)),
+          labelStyle: TextStyle(color: Colors.black),
+          suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  _passwordObscure = !_passwordObscure;
+                });
+              },
+              icon: Icon(
+                _passwordObscure ? Icons.visibility : Icons.visibility_off,
+                color: Colors.black,))
+      );
+    } else {
+      return InputDecoration(
+          labelText: asdf,
+          focusColor: Colors.black,
+          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+          labelStyle: TextStyle(color: Colors.black)
+      );
+    }
   }
 }

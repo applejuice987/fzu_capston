@@ -125,9 +125,3 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
     );
   }
 }
-
-
-
-
-
-
