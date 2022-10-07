@@ -23,6 +23,14 @@ class _LoginInfluencerState extends State<LoginInfluencer> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   var db = FirebaseFirestore.instance;
   var q = "user_influencer";
+  bool _passwordObscure = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _passwordObscure = true;
+  }
 
 
   @override
@@ -47,8 +55,15 @@ class _LoginInfluencerState extends State<LoginInfluencer> {
                   TextField(
                     controller: in_pw_controller,
                     obscureText: true,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: "비밀번호",
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _passwordObscure = !_passwordObscure;
+                              });
+                            },
+                            icon: Icon(_passwordObscure ? Icons.visibility : Icons.visibility_off))
                     ),
                   ),
                   SizedBox(height: 10,),

@@ -19,10 +19,6 @@ class _Page1InfluencerState extends State<Page1Influencer> {
       body: Center(
         child:
         Text('인플루언서 1페이지')
-
-
-
-
         ),
       );
 
