@@ -11,19 +11,12 @@ import 'chatMessageModel.dart';
 //TODO!! Page3에서 클릭 하였을때, 누른 1:1 채팅창의 화면 출력.
 
 class Page3Detail extends StatefulWidget {
-  const Page3Detail({Key? key}) : super(key: key);
+  final String origin_opponent_email;
+  const Page3Detail(this.origin_opponent_email,{Key? key}) : super(key: key);
 
   @override
   State<Page3Detail> createState() => _Page3DetailState();
 }
-
-List<ChatMessage> messages = [
-  ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
-  ChatMessage(messageContent: "How have you been?", messageType: "receiver"),
-  ChatMessage(messageContent: "Hey Kriss, I am doing fine dude. wbu?", messageType: "sender"),
-  ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver"),
-  ChatMessage(messageContent: "Is there any thing wrong?", messageType: "sender"),
-];
 
 class _Page3DetailState extends State<Page3Detail> {
   final input_text = TextEditingController();
@@ -33,23 +26,26 @@ class _Page3DetailState extends State<Page3Detail> {
 // This is what you're looking for!
 
 
-  String opponent_email='spo@spo.com';
+  @override
+  void initState(){
+    super.initState();
+  }
+
   //StreamController<String> streamController = StreamController<String>();
-  CollectionReference chat_log = FirebaseFirestore.instance.collection('chat_log').doc(FirebaseAuth.instance.currentUser?.email.toString()).collection('spo@spo.com');
-  List<DocumentSnapshot> item = [];
+
   @override
 
+
   Widget build(BuildContext context) {
-     return Scaffold(
 
+    String opponent_email = widget.origin_opponent_email;
+    CollectionReference chat_log = FirebaseFirestore.instance.collection('chat_log').doc(FirebaseAuth.instance.currentUser?.email.toString()).collection('dummy').doc(opponent_email).collection('dummy');
 
-
+    return Scaffold(
       appBar: AppBar(
         title:Text(opponent_email)
       ),
       body: Stack(
-
-
         children: <Widget>[
           GestureDetector(
             onTap:(){
@@ -60,19 +56,11 @@ class _Page3DetailState extends State<Page3Detail> {
             },
             child:StreamBuilder<dynamic>(
 
-              //stream: streamController.stream,
                 stream: chat_log.snapshots(),
-
-
                 builder: (context,snapshot){
-                   //_scrollDown();
-
-
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Text("Loading");
                   }
-                  print(snapshot.data.docs.length);
-
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     if (_controller.hasClients) {
                       _controller.jumpTo(_controller.position.maxScrollExtent);
@@ -85,13 +73,8 @@ class _Page3DetailState extends State<Page3Detail> {
                     child: Column(
 
                       children: <Widget>[
-
-
-
                         ListView.builder( //채팅내용 출력
                           //itemCount: messages.length,
-
-
                           itemCount: snapshot.data.docs.length,
                           shrinkWrap: true,
                           padding: EdgeInsets.only(top: 10, bottom: 10),
@@ -131,7 +114,7 @@ class _Page3DetailState extends State<Page3Detail> {
                             Padding(
                               padding: const EdgeInsetsDirectional.only(
                                   top: 18, bottom: 18),
-                              child: Text("Powered By:",
+                              child: Text("",
                                   style: new TextStyle(fontSize: 18.0)),
                             )
                           ],
@@ -188,11 +171,11 @@ class _Page3DetailState extends State<Page3Detail> {
                   FloatingActionButton(
                     onPressed: (){
 
-                      firestore.collection('chat_log').doc(opponent_email).collection(FirebaseAuth.instance.currentUser!.email.toString()).doc(DateTime.now().toString()).set({
+                      firestore.collection('chat_log').doc(opponent_email).collection('dummy').doc(FirebaseAuth.instance.currentUser!.email.toString()).collection('dummy').doc(DateTime.now().toString()).set({
                         'sender_email':FirebaseAuth.instance.currentUser?.email.toString(),
                         'chat':input_text.text
                       });
-                      firestore.collection('chat_log').doc(FirebaseAuth.instance.currentUser?.email.toString()).collection(opponent_email).doc(DateTime.now().toString()).set({
+                      firestore.collection('chat_log').doc(FirebaseAuth.instance.currentUser?.email.toString()).collection('dummy').doc(opponent_email).collection('dummy').doc(DateTime.now().toString()).set({
                         'sender_email':FirebaseAuth.instance.currentUser?.email.toString(),
                         'chat':input_text.text
                       });
