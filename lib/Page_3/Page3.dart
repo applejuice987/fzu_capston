@@ -63,15 +63,13 @@ class _Page3State extends State<Page3> {
                               fallbackHeight: 100, fallbackWidth: 100)),
                       Column(children: [
                         Container(child: Text(snapshot.data!.docs[index].id)),
-                        Container(child: Text("${entries[index]}")),
+
                       ]),
                     ]),
-
                   ),
                   onTap: () {
                     print(snapshot.data!.docs[index].id);
                     Navigator.push(
-
                         context,
                         MaterialPageRoute(builder: (_) => Page3Detail(snapshot.data!.docs[index].id)));
                   },

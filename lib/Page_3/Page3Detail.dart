@@ -94,7 +94,7 @@ class _Page3DetailState extends State<Page3Detail> {
                                     borderRadius: BorderRadius.circular(20),
                                     color: (snapshot.data.docs[index]['sender_email'] ==
                                         opponent_email ? Colors.grey.shade200 : Colors
-                                        .blue[200]),
+                                        .cyanAccent),
                                   ),
 
                                   padding: EdgeInsets.all(16),
@@ -145,7 +145,7 @@ class _Page3DetailState extends State<Page3Detail> {
                       height: 30,
                       width: 30,
                       decoration: BoxDecoration(
-                        color: Colors.lightBlue,
+                        color: Colors.cyanAccent,
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Icon(Icons.add, color: Colors.white, size: 20, ),
@@ -184,7 +184,7 @@ class _Page3DetailState extends State<Page3Detail> {
                       input_text.text="";
                     },
                     child: Icon(Icons.send,color: Colors.white,size: 18,),
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.cyanAccent,
                     elevation: 0,
                   ),
                 ],
