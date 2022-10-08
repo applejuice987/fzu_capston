@@ -11,9 +11,11 @@ import 'chatMessageModel.dart';
 //TODO!! Page3에서 클릭 하였을때, 누른 1:1 채팅창의 화면 출력.
 
 class Page3Detail extends StatefulWidget {
+  final String roomid;
+  final String origin_inf;
+  final String origin_spo;
   final String origin_opponent_email;
-  const Page3Detail(this.origin_opponent_email,{Key? key}) : super(key: key);
-
+  const Page3Detail(this.origin_opponent_email,this.origin_inf,this.origin_spo,this.roomid,{Key? key}) : super(key: key);
   @override
   State<Page3Detail> createState() => _Page3DetailState();
 }
@@ -39,7 +41,8 @@ class _Page3DetailState extends State<Page3Detail> {
   Widget build(BuildContext context) {
 
     String opponent_email = widget.origin_opponent_email;
-    CollectionReference chat_log = FirebaseFirestore.instance.collection('chat_log').doc(FirebaseAuth.instance.currentUser?.email.toString()).collection('dummy').doc(opponent_email).collection('dummy');
+    String room = widget.roomid;
+    CollectionReference chat_log = FirebaseFirestore.instance.collection('chat_log').doc(room).collection('dummy');
 
     return Scaffold(
       appBar: AppBar(
@@ -170,19 +173,14 @@ class _Page3DetailState extends State<Page3Detail> {
                   FloatingActionButton(
                     onPressed: (){
 
-                      firestore.collection('chat_log').doc(opponent_email).collection('dummy').doc(FirebaseAuth.instance.currentUser!.email.toString()).collection('dummy').doc(DateTime.now().toString()).set({
+                      firestore.collection('chat_log').doc(room).collection('dummy').doc(DateTime.now().toString()).set({
                         'sender_email':FirebaseAuth.instance.currentUser?.email.toString(),
                         'chat':input_text.text
                       });
-                      firestore.collection('chat_log').doc(FirebaseAuth.instance.currentUser?.email.toString()).collection('dummy').doc(opponent_email).collection('dummy').doc(DateTime.now().toString()).set({
-                        'sender_email':FirebaseAuth.instance.currentUser?.email.toString(),
-                        'chat':input_text.text
-                      });
-                      firestore.collection('chat_log').doc(FirebaseAuth.instance.currentUser?.email.toString()).collection('dummy').doc(opponent_email).set({
-                        'last_chat':input_text.text
-                      });
-                      firestore.collection('chat_log').doc(opponent_email).collection('dummy').doc(FirebaseAuth.instance.currentUser!.email.toString()).set({
-                        'last_chat':input_text.text
+                      firestore.collection('chat_log').doc(room).set({
+                        'lastchat':input_text.text,
+                        'inf':widget.origin_inf,
+                        'spo':widget.origin_spo
                       });
 
                       input_text.text="";

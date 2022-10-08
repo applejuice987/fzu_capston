@@ -22,17 +22,20 @@ class Page3 extends StatefulWidget {
 class _Page3State extends State<Page3> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference chat_list = FirebaseFirestore.instance.collection('chat_log');
+  String my="";
+  String you="";
 
 
 
   @override
   Widget build(BuildContext context) {
-    String my="";
     MySharedPreferences.instance.getBooleanValue("isInflu").then((value) => setState(() {
       if(value){
         my="inf";
+        you="spo";
       }else{
         my="spo";
+        you="inf";
       }
 
     }));
@@ -43,13 +46,16 @@ class _Page3State extends State<Page3> {
 
         body: StreamBuilder<dynamic>(
 
-        stream: chat_list.where("spo", isEqualTo: FirebaseAuth.instance.currentUser?.email.toString()).snapshots(),
+        stream: chat_list.where(my, isEqualTo: FirebaseAuth.instance.currentUser?.email.toString()).snapshots(),
         builder:(context,snapshot) {
+          print(my);
+          print(FirebaseAuth.instance.currentUser?.email.toString());
 
           if(!snapshot.hasData) {
             return Text("Loading");
           }
           print(snapshot.data.docs.length);
+          print(2);
           return ListView.builder(
 
             //scrollDirection: Axis.vertical,
@@ -74,17 +80,17 @@ class _Page3State extends State<Page3> {
                           child: Placeholder(
                               fallbackHeight: 100, fallbackWidth: 100)),
                       Column(children: [
-                        Container(child: Text(snapshot.data!.docs[index].id)),
+                        Container(child: Text(snapshot.data!.docs[index][you])),
                         Container(child: Text(snapshot.data!.docs[index]['lastchat'])),
 
                       ]),
                     ]),
                   ),
                   onTap: () {
-                    print(snapshot.data!.docs[index].id);
+
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => Page3Detail(snapshot.data!.docs[index].id)));
+                        MaterialPageRoute(builder: (_) => Page3Detail(snapshot.data!.docs[index][you],snapshot.data!.docs[index]['inf'],snapshot.data!.docs[index]['spo'],snapshot.data!.docs[index].id)));
                   },
 
                   onLongPress: () =>
