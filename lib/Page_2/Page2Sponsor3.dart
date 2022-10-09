@@ -107,7 +107,7 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
         child: ElevatedButton(
           onPressed: (){
                sponsorup sponsorModel1 = sponsorup(title: titlebox, content: contentbox);
-               sponsor.doc(docId).collection(titlebox).doc(titlebox).set(sponsorModel1.toJson());
+               sponsor.doc(docId).collection("recruit").doc(titlebox).set(sponsorModel1.toJson());
                Navigator.pop(context);
                //sponsor.add({'title': '제목1', 'content': '내용1'});
 
