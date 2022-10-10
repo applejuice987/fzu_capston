@@ -45,7 +45,7 @@ class _LoginInfluencerState extends State<LoginInfluencer> {
             children: <Widget> [
               Column(
                 children: [
-                  const Text("인플루언서님 안녕하세요!", style: TextStyle(fontSize: 30),),
+                  const Text("인플루언서님 안녕하세요!", style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
                   Container(
                     height: 3,
                     width: double.infinity,

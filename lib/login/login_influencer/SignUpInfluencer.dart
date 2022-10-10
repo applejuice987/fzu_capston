@@ -1,17 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fzu/MySharedPreferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fzu/login/MainLoginScreen.dart';
 import 'package:fzu/login/SignUpDatabaseHelper.dart';
-import 'package:fzu/main.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../MainLoginScreen.dart';
 
 //TODO!! 여기서 인플루언서 회원가입을 진행.
 
@@ -27,12 +21,12 @@ class SignUpInfluencer extends StatefulWidget {
 class _SignUpInfluencerState extends State<SignUpInfluencer> {
 
 
-  String loginValue = 'Influencer';
+  String loginValue = '인플루언서';
   final idController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordCheckController = TextEditingController();
   final platformNameController = TextEditingController();
-  bool _passwordVisible = false;
+  bool _passwordVisible = true;
 
   void signUpEmailAccount(dynamic image) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -57,7 +51,7 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
           SignUpDatabaseHelper().backUpInfluencerData(
               email, password,
               platformName, img64);
-          //Navigator.push(context, MaterialPageRoute(builder: (context) => const MyApp()));
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("이미 사용중인 이메일입니다.")));
@@ -105,7 +99,7 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
   @override
   void initState() {
     super.initState();
-    _passwordVisible = false;
+    _passwordVisible = true;
   }
 
   renderTextFormField({
@@ -141,7 +135,7 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
             hintStyle: TextStyle(fontSize: 13),
             suffixIcon: value == 'password' || value == 'passwordCheck'? IconButton(
               icon: Icon(
-                _passwordVisible? Icons.visibility_off : Icons.visibility, color: Colors.black,
+                _passwordVisible? Icons.visibility : Icons.visibility_off, color: Colors.black,
               ),
               onPressed: () {
                 setState(() {
@@ -208,7 +202,7 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
             children: [
               Column(
                 children: [
-                  Text("$loginValue 회원가입", textAlign: TextAlign.left, style: TextStyle(fontSize: 30),),
+                  Text("$loginValue 회원가입", textAlign: TextAlign.left, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
                   Container(
                     height: 3,
                     width: double.infinity,

@@ -46,7 +46,7 @@ class _LoginSponsorState extends State<LoginSponsor> {
             children: <Widget>[
               Column(
                 children: [
-                  const Text("광고주님 안녕하세요!", style: TextStyle(fontSize: 30),),
+                  const Text("광고주님 안녕하세요!", style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
                   Container(
                     height: 3,
                     width: double.infinity,
