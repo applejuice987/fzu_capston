@@ -113,21 +113,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("FZU"),
+        surfaceTintColor: Color(0xffc9b9ec),
+        foregroundColor: Colors.black,
+        backgroundColor: Color(0xffc9b9ec),
+        title: Text("FZU",style: TextStyle(fontWeight: FontWeight.bold),),
       ),
-      body: isInflu ? influ_bottom[pageIndex] : spon_bottom[pageIndex],
+      body: Container(
+        color: Color(0xffc9b9ec),
+          child: isInflu ? influ_bottom[pageIndex] : spon_bottom[pageIndex]),
       //isInflu가 true이면 왼쪽, 아니면 오른쪽
 
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.cyanAccent,
-        currentIndex: pageIndex,
+        backgroundColor: const Color(0xffc9b9ec),
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey
+        ,currentIndex: pageIndex,
         onTap: (value) {
           setState(() {
             pageIndex = value;
           });
         },
         type: BottomNavigationBarType.fixed,
-        items: const [BottomNavigationBarItem(icon: Icon(Icons.add),label: "First"),
+        items: const[
+          BottomNavigationBarItem(icon: Icon(Icons.add),label: "First"),
           BottomNavigationBarItem(icon: Icon(Icons.delete),label: "Second"),
           BottomNavigationBarItem(icon: Icon(Icons.android),label: "Third"),
           BottomNavigationBarItem(icon: Icon(Icons.apple),label: "Fourth"),
