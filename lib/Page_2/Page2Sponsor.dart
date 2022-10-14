@@ -26,7 +26,7 @@ var db = FirebaseFirestore.instance;
  }
 
 class _Page2SponsorState extends State<Page2Sponsor> {
-  //late final DocumentSnapshot documentData;
+  late final DocumentSnapshot documentData;
 
   //_Page2SponsorState(this.documentData);
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -36,8 +36,8 @@ class _Page2SponsorState extends State<Page2Sponsor> {
   late String docId = auth.currentUser!.email.toString();
   //CollectionReference sponsor = FirebaseFirestore.instance.collection('sponsor');
 
-  //Stream collectionStream = FirebaseFirestore.instance.collection('sponsor').snapshots();
-  //Stream documentStream = FirebaseFirestore.instance.collection('sponsor').doc('docId').snapshots();
+  Stream collectionStream = FirebaseFirestore.instance.collection('sponsor').snapshots();
+  Stream documentStream = FirebaseFirestore.instance.collection('sponsor').doc('docId').collection('recruit').snapshots();
   //var documentSnapshot = sponsor.doc('docId').get();
 
   //getData() async {
@@ -99,7 +99,7 @@ class _Page2SponsorState extends State<Page2Sponsor> {
 
             SliverList(
               delegate: SliverChildBuilderDelegate(
-              (context, index) => ListTile(title:Text("제목"),
+              (context, index) => ListTile(title:Text(documentStream.toString()),
                       onTap: () {
                         Navigator.push(
                             context,
