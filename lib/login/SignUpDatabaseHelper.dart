@@ -6,6 +6,7 @@ import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 import '../main.dart';
 
+
 class SignUpDatabaseHelper {
   String _currentUser = '';
   var db = FirebaseFirestore.instance;
@@ -17,22 +18,24 @@ class SignUpDatabaseHelper {
 
   }
 
-  Future<void> backUpInfluencerData(String email,String pw, String platform) async{ //데이터 백업 함수
+  Future<void> backUpInfluencerData(String email,String pw, String platform, String img) async{ //데이터 백업 함수
       final backUpData = <String, dynamic>{ //SQLite 데이터 매핑
         'email': email,
         'pw': pw,
         'platform': platform,
+        'profile' : img,
       };
-      db.collection("user_influencer").doc(email).set(backUpData);
+      db.collection("userInfoTable").doc("dummy").collection("user_influencer").doc(email).set(backUpData);
   }
 
-  Future<void> backUpSponsorData(String email,String pw, String company ) async{ //데이터 백업 함수
+  Future<void> backUpSponsorData(String email,String pw, String company, String image ) async{ //데이터 백업 함수
     final backUpData = <String, dynamic>{ //SQLite 데이터 매핑
       'email': email,
       'pw': pw,
       'company': company,
+      'profile' : image,
     };
-    db.collection("user_sponsor").doc(email).set(backUpData);
+    db.collection("userInfoTable").doc("dummy").collection("user_sponsor").doc(email).set(backUpData);
   }
 
   Future<void> loginFunc(String email, String pw, BuildContext context, bool isInflu) async{
@@ -40,6 +43,7 @@ class SignUpDatabaseHelper {
       final newUser = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
           email: email, password: pw);
+      //TODO!! 나중에 각주 삭제 1
       // if(newUser.user?.emailVerified == true){
         if (newUser.user != null) {
           MySharedPreferences.instance.setBooleanValue("loggedin", true);
@@ -51,6 +55,7 @@ class SignUpDatabaseHelper {
                   builder: (context) => const MyApp()),
                   (Route<dynamic> route) => false);
         }
+        //TODO!! 나중에 각주 삭제 2
       // }
       // else {
       //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("이메일 인증을 진행해주세요!")));

@@ -24,98 +24,150 @@ class _LoginSponsorState extends State<LoginSponsor> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   var db = FirebaseFirestore.instance;
   var q = "user_sponsor";
+  bool _passwordObscure = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _passwordObscure = true;
+  }
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          margin: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+        color: Color(0xffc9b9ec),
           alignment: Alignment.center,
           height: double.infinity,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              const Text(
-                "광고주님 안녕하세요!",
-                style: TextStyle(fontSize: 25),
-              ),
               Column(
-                children: <Widget>[
-                  TextField(
-                    controller: sp_email_controller,
-                    decoration: const InputDecoration(
-                      labelText: "이메일",
-                    ),
-                  ),
-                  TextField(
-                    controller: sp_pw_controller,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: "비밀번호",
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
+                children: [
+                  const Text("광고주님 안녕하세요!", style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
+                  Container(
+                    height: 3,
                     width: double.infinity,
-                    height: 40,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          SignUpDatabaseHelper().loginFunc(sp_email_controller.text, sp_pw_controller.text, context, false);
-                          },
-                        child: const Text("로그인")),
-                  ),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(
-                          height: 30,
-                          child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const SignUpSponsor()));
-                              },
-                              child: const Text("회원가입")),
-                        ),
-                        SizedBox(
-                          height: 30,
-                          child: TextButton(
-                              onPressed: () {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const MyApp()),
-                                    (Route<dynamic> route) => false);
-                              },
-                              child: const Text("메인으로 넘어가기")),
-                        ),
-                        SizedBox(
-                          height: 30,
-                          child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const FindAccount()));
-                              },
-                              child: const Text("비밀번호를 잊으셨나요?")),
-                        ),
-                      ],
-                    ),
+                    color: Colors.white,
+                    margin: const EdgeInsets.fromLTRB(50, 10, 50, 0),
                   ),
                 ],
+              ),
+              Container(
+                margin : const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                child: Column(
+                  children: <Widget>[
+                    TextField(
+                      controller: sp_email_controller,
+                      decoration: buildInputDecoration("이메일", true)
+                    ),
+                    TextField(
+                      controller: sp_pw_controller,
+                      obscureText: _passwordObscure,
+                      decoration: buildInputDecoration("비밀번호", false)
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 40,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            SignUpDatabaseHelper().loginFunc(sp_email_controller.text, sp_pw_controller.text, context, false);
+                            },
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.white,
+                              elevation: 15,
+                              shadowColor: Colors.black,
+                              side: const BorderSide(color: Colors.black, width : 1.5),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))
+                          ),
+                          child: const Text("로그인", style: TextStyle(color: Colors.black),)),
+                    ),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          SizedBox(
+                            height: 30,
+                            child: TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SignUpSponsor()));
+                                },
+                                child: const Text("회원가입", style: TextStyle(color: Colors.black),)),
+                          ),
+                          SizedBox(
+                            height: 30,
+                            child: TextButton(
+                                onPressed: () {
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const MyApp()),
+                                      (Route<dynamic> route) => false);
+                                },
+                                child: const Text("메인으로 넘어가기", style: TextStyle(color: Colors.black),)),
+                          ),
+                          SizedBox(
+                            height: 30,
+                            child: TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const FindAccount()));
+                                },
+                                child: const Text("비밀번호를 잊으셨나요?", style: TextStyle(color: Colors.black),)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           )),
     );
   }
+  InputDecoration buildInputDecoration(String format, bool isTrue) {
+    if (isTrue == false) {
+      return InputDecoration(
+          labelText: format,
+          focusColor: Colors.black,
+          enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)),
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)),
+          labelStyle: TextStyle(color: Colors.black),
+          suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  _passwordObscure = !_passwordObscure;
+                });
+              },
+              icon: Icon(
+                _passwordObscure ? Icons.visibility : Icons.visibility_off,
+                color: Colors.black,))
+      );
+    } else {
+      return InputDecoration(
+          labelText: format,
+          focusColor: Colors.black,
+          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+          labelStyle: TextStyle(color: Colors.black)
+      );
+    }
+  }
+
 }

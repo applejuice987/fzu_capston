@@ -13,7 +13,6 @@ import 'package:fzu/Page_3/Page3.dart';
 import 'package:fzu/Page_4/Page4.dart';
 import 'package:fzu/firebase_options.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
-
 import 'Page_2/Page2Sponsor2.dart';
 
 
@@ -28,6 +27,7 @@ void main() async {
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -51,6 +51,7 @@ class _MyAppState extends State<MyApp> {
     }
 
     return MaterialApp(
+      builder: (context,child) => MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: child!),
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -80,9 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var asdf;
 
   bool isInflu = false;
-  //bool isInflu = false;
   var useremail = FirebaseAuth.instance.currentUser?.email.toString();
-
 
   void initState() {
     super.initState();
@@ -95,8 +94,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget build(BuildContext context) {
 
-    var useremail = FirebaseAuth.instance.currentUser?.email.toString();
-    //bool isInflu = false;
     //인플루언서 로그인시 실행되야하는 바텀 아이템
     List<Widget> influ_bottom = <Widget>[
       Page1Influencer(),
@@ -116,21 +113,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("FZU"),
+        surfaceTintColor: Color(0xffc9b9ec),
+        foregroundColor: Colors.black,
+        backgroundColor: Color(0xffc9b9ec),
+        title: Text("FZU",style: TextStyle(fontWeight: FontWeight.bold),),
       ),
-      body: isInflu ? influ_bottom[pageIndex] : spon_bottom[pageIndex],
+      body: Container(
+        color: Color(0xffc9b9ec),
+          child: isInflu ? influ_bottom[pageIndex] : spon_bottom[pageIndex]),
       //isInflu가 true이면 왼쪽, 아니면 오른쪽
 
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.cyanAccent,
-        currentIndex: pageIndex,
+        backgroundColor: const Color(0xffc9b9ec),
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey
+        ,currentIndex: pageIndex,
         onTap: (value) {
           setState(() {
             pageIndex = value;
           });
         },
         type: BottomNavigationBarType.fixed,
-        items: const [BottomNavigationBarItem(icon: Icon(Icons.add),label: "First"),
+        items: const[
+          BottomNavigationBarItem(icon: Icon(Icons.add),label: "First"),
           BottomNavigationBarItem(icon: Icon(Icons.delete),label: "Second"),
           BottomNavigationBarItem(icon: Icon(Icons.android),label: "Third"),
           BottomNavigationBarItem(icon: Icon(Icons.apple),label: "Fourth"),

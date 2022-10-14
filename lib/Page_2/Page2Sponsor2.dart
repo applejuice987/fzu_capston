@@ -128,7 +128,6 @@ class _Page2Sponsor2State extends State<Page2Sponsor2> {
 class CategoryBreadcrumbs extends SliverPersistentHeaderDelegate {
   const CategoryBreadcrumbs();
 
-
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
