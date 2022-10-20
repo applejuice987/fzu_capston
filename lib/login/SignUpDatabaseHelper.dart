@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,14 +20,22 @@ class SignUpDatabaseHelper {
 
   }
 
-  Future<void> backUpInfluencerData(String email,String pw, String platform, String img) async{ //데이터 백업 함수
+  Future<void> backUpInfluencerData(String email,String pw, String platform, String img64) async{ //데이터 백업 함수
       final backUpData = <String, dynamic>{ //SQLite 데이터 매핑
         'email': email,
         'pw': pw,
         'platform': platform,
-        'profile' : img,
+        'profile' : img64,
+        'PRImage' : '',
+        "PRText" : '',
+        'displayName' : '',
+        'category' : [],
+        'chatList' : [],
+        'likeAdList' : [],
+        'likeSpoList' : [],
+
       };
-      db.collection("userInfoTable").doc("dummy").collection("user_influencer").doc(email).set(backUpData);
+      db.collection("userInfoTable").doc("user").collection("user_influencer").doc(email).set(backUpData);
   }
 
   Future<void> backUpSponsorData(String email,String pw, String company, String image ) async{ //데이터 백업 함수

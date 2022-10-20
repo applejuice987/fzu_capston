@@ -34,6 +34,8 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
     if (image != null) {
       var bytes = File(image!.path).readAsBytesSync();
       img64 = base64Encode(bytes);
+    } else {
+      img64 = '';
     }
     try {
           UserCredential result = (
@@ -400,10 +402,8 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
 
   takePhoto(ImageSource source) async {
     final pickedFile = await _picker.pickImage(source: source, imageQuality: 30);
-    print('SEX'+ pickedFile.toString());
     setState(() {
       _imageFile = pickedFile;
-      print('SEX'+_imageFile.toString());
       _showImage = true;
     });
   }

@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 import 'package:fzu/login/SignUpDatabaseHelper.dart';
+import 'package:fzu/main.dart';
 import 'package:image_picker/image_picker.dart';
 
 //TODO!! 여기서 광고주의 회원가입을 진행.
@@ -30,6 +32,8 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
     if (image != null) {
       var bytes = File(image!.path).readAsBytesSync();
       img64 = base64Encode(bytes);
+    } else {
+      img64 = '';
     }
     try {
       UserCredential result = (
@@ -47,6 +51,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
             SignUpDatabaseHelper().backUpSponsorData(
                 email, password,
                 companyName, img64);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MyApp()),(Route<dynamic> route) => false);
 
   } on FirebaseAuthException catch (e) {
     if (e.code == 'email-already-in-use') {
@@ -64,6 +69,16 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
     }
     }
 
+  }
+
+  void flutterToast(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER);
   }
 
   bool validatePasswordStructure(String value) { //비밀번호 조건 확인 함수
@@ -97,7 +112,6 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
   final ImagePicker _picker = ImagePicker();
   dynamic _imageFile;
   bool _showImage = false;
-
 
   @override
   void initState() {

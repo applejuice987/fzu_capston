@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class _Page4State extends State<Page4> {
           Text(auth.currentUser!.email.toString()),
           SizedBox(
             child: ElevatedButton(onPressed: () {
-              signoutmethod(context);
+              signOutMethod(context);
             } , child: const Text("로그아웃")),
           ),
         ],
@@ -42,7 +43,7 @@ class _Page4State extends State<Page4> {
     );
   }
 
-  void signoutmethod(BuildContext context) async {
+  void signOutMethod(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     MySharedPreferences.instance.setBooleanValue("loggedin", false);
     Navigator.push(context, MaterialPageRoute(builder: (context) =>
