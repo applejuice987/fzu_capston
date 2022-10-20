@@ -36,56 +36,50 @@ class _Page1SponsorState extends State<Page1Sponsor> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-          resizeToAvoidBottomInset : false,
-      backgroundColor: Color(0xffC9B9EC),
-      body:
-      SingleChildScrollView(
-
-        child: Column(
-          children: <Widget>[
-Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children:[
-      Expanded(child:
-            RadioListTile(
-                contentPadding: EdgeInsets.all(0),
-                title: Text('자동차'),
-                value: category.Car,
-                groupValue: _Cate,
-                onChanged: (value){
-              setState(() {
-                if (value !=null) _Cate = value as category;
-              });
-            }),
-      ),
-
-      Expanded(child:
-      RadioListTile(
-                contentPadding: EdgeInsets.all(0),
-                title: Text('핸드폰'),
-                value: category.Phone,
-                groupValue: _Cate,
-                onChanged: (value){
-                  setState(() {
-                    if (value !=null) _Cate = value as category;
-                  });
-                }),
-      ),
-
-      Expanded(child:
-      RadioListTile(
-                contentPadding: EdgeInsets.all(0),
-                title: Text('옷'),
-                value: category.Clothing,
-                groupValue: _Cate,
-                onChanged: (value){
-                  setState(() {
-                    if (value !=null) _Cate = value as category;
-                  });
-                }),
-      ),
-    ]),
+      home: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Color(0xffC9B9EC),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Expanded(
+                  child: RadioListTile(
+                      contentPadding: EdgeInsets.all(0),
+                      title: Text('자동차'),
+                      value: category.Car,
+                      groupValue: _Cate,
+                      onChanged: (value) {
+                        setState(() {
+                          if (value != null) _Cate = value as category;
+                        });
+                      }),
+                ),
+                Expanded(
+                  child: RadioListTile(
+                      contentPadding: EdgeInsets.all(0),
+                      title: Text('핸드폰'),
+                      value: category.Phone,
+                      groupValue: _Cate,
+                      onChanged: (value) {
+                        setState(() {
+                          if (value != null) _Cate = value as category;
+                        });
+                      }),
+                ),
+                Expanded(
+                  child: RadioListTile(
+                      contentPadding: EdgeInsets.all(0),
+                      title: Text('옷'),
+                      value: category.Clothing,
+                      groupValue: _Cate,
+                      onChanged: (value) {
+                        setState(() {
+                          if (value != null) _Cate = value as category;
+                        });
+                      }),
+                ),
+              ]),
 
 /*
       Expanded(child:
@@ -101,120 +95,107 @@ Row(
                 }),
       ) */
 
+              Container(
+                margin: EdgeInsets.only(top: 35),
+                alignment: AlignmentDirectional.center,
+                child: Text('광고모델 모집하기',
+                    style: TextStyle(
+                        color: Colors.white,
+                        letterSpacing: 2.0,
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.bold)),
+              ),
+              GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                },
+                child: StreamBuilder<dynamic>(
+                    stream: FirebaseFirestore.instance
+                        .collection('user_influencer')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text('Loading');
+                      }
 
-
-
-
-
-
-
-            Container(
-              margin: EdgeInsets.only(top: 35, bottom: 35),
-              alignment: AlignmentDirectional.center,
-              child: Text('광고모델 모집하기',
-                  style: TextStyle(
-                      color: Colors.white,
-                      letterSpacing: 2.0,
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.bold)),
-            ),
-
-
-            GestureDetector(
-              onTap: () {
-                FocusScope.of(context).unfocus();
-              },
-              child: StreamBuilder<dynamic>(
-                  stream: FirebaseFirestore.instance
-                      .collection('user_influencer')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Text('Loading');
-                    }
-
-                    final docs = snapshot.data!.docs;
-                    return SizedBox(
-                      height: 600,
-                      child: PageView.builder(
-                          controller: _controller,
-                          scrollDirection: Axis.horizontal,
-                          pageSnapping: true,
-                          physics: ScrollPhysics(),
-                          itemCount: docs.length,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                      padding: EdgeInsets.all(50.0),
+                      final docs = snapshot.data!.docs;
+                      return SizedBox(
+                        height: 600,
+                        child: PageView.builder(
+                            controller: _controller,
+                            scrollDirection: Axis.horizontal,
+                            pageSnapping: true,
+                            physics: ScrollPhysics(),
+                            itemCount: docs.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                        padding: EdgeInsets.all(20.0),
+                                        child: Container(
+                                            child: Image.memory(Base64Decoder()
+                                                .convert(
+                                                    docs[index]['profile']))
+                                            //Base64Decoder().convert(docs['profile'])
+                                            )),
+                                    Flexible(
+                                      flex: 1,
                                       child: Container(
-                                          child: Image.memory(Base64Decoder()
-                                              .convert(docs[index]['profile']))
-                                          //Base64Decoder().convert(docs['profile'])
-                                          )),
-                                  Flexible(
-                                    flex: 1,
-                                    child: Container(
-                                      padding: EdgeInsets.all(5.0),
-                                      child: Text(
-                                        docs[index]['email'],
-                                        style: TextStyle(fontSize: 20.0),
+                                        padding: EdgeInsets.all(5.0),
+                                        child: Text(
+                                          docs[index]['email'],
+                                          style: TextStyle(fontSize: 20.0),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Flexible(
-                                    flex: 1,
-                                    child: Container(
-                                        padding: EdgeInsets.all(5.0),
-                                        child: Text(
-                                          docs[index]['platform'],
-                                          style: TextStyle(fontSize: 15.0),
-                                        )),
-                                  ),
-                                  Flexible(
-                                    flex: 1,
-                                    child: Container(
-                                        padding: EdgeInsets.all(5.0),
-                                        child: Text(
-                                          docs[index]['Subscribers'],
-                                          style: TextStyle(fontSize: 15.0),
-                                        )),
-                                  ),
-                                  Flexible(
-                                    flex: 1,
-                                    child: Container(
-                                        padding: EdgeInsets.all(5.0),
-                                        child: Text(
-                                          docs[index]['Category'],
-                                          style: TextStyle(fontSize: 15.0),
-                                        )),
-                                  ),
-                                  ElevatedButton(
-                                      onPressed: () {}, child: Text('자세히보기'))
-                                ],
-                              ),
-                            );
-                          }),
-                    );
-                  }),
-            )
-          ],
+                                    Flexible(
+                                      flex: 1,
+                                      child: Container(
+                                          padding: EdgeInsets.all(5.0),
+                                          child: Text(
+                                            docs[index]['platform'],
+                                            style: TextStyle(fontSize: 15.0),
+                                          )),
+                                    ),
+                                    Flexible(
+                                      flex: 1,
+                                      child: Container(
+                                          padding: EdgeInsets.all(5.0),
+                                          child: Text(
+                                            docs[index]['Subscribers'],
+                                            style: TextStyle(fontSize: 15.0),
+                                          )),
+                                    ),
+                                    Flexible(
+                                      flex: 1,
+                                      child: Container(
+                                          padding: EdgeInsets.all(5.0),
+                                          child: Text(
+                                            docs[index]['Category'],
+                                            style: TextStyle(fontSize: 15.0),
+                                          )),
+                                    ),
+                                    ElevatedButton(
+                                        onPressed: () {}, child: Text('자세히보기'))
+                                  ],
+                                ),
+                              );
+                            }),
+                      );
+                    }),
+              )
+            ],
+          ),
         ),
+        bottomNavigationBar: SafeArea(
+            child: ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.subtitle1),
+          child: Text('매칭하기'),
+        )),
       ),
-          bottomNavigationBar: SafeArea(
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                    textStyle: Theme.of(context).textTheme.subtitle1),
-                child: Text('매칭하기'),
-              )),
-
-
-
-        ),
-
-
     );
   }
 }

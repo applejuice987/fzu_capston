@@ -45,7 +45,6 @@ class _Page3State extends State<Page3> {
 
 
         body: StreamBuilder<dynamic>(
-
         stream: chat_list.where(my, isEqualTo: FirebaseAuth.instance.currentUser?.email.toString()).snapshots(),
         builder:(context,snapshot) {
           print(my);
@@ -59,29 +58,30 @@ class _Page3State extends State<Page3> {
           return ListView.builder(
 
             //scrollDirection: Axis.vertical,
-              padding: const EdgeInsets.all(5),
+              //padding: const EdgeInsets.fromLTRB(5,5,5,5),
               itemCount: snapshot.data.docs.length,
 
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   title: Container(
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       color: Color(0xFFc9b9ec),
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
                     child: Row(children: [
                       Container(
-                          height: 100,
+                          height: 70,
                           margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
                           child: Placeholder(
-                              fallbackHeight: 100, fallbackWidth: 100)),
-                      Column(children: [
-                        Container(child: Text(snapshot.data!.docs[index][you])),
-                        Container(child: Text(snapshot.data!.docs[index]['lastchat'])),
+                              fallbackHeight: 60, fallbackWidth: 80)),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center
+                          ,children: [
+                        Text(snapshot.data!.docs[index][you]),
+                        SizedBox(height: 10,),
+                        Text(snapshot.data!.docs[index]['lastchat']),
 
                       ]),
                     ]),

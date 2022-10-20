@@ -32,8 +32,6 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
     if (image != null) {
       var bytes = File(image!.path).readAsBytesSync();
       img64 = base64Encode(bytes);
-    } else {
-      img64 = '';
     }
     try {
       UserCredential result = (
@@ -50,8 +48,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
       }
             SignUpDatabaseHelper().backUpSponsorData(
                 email, password,
-                companyName, img64);
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MyApp()),(Route<dynamic> route) => false);
+                companyName, img64, 'spo');
 
   } on FirebaseAuthException catch (e) {
     if (e.code == 'email-already-in-use') {
@@ -69,16 +66,6 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
     }
     }
 
-  }
-
-  void flutterToast(String message) {
-    Fluttertoast.showToast(
-        msg: message,
-        backgroundColor: Colors.black,
-        textColor: Colors.white,
-        fontSize: 16.0,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER);
   }
 
   bool validatePasswordStructure(String value) { //비밀번호 조건 확인 함수
@@ -112,6 +99,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
   final ImagePicker _picker = ImagePicker();
   dynamic _imageFile;
   bool _showImage = false;
+
 
   @override
   void initState() {
@@ -219,163 +207,176 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Container(
-        color: const Color(0xffc9b9ec),
-        width: size.width,
-        alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Column(
-                children: [
-                  Text("$loginValue 회원가입", textAlign: TextAlign.left, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
-                  Container(
-                    height: 3,
-                    width: double.infinity,
-                    color: Colors.white,
-                    margin: const EdgeInsets.fromLTRB(50, 10, 50, 0),
-                  ),
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Form(key: formKey,
-                      child: Padding(
-                        padding: EdgeInsets.all(30.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [Container(
-                            width: 200, height: 200,
-                            child: ElevatedButton(
-                              onPressed: (){
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: ((builder) => bottomSheet()));
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  // primary: Colors.black,
-                                  // onSurface: Colors.grey,
-                                  // backgroundColor: Colors.grey,
-                                  side: BorderSide(width: 0)
-                              ),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Visibility(
-                                    visible: _showImage,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: const [
-                                        CircularProgressIndicator(),
+    return GestureDetector(
+      onTap: (){
+        FocusNode currentFocus = FocusScope.of(context);
+
+        if(!currentFocus.hasPrimaryFocus){
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child:
+              Container(
+              color: const Color(0xffc9b9ec),
+              width: size.width,
+              alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        SizedBox(height: 30,),
+                        Text("$loginValue 회원가입", textAlign: TextAlign.left, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                        Container(
+                          height: 3,
+                          width: double.infinity,
+                          color: Colors.white,
+                          margin: const EdgeInsets.fromLTRB(50, 10, 50, 0),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Form(key: formKey,
+                            child: Padding(
+                              padding: EdgeInsets.all(30.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [Container(
+                                  width: 200, height: 200,
+                                  child: ElevatedButton(
+                                    onPressed: (){
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: ((builder) => bottomSheet()));
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Colors.black,
+                                        onSurface: Colors.grey,
+                                        backgroundColor: Colors.grey,
+                                        side: BorderSide(width: 0)
+                                    ),
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Visibility(
+                                          visible: _showImage,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: const [
+                                              CircularProgressIndicator(),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                            visible: true,
+                                            child: _imageFile == null
+                                                ? Text('+')
+                                                : Image(image: FileImage(File(_imageFile.path)),)
+                                        )
                                       ],
                                     ),
                                   ),
-                                  Visibility(
-                                      visible: true,
-                                      child: _imageFile == null
-                                          ? Text('+')
-                                          : Image(image: FileImage(File(_imageFile.path)),)
-                                  )
+                                ),
+                                  SizedBox(height: 20,),
+                                  renderTextFormField(
+                                      label: 'Email',
+                                      onSaved: (val) {
+                                        setState(() {
+                                          email = val as String;
+                                        });
+                                      },
+                                      validator: (val) {
+                                        if (val.length < 1) {
+                                          return '이메일 주소를 입력해주세요.';
+                                        }
+                                        else if (!RegExp(emailPattern).hasMatch(val)) {
+                                          return '이메일 형식이 잘못되었습니다.';
+                                        }
+                                        else if (_reduplicatedEmail) {
+                                          return '이미 사용중인 이메일입니다.';
+                                        }
+                                        return null;
+                                      },
+                                      value: 'email',
+                                      hint: emailHint
+                                  ),
+                                  SizedBox(height: 20,),
+                                  renderTextFormField(
+                                      label: 'Password',
+                                      onSaved: (val) {
+                                        setState(() {
+                                          password = val as String;
+                                        });
+                                      },
+                                      validator: (val) {
+                                        if (val.length < 1) {
+                                          return '비밀번호를 입력해주세요.';
+                                        }
+                                        else if(val.length < 8) {
+                                          return null;/*'비밀번호는 8자 이상이어야 합니다.';*/
+                                          //TODO 개발용으로 조건 무조건 통과하게 만듦, 추후에 null 지우고 주석부분 살리면 됨
+                                        }
+                                        else if (!RegExp(passwordPattern).hasMatch(val)) {
+                                          return null;/*'비밀번호는 영문, 숫자, 특수문자를 포함하여야 합니다.';*/
+                                          //TODO 개발용으로 조건 무조건 통과하게 만듦, 추후에 null 지우고 주석부분 살리면 됨
+                                        }
+                                        return null;
+                                      },
+                                      value: 'password',
+                                      hint: passwordHint
+                                  ),
+                                  SizedBox(height: 20,),
+                                  renderTextFormField(
+                                      label: 'Password 확인',
+                                      onSaved: (val) {
+                                        setState(() {
+                                          passwordCheck = val;
+                                        });
+                                      },
+                                      validator: (val) {
+                                        if (val.length < 1) {
+                                          return '비밀번호를 확인해주세요.';
+                                        }
+                                        else if(val != password) {
+                                          return '동일한 비밀번호를 입력해주세요.';
+                                        }
+                                        return null;
+                                      },
+                                      value: 'passwordCheck',
+                                      hint: passwordCheckHint
+                                  ),
+                                  SizedBox(height: 20,),
+                                  renderTextFormField(
+                                      label: '업체명',
+                                      onSaved: (val) {
+                                        setState(() {
+                                          companyName = val;
+                                        });
+                                      },
+                                      validator: (val) {
+                                        if (val.length < 1) {
+                                          return '업체명을 입력해주세요.';
+                                        }
+                                        return null;
+                                      },
+                                      value: 'platformName',
+                                      hint: companyHint
+                                  ),
+                                  renderButton(_imageFile),
                                 ],
                               ),
-                            ),
-                          ),
-                            SizedBox(height: 20,),
-                            renderTextFormField(
-                                label: 'Email',
-                                onSaved: (val) {
-                                  setState(() {
-                                    email = val as String;
-                                  });
-                                },
-                                validator: (val) {
-                                  if (val.length < 1) {
-                                    return '이메일 주소를 입력해주세요.';
-                                  }
-                                  else if (!RegExp(emailPattern).hasMatch(val)) {
-                                    return '이메일 형식이 잘못되었습니다.';
-                                  }
-                                  else if (_reduplicatedEmail) {
-                                    return '이미 사용중인 이메일입니다.';
-                                  }
-                                  return null;
-                                },
-                                value: 'email',
-                                hint: emailHint
-                            ),
-                            SizedBox(height: 20,),
-                            renderTextFormField(
-                                label: 'Password',
-                                onSaved: (val) {
-                                  setState(() {
-                                    password = val as String;
-                                  });
-                                },
-                                validator: (val) {
-                                  if (val.length < 1) {
-                                    return '비밀번호를 입력해주세요.';
-                                  }
-                                  else if(val.length < 8) {
-                                    return null;/*'비밀번호는 8자 이상이어야 합니다.';*/
-                                    //TODO 개발용으로 조건 무조건 통과하게 만듦, 추후에 null 지우고 주석부분 살리면 됨
-                                  }
-                                  else if (!RegExp(passwordPattern).hasMatch(val)) {
-                                    return null;/*'비밀번호는 영문, 숫자, 특수문자를 포함하여야 합니다.';*/
-                                    //TODO 개발용으로 조건 무조건 통과하게 만듦, 추후에 null 지우고 주석부분 살리면 됨
-                                  }
-                                  return null;
-                                },
-                                value: 'password',
-                                hint: passwordHint
-                            ),
-                            SizedBox(height: 20,),
-                            renderTextFormField(
-                                label: 'Password 확인',
-                                onSaved: (val) {
-                                  setState(() {
-                                    passwordCheck = val;
-                                  });
-                                },
-                                validator: (val) {
-                                  if (val.length < 1) {
-                                    return '비밀번호를 확인해주세요.';
-                                  }
-                                  else if(val != password) {
-                                    return '동일한 비밀번호를 입력해주세요.';
-                                  }
-                                  return null;
-                                },
-                                value: 'passwordCheck',
-                                hint: passwordCheckHint
-                            ),
-                            SizedBox(height: 20,),
-                            renderTextFormField(
-                                label: '업체명',
-                                onSaved: (val) {
-                                  setState(() {
-                                    companyName = val;
-                                  });
-                                },
-                                validator: (val) {
-                                  if (val.length < 1) {
-                                    return '업체명을 입력해주세요.';
-                                  }
-                                  return null;
-                                },
-                                value: 'platformName',
-                                hint: companyHint
-                            ),
-                            renderButton(_imageFile),
-                          ],
-                        ),
-                      )),
-                ],
-              )
-            ],
-          )),
+                            )),
+                      ],
+                    )
+                  ],
+                )),
+          ),
+      ),
     );
   }
 

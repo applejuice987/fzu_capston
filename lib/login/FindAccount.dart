@@ -13,30 +13,62 @@ class FindAccount extends StatefulWidget {
   State<FindAccount> createState() => _FindAccountState();
 }
 
-
 class _FindAccountState extends State<FindAccount> {
-
   final find_pw_controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text("아래를 통하여 비밀번호를 재설정하세요!"),
-          SizedBox(height: 50,),
-          TextField(
-            controller: find_pw_controller,
-            decoration: const InputDecoration(
-              labelText: "이메일",
-              hintText: "이메일을 입력해주세요"
+      body: Container(
+        color: Color(0xffc9b9ec),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              children: [
+                const Text(
+                  "아래를 통하여\n비밀번호를 재설정하세요!",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                ),
+                Container(
+                  height: 3,
+                  width: double.infinity,
+                  color: Colors.white,
+                  margin: const EdgeInsets.fromLTRB(50, 10, 50, 0),
+                ),
+              ],
             ),
-          ),
-          ElevatedButton(onPressed: (){
-            SignUpDatabaseHelper().resetPassword(find_pw_controller.text, context);
-          }, child: Text("재설정하기"))
-        ],
+            SizedBox(
+              height: 50,
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(50, 0, 50, 0),
+              child: TextField(
+                controller: find_pw_controller,
+                decoration: const InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
+                    labelStyle: TextStyle(color: Colors.black),
+                    labelText: "이메일",
+                    hintText: "이메일을 입력해주세요"),
+              ),
+            ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                    onSurface: Colors.white,
+                    backgroundColor: Colors.white,
+                    side: BorderSide(width: 0)
+                ),
+                onPressed: () {
+                  SignUpDatabaseHelper()
+                      .resetPassword(find_pw_controller.text, context);
+                },
+                child: const Text("재설정하기",style: TextStyle(color: Colors.black),))
+          ],
+        ),
       ),
     );
   }
