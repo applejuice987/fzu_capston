@@ -51,6 +51,25 @@ class _Page2SponsorState extends State<Page2Sponsor> {
     //return result;
  // }
 
+
+  String _currentUser = '';
+  List<String> _titleList = [];
+
+  void initState() {
+    super.initState();
+    var db = FirebaseFirestore.instance;
+
+    _currentUser = FirebaseAuth.instance.currentUser!.email.toString();
+    db.collection("sponsor").doc('dhgns3926@daum.net').collection('recruit').get().then((value) {
+      for (var doc in value.docs) {
+        String title = doc["title"];
+        String content = doc["content"];
+        _titleList.add(doc['title'].toString());
+      }
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -99,7 +118,7 @@ class _Page2SponsorState extends State<Page2Sponsor> {
 
             SliverList(
               delegate: SliverChildBuilderDelegate(
-              (context, index) => ListTile(title:Text(documentStream.toString()),
+              (context, index) => ListTile(title:Text(_titleList[index]),
                       onTap: () {
                         Navigator.push(
                             context,
