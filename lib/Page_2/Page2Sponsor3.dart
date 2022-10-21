@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -22,11 +20,11 @@ class sponsorup {
   sponsorup({
     required this.title,
     required this.content,
-});
+  });
 
   sponsorup.fromJson(Map<String, dynamic> json):
-      title= json['title'],
-      content = json['content'];
+        title= json['title'],
+        content = json['content'];
 
   Map<String, dynamic> toJson() => {
     'title': title,
@@ -100,27 +98,28 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
           ),
         ),
         bottomNavigationBar: SafeArea(
-        child: Padding(
-         padding: EdgeInsets.symmetric(horizontal: 20),
-        child: SizedBox(
-         //height: submitButtonHeigh,
-        child: ElevatedButton(
-          onPressed: (){
-               sponsorup sponsorModel1 = sponsorup(title: titlebox, content: contentbox);
-               sponsor.doc(docId).collection("recruit").doc(titlebox).set(sponsorModel1.toJson());
-               Navigator.pop(context);
-               //sponsor.add({'title': '제목1', 'content': '내용1'});
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: SizedBox(
+              //height: submitButtonHeigh,
+              child: ElevatedButton(
+                onPressed: (){
+                  sponsorup sponsorModel1 = sponsorup(title: titlebox, content: contentbox);
+                  sponsor.doc(docId).collection('recruit').doc(titlebox).set(sponsorModel1.toJson());
 
-          },
-         style: ElevatedButton.styleFrom(
-          textStyle: Theme.of(context).textTheme.subtitle1,
-        ),
-            child: Text('등록하기'),
+                  Navigator.pop(context);
+                  //sponsor.add({'title': '제목1', 'content': '내용1'});
+
+                },
+                style: ElevatedButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.subtitle1,
+                ),
+                child: Text('등록하기'),
 
               ),
             ),
-           ),
-         ),
+          ),
+        ),
       ),
     );
   }
