@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/Page_1/Page1Influencer.dart';
 import 'package:fzu/Page_1/Page1Sponsor.dart';
+import 'package:fzu/Page_1/Create_Info.dart';
 import 'package:fzu/Page_2/Page2Influencer.dart';
 import 'package:fzu/Page_2/Page2Influencer2.dart';
 import 'package:fzu/Page_2/Page2Sponsor.dart';
@@ -132,7 +133,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     //인플루언서 로그인시 실행되야하는 바텀 아이템
     List<Widget> influ_bottom = <Widget>[
-      Page1Influencer(),
+     Create_Info(),
+      //Page1Influencer(),
       Page2Influencer(),
       Page3(),
       Page4()
