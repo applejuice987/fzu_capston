@@ -206,6 +206,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;

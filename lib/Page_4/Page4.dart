@@ -6,7 +6,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fzu/MySharedPreferences.dart';
+import 'package:fzu/Page_4/Page4_BlackList.dart';
 import 'package:fzu/Page_4/Page4_LikeAd.dart';
+import 'package:fzu/Page_4/Page4_LikeInfluencer.dart';
+import 'package:fzu/Page_4/Page4_MyAd.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 import 'package:fzu/login/login_sponsor/LoginSponsor.dart';
 
@@ -118,11 +121,20 @@ class _Page4State extends State<Page4> {
                   children: <Widget>[
                     Expanded(
                         child: InkWell(
-                            onTap: () {
+                            onTap: isInflu ? () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const Page4_LikeAd()));
+                                      builder: (
+                                          context) => const Page4_LikeAd()));
+                            }
+                                :
+                                () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (
+                                          context) => const Page4_MyAd()));
                             },
                             child: Container(
                               alignment: Alignment.center,
@@ -131,7 +143,12 @@ class _Page4State extends State<Page4> {
                                   borderRadius: BorderRadius.only(
                                       bottomLeft: Radius.circular(6),
                                       topLeft: Radius.circular(6))),
-                              child: Text("관심 광고",
+                              child: isInflu ? Text("관심 광고",
+                                  style: TextStyle(
+                                    color: Color(0xff9f83de),
+                                    fontSize: 17,
+                                  ))
+                                  : Text("등록 광고",
                                   style: TextStyle(
                                     color: Color(0xff9f83de),
                                     fontSize: 17,
@@ -139,31 +156,51 @@ class _Page4State extends State<Page4> {
                             ))),
                     Padding(
                         padding: EdgeInsets.symmetric(vertical: 5),
-                        child: Container( width: 2)),
+                        child: Container(width: 2)),
                     Expanded(
                         child: InkWell(
-                            onTap: () {Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Page4_LikeSponsor()));},
+                            onTap: isInflu ? () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (
+                                          context) => const Page4_LikeSponsor()));
+                            }
+                                : () {
+                              Navigator.push(
+                                  context,
+                              MaterialPageRoute(
+                                  builder: (
+                                      context) => const Page4_LikeInfluencer())
+                              );
+                            },
                             child: Container(
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                  color: Colors.white,),
-                              child: Text("관심 기업",
+                                color: Colors.white,),
+                              child: isInflu ? Text("관심 기업",
+                                  style: TextStyle(
+                                      color: Color(0xff9f83de), fontSize: 17))
+                                  : Text("관심 인플루언서",
                                   style: TextStyle(
                                       color: Color(0xff9f83de), fontSize: 17)),
                             ))),
                     Expanded(
                         child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (
+                                          context) => const Page4_BlackList()));
+                            },
                             child: Container(
                               alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    //color: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                        bottomRight: Radius.circular(6),
-                                        topRight: Radius.circular(6))),
+                              decoration: BoxDecoration(
+                                //color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      bottomRight: Radius.circular(6),
+                                      topRight: Radius.circular(6))),
                               child: Text("차단 목록",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 17)),
@@ -182,16 +219,18 @@ class _Page4State extends State<Page4> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                          child: OutlinedButton(
+                        child: OutlinedButton(
                             style: ButtonStyle(),
-                              onPressed: () {}, child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('공지사항', style: TextStyle(color: Color(0xff9f83de), fontSize: 20),),
-                              Icon(Icons.arrow_forward_ios, size: 20.0, color: Colors.grey,)
-                            ],
-                          )),
-                        ),
+                            onPressed: () {}, child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('공지사항', style: TextStyle(
+                                color: Color(0xff9f83de), fontSize: 20),),
+                            Icon(Icons.arrow_forward_ios, size: 20.0,
+                              color: Colors.grey,)
+                          ],
+                        )),
+                      ),
                       SizedBox(
                         width: 15,
                       ),
@@ -201,8 +240,10 @@ class _Page4State extends State<Page4> {
                             onPressed: () {}, child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('FAQ', style: TextStyle(color: Color(0xff9f83de), fontSize: 20),),
-                            Icon(Icons.arrow_forward_ios, size: 20.0, color: Colors.grey)
+                            Text('FAQ', style: TextStyle(
+                                color: Color(0xff9f83de), fontSize: 20),),
+                            Icon(Icons.arrow_forward_ios, size: 20.0,
+                                color: Colors.grey)
                           ],
                         )),
                       ),
@@ -219,8 +260,10 @@ class _Page4State extends State<Page4> {
                             onPressed: () {}, child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('이용안내', style: TextStyle(color: Color(0xff9f83de), fontSize: 20),),
-                            Icon(Icons.arrow_forward_ios, size: 20.0, color: Colors.grey)
+                            Text('이용안내', style: TextStyle(
+                                color: Color(0xff9f83de), fontSize: 20),),
+                            Icon(Icons.arrow_forward_ios, size: 20.0,
+                                color: Colors.grey)
                           ],
                         )),
                       ),
@@ -233,8 +276,10 @@ class _Page4State extends State<Page4> {
                             onPressed: () {}, child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('인증센터', style: TextStyle(color: Color(0xff9f83de), fontSize: 20),),
-                            Icon(Icons.arrow_forward_ios, size: 20.0, color: Colors.grey)
+                            Text('인증센터', style: TextStyle(
+                                color: Color(0xff9f83de), fontSize: 20),),
+                            Icon(Icons.arrow_forward_ios, size: 20.0,
+                                color: Colors.grey)
                           ],
                         )),
                       ),
@@ -247,7 +292,7 @@ class _Page4State extends State<Page4> {
               width: double.infinity,
               height: 90,
               child: Expanded(child: OutlinedButton(onPressed: () {},
-              child: Text('내 정보 수정'),)),
+                child: Text('내 정보 수정'),)),
             ),
             SizedBox(
               child: ElevatedButton(onPressed: () {

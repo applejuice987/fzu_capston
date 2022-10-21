@@ -55,18 +55,22 @@ class _Page2SponsorState extends State<Page2Sponsor> {
   String _currentUser = '';
   List<String> _titleList = [];
 
+  @override
   void initState() {
     super.initState();
     var db = FirebaseFirestore.instance;
-
     _currentUser = FirebaseAuth.instance.currentUser!.email.toString();
-    db.collection("sponsor").doc('dhgns3926@daum.net').collection('recruit').get().then((value) {
-      for (var doc in value.docs) {
-        String title = doc["title"];
-        String content = doc["content"];
-        _titleList.add(doc['title'].toString());
-      }
+    setState(() {
+      db.collection("sponsor").doc('dhgns3926@daum.net').collection('recruit').get().then((value) {
+        for (var doc in value.docs) {
+          String title = doc["title"];
+          String content = doc["content"];
+          _titleList.add(doc['title'].toString());
+        }
+      });
     });
+
+
   }
 
 

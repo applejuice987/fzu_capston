@@ -32,6 +32,7 @@ class SignUpDatabaseHelper {
         'chatList' : [],
         'likeAdList' : [],
         'likeSpoList' : [],
+        'blackList' : []
 
       };
       db.collection("userInfoTable").doc("user").collection("user_influencer").doc(email).set(backUpData);
@@ -49,7 +50,8 @@ class SignUpDatabaseHelper {
       'type': type,
       'likeInfList' : [],
       'adList' : [],
-      'chatList' : []
+      'chatList' : [],
+      'blackList' : []
 
     };
     db
