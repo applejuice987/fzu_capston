@@ -6,7 +6,6 @@ import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 import '../main.dart';
 
-
 class SignUpDatabaseHelper {
   String _currentUser = '';
   var db = FirebaseFirestore.instance;
@@ -15,30 +14,31 @@ class SignUpDatabaseHelper {
   void initState() {
     FirebaseAuth auth = FirebaseAuth.instance;
     _currentUser = auth.currentUser!.email.toString(); //로그인 EMail 확인
-
   }
 
-  Future<void> backUpInfluencerData(String email,String pw, String platform, String img64, String type) async{ //데이터 백업 함수
-      final backUpData = <String, dynamic>{ //SQLite 데이터 매핑
-        'email': email,
-        'pw': pw,
-        'platform': platform,
-        'profile' : img64,
-        'PRImage' : '',
-        "PRText" : '',
-        'type' : type,
-        'displayName' : '',
-        'category' : [],
-        'chatList' : [],
-        'likeAdList' : [],
-        'likeSpoList' : [],
-
-      };
-      db.collection("userInfoTable").doc("user").collection("user_influencer").doc(email).set(backUpData);
+  Future<void> backUpInfluencerData(
+      String email, String pw, String platform, String img, String type, String channelName, String contents) async {
+    //데이터 백업 함수
+    final backUpData = <String, dynamic>{
+      //SQLite 데이터 매핑
+      'email': email,
+      'pw': pw,
+      'platform': platform,
+      'profile': img,
+      'type': type,
+      'channelName': channelName,
+      'contents' : contents
+    };
+    db
+        .collection("userInfoTable")
+        .doc("user")
+        .collection("user_influencer")
+        .doc(email)
+        .set(backUpData);
   }
 
   Future<void> backUpSponsorData(String email, String pw, String company,
-      String image, String type) async {
+      String image, String type, String ceoName) async {
     //데이터 백업 함수
     final backUpData = <String, dynamic>{
       //SQLite 데이터 매핑
@@ -47,10 +47,7 @@ class SignUpDatabaseHelper {
       'company': company,
       'profile': image,
       'type': type,
-      'likeInfList' : [],
-      'adList' : [],
-      'chatList' : []
-
+      'ceoName' : ceoName
     };
     db
         .collection("userInfoTable")
@@ -97,6 +94,7 @@ class SignUpDatabaseHelper {
               MaterialPageRoute(builder: (context) => const MyApp()),
                   (Route<dynamic> route) => false);
         }
+
         //TODO!! 나중에 각주 삭제 2
         // }
         // else {
@@ -181,5 +179,4 @@ class SignUpDatabaseHelper {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER);
   }
-
 }

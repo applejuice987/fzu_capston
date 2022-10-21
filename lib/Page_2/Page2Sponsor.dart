@@ -16,14 +16,14 @@ class Page2Sponsor extends StatefulWidget {
   State<Page2Sponsor> createState() => _Page2SponsorState();
 }
 void getdata1() {
-var db = FirebaseFirestore.instance;
- db.collection("sponsor").get().then((value) {
- for (var doc in value.docs) {
-  String title = doc["title"];
-  String content = doc["content"];
- }
- });
- }
+  var db = FirebaseFirestore.instance;
+  db.collection("sponsor").get().then((value) {
+    for (var doc in value.docs) {
+      String title = doc["title"];
+      String content = doc["content"];
+    }
+  });
+}
 
 class _Page2SponsorState extends State<Page2Sponsor> {
   late final DocumentSnapshot documentData;
@@ -41,15 +41,15 @@ class _Page2SponsorState extends State<Page2Sponsor> {
   //var documentSnapshot = sponsor.doc('docId').get();
 
   //getData() async {
-    //var result = await firestore.collection("sponsor").doc("docId").get().then((value){
-      //for(var doc in ){
-       // String title = doc["title"];
-       // String content = doc["content"];
+  //var result = await firestore.collection("sponsor").doc("docId").get().then((value){
+  //for(var doc in ){
+  // String title = doc["title"];
+  // String content = doc["content"];
 
-     // }
+  // }
   //  });
-    //return result;
- // }
+  //return result;
+  // }
 
 
   String _currentUser = '';
@@ -118,32 +118,32 @@ class _Page2SponsorState extends State<Page2Sponsor> {
 
             SliverList(
               delegate: SliverChildBuilderDelegate(
-              (context, index) => ListTile(title:Text(_titleList[index]),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Page2Sponsor2()));
-                      },),
+                    (context, index) => ListTile(title:Text(_titleList[index]),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Page2Sponsor2()));
+                  },),
                 childCount: 10,
               ),
             ),
-           // StreamBuilder<QuerySnapshot>(
-             // stream: firestore.collection('sponsor').snapshots(),
+            // StreamBuilder<QuerySnapshot>(
+            // stream: firestore.collection('sponsor').snapshots(),
 
-             // builder: (context, snapshot) {
-              //  if (snapshot.connectionState == ConnectionState.waiting){
-               //   return CircularProgressIndicator();
-              //  }
-              //  return ListView.builder(
-               //   itemCount: snapshot.data!.documents.length,
-                //  itemBuilder: (ctx, index) => Container(
-                //    padding: EdgeInsets.all(8),
-                //    child: Text(snapshot.data.documents[index]['text']),
-               //   ),
-              //  );
+            // builder: (context, snapshot) {
+            //  if (snapshot.connectionState == ConnectionState.waiting){
+            //   return CircularProgressIndicator();
             //  }
-          //  ),
+            //  return ListView.builder(
+            //   itemCount: snapshot.data!.documents.length,
+            //  itemBuilder: (ctx, index) => Container(
+            //    padding: EdgeInsets.all(8),
+            //    child: Text(snapshot.data.documents[index]['text']),
+            //   ),
+            //  );
+            //  }
+            //  ),
           ],
         ),
       ),
