@@ -32,6 +32,8 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
     if (image != null) {
       var bytes = File(image!.path).readAsBytesSync();
       img64 = base64Encode(bytes);
+    } else {
+      img64 = '';
     }
     try {
       UserCredential result = (
@@ -221,6 +223,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
               Container(
               color: const Color(0xffc9b9ec),
               width: size.width,
+              height: size.height,
               alignment: Alignment.center,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

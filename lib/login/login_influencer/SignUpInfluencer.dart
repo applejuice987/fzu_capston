@@ -207,6 +207,7 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
           child: Container(
             color: const Color(0xffc9b9ec),
               width: size.width,
+              height: size.height,
               alignment: Alignment.center,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

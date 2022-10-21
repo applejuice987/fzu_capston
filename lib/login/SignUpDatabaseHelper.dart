@@ -18,7 +18,7 @@ class SignUpDatabaseHelper {
 
   }
 
-  Future<void> backUpInfluencerData(String email,String pw, String platform, String img64) async{ //데이터 백업 함수
+  Future<void> backUpInfluencerData(String email,String pw, String platform, String img64, String type) async{ //데이터 백업 함수
       final backUpData = <String, dynamic>{ //SQLite 데이터 매핑
         'email': email,
         'pw': pw,
@@ -26,6 +26,7 @@ class SignUpDatabaseHelper {
         'profile' : img64,
         'PRImage' : '',
         "PRText" : '',
+        'type' : type,
         'displayName' : '',
         'category' : [],
         'chatList' : [],
@@ -45,7 +46,11 @@ class SignUpDatabaseHelper {
       'pw': pw,
       'company': company,
       'profile': image,
-      'type': type
+      'type': type,
+      'likeInfList' : [],
+      'adList' : [],
+      'chatList' : []
+
     };
     db
         .collection("userInfoTable")
