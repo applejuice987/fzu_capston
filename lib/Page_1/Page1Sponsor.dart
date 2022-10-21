@@ -135,7 +135,7 @@ class _Page1SponsorState extends State<Page1Sponsor>
               GestureDetector(
                 onTap: () {
                   FocusScope.of(context).unfocus();
-                },
+                  },
                 child: StreamBuilder<dynamic>(
                     stream: FirebaseFirestore.instance
                         .collection('user_influencer')
