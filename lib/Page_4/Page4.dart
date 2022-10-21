@@ -6,8 +6,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fzu/MySharedPreferences.dart';
+import 'package:fzu/Page_4/Page4_LikeAd.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 import 'package:fzu/login/login_sponsor/LoginSponsor.dart';
+
+import 'Page4_LikeSponsor.dart';
 
 //TODO!! 로그인의 관계 없이 같은 화면 출력
 //TODO!! 로그인 한 사람의 프로필 수정이라던가 이것저것 만들 예정.
@@ -115,7 +118,12 @@ class _Page4State extends State<Page4> {
                   children: <Widget>[
                     Expanded(
                         child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Page4_LikeAd()));
+                            },
                             child: Container(
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
@@ -134,7 +142,10 @@ class _Page4State extends State<Page4> {
                         child: Container( width: 2)),
                     Expanded(
                         child: InkWell(
-                            onTap: () {},
+                            onTap: () {Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Page4_LikeSponsor()));},
                             child: Container(
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
