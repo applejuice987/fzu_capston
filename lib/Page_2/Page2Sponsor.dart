@@ -28,7 +28,7 @@ class _Page2SponsorState extends State<Page2Sponsor> {
   //CollectionReference sponsor = FirebaseFirestore.instance.collection('sponsor');
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  // getData() async  {
+  // getData() async {
   // var result = await firestore.collection("sponsor").doc("docId").get().then((value){
   // for(var doc in ){
   // String title = doc["title"];
@@ -91,7 +91,7 @@ class _Page2SponsorState extends State<Page2Sponsor> {
         },),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xfff4cccc),
         onPressed: () {Navigator.push(
             context,
             MaterialPageRoute(
