@@ -18,19 +18,30 @@ class Page2Influencer extends StatefulWidget {
 
 class _Page2InfluencerState extends State<Page2Influencer> {
 
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  CollectionReference sponsor = FirebaseFirestore.instance.collection('sponsor');
+  // FirebaseFirestore firestore = FirebaseFirestore.instance;
+  // CollectionReference sponsor = FirebaseFirestore.instance.collection('sponsor');
 
   FirebaseAuth auth = FirebaseAuth.instance;
   late String docId = auth.currentUser!.email.toString();
 
 
-  List<dynamic> _adList = [];
-  Map<String, dynamic> Middle_Datainfo = Map<String, dynamic>();
+  List<String> _adList = [];
+  //Map<String, dynamic> Middle_Datainfo = Map<String, dynamic>();
 
 
   @override
   Widget build(BuildContext context) {
+    // FirebaseFirestore.instance.collection("sponsor").doc('fullad').get().then((value) {
+    //   setState(() {
+    //     _adList.clear();
+    //     for (var doc in value.docs) {
+    //       String title = doc["title"];
+    //       _adList.add(doc['title'].toString());
+    //     }
+    //   });
+    //   // MySharedPreferences.instance.setStringList('albamon', _titleList);
+    // });
+
     return Scaffold(
         body: GridView.count(
           crossAxisCount: 2,
