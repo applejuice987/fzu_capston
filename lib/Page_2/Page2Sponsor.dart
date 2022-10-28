@@ -12,15 +12,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 //TODO!! 로그인 한 사람이 스폰서 일 경우, 이 화면 출력
 
 class Page2Sponsor extends StatefulWidget {
-  const Page2Sponsor({Key? key, required this.list}) : super(key: key);
-  final List<String> list;
+  const Page2Sponsor({Key? key,
+    // required this.list
+  }) : super(key: key);
+  // final List<String> list;
   @override
   State<Page2Sponsor> createState() => _Page2SponsorState();
 }
 
 class _Page2SponsorState extends State<Page2Sponsor> {
   late final DocumentSnapshot documentData;
-
+  List<String> _titleList = [];
   //_Page2SponsorState(this.documentData);
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   //CollectionReference sponsor = FirebaseFirestore.instance.collection('sponsor');
@@ -40,12 +42,26 @@ class _Page2SponsorState extends State<Page2Sponsor> {
   void initState() {
     super.initState();
   }
-
+  refreshlist(){
+    var useremail = FirebaseAuth.instance.currentUser?.email.toString();
+    FirebaseFirestore.instance.collection("sponsor").doc(useremail).collection('recruit').get().then((value) {
+      setState(() {
+        _titleList.clear();
+        for (var doc in value.docs) {
+          String title = doc["title"];
+          String content = doc["content"];
+          _titleList.add(doc['title'].toString());
+        }
+      });
+      // MySharedPreferences.instance.setStringList('albamon', _titleList);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    refreshlist();
    // var _titleList = MySharedPreferences.instance.getStringList('albamon');
-    List<String> _titleList = widget.list;
+   //  List<String> _titleList = widget.list;
     return MaterialApp(
       home: Scaffold(
         body: CustomScrollView(

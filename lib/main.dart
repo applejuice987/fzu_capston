@@ -128,8 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     super.initState();
   }
-
-  Widget build(BuildContext context) {
+  refreshlist(){
     var useremail = FirebaseAuth.instance.currentUser?.email.toString();
     FirebaseFirestore.instance.collection("sponsor").doc(useremail).collection('recruit').get().then((value) {
       setState(() {
@@ -142,7 +141,10 @@ class _MyHomePageState extends State<MyHomePage> {
       });
       // MySharedPreferences.instance.setStringList('albamon', _titleList);
     });
+  }
 
+  Widget build(BuildContext context) {
+    // refreshlist();
     //인플루언서 로그인시 실행되야하는 바텀 아이템
     List<Widget> influ_bottom = <Widget>[
       Page1Influencer(),
@@ -153,7 +155,9 @@ class _MyHomePageState extends State<MyHomePage> {
     //스폰서 로그인시 ~~
     List<Widget> spon_bottom = <Widget>[
       Page1Sponsor(),
-      Page2Sponsor(list: _titleList),
+      Page2Sponsor(
+          // list: _titleList
+      ),
       Page3(),
       Page4()
     ];
