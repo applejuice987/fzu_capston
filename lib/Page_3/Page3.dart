@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -23,16 +24,15 @@ class Page3 extends StatefulWidget {
 }
 
 class _Page3State extends State<Page3> {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  CollectionReference chat_list = FirebaseFirestore.instance.collection(
-      'chat_log');
   String my = "";
   String you = "";
   String yourimage = "";
+  String email="";
 
+  void initState() {
 
-  @override
-  Widget build(BuildContext context) {
+    super.initState();
+    email=FirebaseAuth.instance.currentUser!.email.toString()!;
     MySharedPreferences.instance.getBooleanValue("isInflu").then((value) =>
         setState(() {
           if (value) {
@@ -45,21 +45,25 @@ class _Page3State extends State<Page3> {
             yourimage = "infimage";
           }
         }));
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
 
     return Scaffold(
 
         body: StreamBuilder<dynamic>(
 
-            stream: chat_list.where(my,
-                isEqualTo: FirebaseAuth.instance.currentUser?.email.toString())
+            stream: FirebaseFirestore.instance.collection(
+                'chat_log').where(my, isEqualTo: email)
                 .snapshots(),
 
             builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                print(my);
-                print(FirebaseAuth.instance.currentUser?.email.toString());
-                return
 
+
+              if (!snapshot.hasData) {
+                return
                   Container(
                     child: Center(
                       child: SizedBox(
@@ -74,12 +78,15 @@ class _Page3State extends State<Page3> {
                   );
               }
 
-              /*var sample = Base64Decoder().convert(snapshot.data!.docs[index]['spoimage']);
-          var sample2 = sample.buffer.asInt8List();*/
+              final docs = snapshot.data!.docs;
               return ListView.builder(
 
 
-                //scrollDirection: Axis.vertical,
+
+
+
+
+                  //scrollDirection: Axis.vertical,
                   padding: const EdgeInsets.all(5),
                   itemCount: snapshot.data.docs.length,
 
@@ -100,6 +107,7 @@ class _Page3State extends State<Page3> {
                         child: Row(children: <Widget>[
 
                           Container(
+
                               padding: EdgeInsets.all(5.0),
                               child: CircleAvatar(
                                   radius: 50,
@@ -108,8 +116,7 @@ class _Page3State extends State<Page3> {
                                     Base64Decoder().convert(
                                         snapshot.data.docs[index][yourimage]),
                                   )
-                                /*Image.memory(Base64Decoder().convert(snapshot.data!.docs[index]['spoimage']),
-                           width:100,height: 100,fit:BoxFit.cover)*/
+
                               )
                           )
                           ,
