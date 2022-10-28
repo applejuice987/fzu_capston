@@ -79,7 +79,6 @@ class _Page1SponsorState extends State<Page1Sponsor>
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        resizeToAvoidBottomInset: false,
         backgroundColor: Color(0xffC9B9EC),
         body: SingleChildScrollView(
           child: Column(

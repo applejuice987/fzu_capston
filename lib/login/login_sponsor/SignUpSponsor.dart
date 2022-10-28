@@ -171,7 +171,6 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
       ],
     );
   }
-
   renderButton(dynamic image) {
     return Container(
       width: 300,
@@ -202,6 +201,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
