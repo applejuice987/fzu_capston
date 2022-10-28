@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/Page_1/Page1Influencer.dart';
 import 'package:fzu/Page_1/Page1Sponsor.dart';
+import 'package:fzu/Page_1/Create_Info.dart';
 import 'package:fzu/Page_2/Page2Influencer.dart';
 import 'package:fzu/Page_2/Page2Influencer2.dart';
 import 'package:fzu/Page_2/Page2Sponsor.dart';
@@ -14,8 +16,6 @@ import 'package:fzu/Page_4/Page4.dart';
 import 'package:fzu/firebase_options.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 import 'Page_2/Page2Sponsor2.dart';
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +37,7 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
 
   bool isInflu = false;
+  bool isadmin = false;
 
   @override
   Widget build(BuildContext context) {
@@ -50,22 +51,31 @@ class _MyAppState extends State<MyApp> {
       firstwidget = const MainLoginScreen();
     }
 
-    return MaterialApp(
-      builder: (context,child) => MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: child!),
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+    return GestureDetector(
+      onTap: (){
+        FocusNode currentFocus = FocusScope.of(context);
+
+        if(!currentFocus.hasPrimaryFocus){
+          currentFocus.unfocus();
+        }
+      },
+      child: MaterialApp(
+        builder: (context,child) => MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: child!),
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or simply save your changes to "hot reload" in a Flutter IDE).
+          // Notice that the counter didn't reset back to zero; the application
+          // is not restarted.
+          primarySwatch: Colors.blue,
+        ),
+        home: firstwidget,
       ),
-      home: firstwidget,
     );
   }
 }
@@ -81,22 +91,45 @@ class _MyHomePageState extends State<MyHomePage> {
   var asdf;
 
   bool isInflu = false;
+  bool isadmin = false;
   var useremail = FirebaseAuth.instance.currentUser?.email.toString();
 
   void initState() {
+    MySharedPreferences.instance.getBooleanValue("isInflu").then((value) =>
+        setState(() {
+          print('3-1$isInflu');
+          isInflu = value;
+          print('3-2$isInflu');
+        }));
+    try {
+      FirebaseFirestore.instance
+          .collection("userInfoTable")
+          .doc("admin")
+          .collection("user_admin")
+          .doc(useremail)
+          .get()
+          .then((value) {
+        if (value.exists) {
+          isadmin = true;
+          print("1 isadmin value = ");
+          print(isadmin);
+        } else {
+          isadmin = false;
+          print("2 isadmin value = ");
+          print(isadmin);
+        }
+      });
+    } catch(e){
+      print(e);
+    }
     super.initState();
-    MySharedPreferences.instance.getBooleanValue("isInflu").then((value) => setState(() {
-      print('3-1$isInflu');
-      isInflu = value;
-      print('3-2$isInflu');
-    }));
   }
 
   Widget build(BuildContext context) {
-
     //인플루언서 로그인시 실행되야하는 바텀 아이템
     List<Widget> influ_bottom = <Widget>[
-      Page1Influencer(),
+     Create_Info(),
+     // Page1Influencer(),
       Page2Influencer(),
       Page3(),
       Page4()
@@ -113,33 +146,43 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        surfaceTintColor: Color(0xffc9b9ec),
+        centerTitle: true,
+        surfaceTintColor: const Color(0xffc9b9ec),
         foregroundColor: Colors.black,
-        backgroundColor: Color(0xffc9b9ec),
-        title: Text("FZU",style: TextStyle(fontWeight: FontWeight.bold),),
+        backgroundColor: const Color(0xffc9b9ec),
+        title: const Text("FZU",style: TextStyle(fontWeight: FontWeight.bold),),
       ),
       body: Container(
-        color: Color(0xffc9b9ec),
+        color: const Color(0xffc9b9ec),
           child: isInflu ? influ_bottom[pageIndex] : spon_bottom[pageIndex]),
       //isInflu가 true이면 왼쪽, 아니면 오른쪽
 
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xffc9b9ec),
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey
-        ,currentIndex: pageIndex,
-        onTap: (value) {
-          setState(() {
-            pageIndex = value;
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        items: const[
-          BottomNavigationBarItem(icon: Icon(Icons.add),label: "First"),
-          BottomNavigationBarItem(icon: Icon(Icons.delete),label: "Second"),
-          BottomNavigationBarItem(icon: Icon(Icons.android),label: "Third"),
-          BottomNavigationBarItem(icon: Icon(Icons.apple),label: "Fourth"),
-        ],
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color:Colors.grey,
+          border: Border(top: BorderSide(color: Colors.grey, width : 1.0)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(color: Colors.black, blurRadius: 3)
+          ]
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: const Color(0xffc9b9ec),
+          selectedItemColor: Colors.black,
+          unselectedItemColor: Colors.grey,
+          currentIndex: pageIndex,
+          onTap: (value) {
+            setState(() {
+              pageIndex = value;
+            });
+          },
+          type: BottomNavigationBarType.fixed,
+          items: const[
+            BottomNavigationBarItem(icon: Icon(Icons.add),label: "찾기"),
+            BottomNavigationBarItem(icon: Icon(Icons.delete),label: "내 광고"),
+            BottomNavigationBarItem(icon: Icon(Icons.android),label: "채팅"),
+            BottomNavigationBarItem(icon: Icon(Icons.apple),label: "내 정보"),
+          ],
+        ),
       ),
     );
   }

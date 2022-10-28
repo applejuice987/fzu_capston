@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,9 +14,34 @@ class Page2Influencer extends StatefulWidget {
   State<Page2Influencer> createState() => _Page2InfluencerState();
 }
 
+
+
 class _Page2InfluencerState extends State<Page2Influencer> {
+
+  // FirebaseFirestore firestore = FirebaseFirestore.instance;
+  // CollectionReference sponsor = FirebaseFirestore.instance.collection('sponsor');
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+  late String docId = auth.currentUser!.email.toString();
+
+
+  List<String> _adList = [];
+  //Map<String, dynamic> Middle_Datainfo = Map<String, dynamic>();
+
+
   @override
   Widget build(BuildContext context) {
+    // FirebaseFirestore.instance.collection("sponsor").doc('fullad').get().then((value) {
+    //   setState(() {
+    //     _adList.clear();
+    //     for (var doc in value.docs) {
+    //       String title = doc["title"];
+    //       _adList.add(doc['title'].toString());
+    //     }
+    //   });
+    //   // MySharedPreferences.instance.setStringList('albamon', _titleList);
+    // });
+
     return Scaffold(
         body: GridView.count(
           crossAxisCount: 2,
@@ -32,7 +59,7 @@ class _Page2InfluencerState extends State<Page2Influencer> {
                   children: [
                     CircleAvatar(radius: 70,),
                     SizedBox(height: 20,),
-                    Text('광고명'),
+                    Text("광고명"),
                     Text('회사명'),
                 ],
                 ),
@@ -46,6 +73,7 @@ class _Page2InfluencerState extends State<Page2Influencer> {
     );
   }
 }
+
 
 
 

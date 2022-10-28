@@ -34,6 +34,8 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
     if (image != null) {
       var bytes = File(image!.path).readAsBytesSync();
       img64 = base64Encode(bytes);
+    } else {
+      img64 = '';
     }
     try {
           UserCredential result = (
@@ -50,7 +52,7 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
           }
           SignUpDatabaseHelper().backUpInfluencerData(
               email, password,
-              platformName, img64);
+              platformName, img64, 'inf', channel_platformName, main_contents);
 
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
@@ -69,12 +71,16 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
   String password = '';
   String passwordCheck = '';
   String platformName = '';
+  String channel_platformName = '';
+  String main_contents = '';
   String passwordPattern = r'^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
   String emailPattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
   String emailHint = '이메일 형식으로 입력하세요.';
   String passwordHint = '8~15자의 영문, 숫자, 특수문자를 포함해주세요.';
   String passwordCheckHint = '동일한 비밀번호를 입력해주세요.';
   String platformHint = '활동하는 플랫폼명을 입력해주세요.';
+  String channel_platformNameHint = '활동하는 채널/활동명을 입력해주세요. 예)프주TV';
+  String main_contentsHint = '주로하는 컨텐츠를 입력해주세요.';
   bool _reduplicatedEmail = false;
 
   bool validatePasswordStructure(String value) { //비밀번호 조건 확인 함수
@@ -99,7 +105,7 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
   @override
   void initState() {
     super.initState();
-    _passwordVisible = true;
+    _passwordVisible = false;
   }
 
   renderTextFormField({
@@ -135,7 +141,7 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
             hintStyle: TextStyle(fontSize: 13),
             suffixIcon: value == 'password' || value == 'passwordCheck'? IconButton(
               icon: Icon(
-                _passwordVisible? Icons.visibility : Icons.visibility_off, color: Colors.black,
+                _passwordVisible? Icons.visibility_off : Icons.visibility, color: Colors.black,
               ),
               onPressed: () {
                 setState(() {
@@ -149,7 +155,9 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
               password = text;
             }
           },
-          obscureText: !_passwordVisible,
+          autofocus: value == 'email' ? true : false,
+          obscureText: value == 'password' || value == 'passwordCheck'
+          ? !_passwordVisible : false,
           onSaved: onSaved,
           validator: validator,
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -173,7 +181,7 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
 
         },
         style: ElevatedButton.styleFrom(
-            primary: Colors.white,
+            backgroundColor: Colors.white,
             elevation: 15,
             shadowColor: Colors.black,
             side: const BorderSide(color: Colors.black, width : 1.5),
@@ -192,16 +200,26 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    double appbarheight = AppBar().preferredSize.height;
     return Scaffold(
-      body: Container(
-        color: const Color(0xffc9b9ec),
-          width: size.width,
-          alignment: Alignment.center,
+        backgroundColor: Color(0xffc9b9ec),
+      body:  GestureDetector(
+        onTap: (){
+          FocusNode currentFocus = FocusScope.of(context);
+
+          if(!currentFocus.hasPrimaryFocus){
+            currentFocus.unfocus();
+          }
+        },
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Column(
                 children: [
+                  SizedBox(height: appbarheight,),
+                  SizedBox(height: 30),
                   Text("$loginValue 회원가입", textAlign: TextAlign.left, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
                   Container(
                     height: 3,
@@ -342,6 +360,41 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
                               value: 'platformName',
                               hint: platformHint
                             ),
+                            const SizedBox(height: 20,),
+                            renderTextFormField(
+                                label: '채널/활동명',
+                                onSaved: (val) {
+                                  setState(() {
+                                    channel_platformName = val;
+                                  });
+                                },
+                                validator: (val) {
+                                  if (val.length < 1) {
+                                    return '채널/활동명을 작성해주세요.';
+                                  }
+                                  return null;
+                                },
+                                value: 'channel_platformName',
+                                hint: channel_platformNameHint
+                            ),
+                            const SizedBox(height:20),
+                            renderTextFormField(
+                                label: '주 컨텐츠',
+                                onSaved: (val) {
+                                  setState(() {
+                                    main_contents = val;
+                                  });
+                                },
+                                validator: (val) {
+                                  if (val.length < 1) {
+                                    return '주 컨텐츠를 입력해주세요.';
+                                  }
+                                  return null;
+                                },
+                                value: 'platformName',
+                                hint: main_contentsHint
+                            ),
+
                           renderButton(_imageFile),
                           ],
                         ),
@@ -351,7 +404,9 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
 
 
             ],
-          )),
+          ),
+        ),
+      ),
     );
   }
 
@@ -400,10 +455,8 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
 
   takePhoto(ImageSource source) async {
     final pickedFile = await _picker.pickImage(source: source, imageQuality: 30);
-    print('SEX'+ pickedFile.toString());
     setState(() {
       _imageFile = pickedFile;
-      print('SEX'+_imageFile.toString());
       _showImage = true;
     });
   }

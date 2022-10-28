@@ -241,9 +241,9 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
                                     builder: ((builder) => bottomSheet()));
                               },
                               style: ElevatedButton.styleFrom(
-                                   primary: Colors.black,
-                                   onSurface: Colors.grey,
-                                   backgroundColor: Colors.grey,
+                                  // primary: Colors.black,
+                                  // onSurface: Colors.grey,
+                                  // backgroundColor: Colors.grey,
                                   side: BorderSide(width: 0)
                               ),
                               child: Stack(
