@@ -46,8 +46,6 @@ class _Page3State extends State<Page3> {
           }
         }));
   }
-
-
   @override
   Widget build(BuildContext context) {
 
@@ -56,7 +54,7 @@ class _Page3State extends State<Page3> {
         body: StreamBuilder<dynamic>(
 
             stream: FirebaseFirestore.instance.collection(
-                'chat_log').where(my, isEqualTo: email)
+                'chat_log').where("spo", isEqualTo: email)
                 .snapshots(),
 
             builder: (context, snapshot) {
