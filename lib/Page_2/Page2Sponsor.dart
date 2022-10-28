@@ -48,12 +48,9 @@ class _Page2SponsorState extends State<Page2Sponsor> {
       setState(() {
         _titleList.clear();
         for (var doc in value.docs) {
-          String title = doc["title"];
-          String content = doc["content"];
           _titleList.add(doc['title'].toString());
         }
       });
-      // MySharedPreferences.instance.setStringList('albamon', _titleList);
     });
   }
 
@@ -62,63 +59,52 @@ class _Page2SponsorState extends State<Page2Sponsor> {
     refreshlist();
    // var _titleList = MySharedPreferences.instance.getStringList('albamon');
    //  List<String> _titleList = widget.list;
-    return MaterialApp(
-      home: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            //const SliverAppBar(
-            //title: Text("새로운 광고모집을 추가하세요"),
-            //floating: true,
-            //flexibleSpace: Placeholder(),
-            // expandedHeight: 100,
-            // ),
-            SliverToBoxAdapter(
-
-                child: Container(
-                  padding: const EdgeInsets.all(30),
-                  height: 200,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Page2Sponsor3()));
-                      }, child: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: Colors.black,
-                        child: const Icon(
-                          CupertinoIcons.plus,
-                        ),),),
-                      //CircleAvatar(
-                      //radius: 30,
-                      // backgroundColor: Colors.black,
-                      // child: const Icon(
-                      // CupertinoIcons.plus,
-                      // ),),
-                      Text("새로운 광고 모집하기"),
-
-                    ],
-                  ),
-                )
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) => _titleList.isEmpty ? Text("아무것도 없음") : ListTile(title:Text(_titleList[index]),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Page2Sponsor2()));
-                  },),
-                childCount: _titleList.length,
+    return Scaffold(
+      // appBar: PreferredSize(
+      //   preferredSize: Size.fromHeight(30),
+      //   child: AppBar(
+      //     backgroundColor: Color(0xffC9B9EC),
+      //     title: Text("광고확인"),
+      //   ),
+      // ),
+      body: Container(
+        color: Color(0xffd6cdea),
+        child:
+        ListView.builder(itemCount: _titleList.length,
+        itemBuilder: (ctx, index){
+          return Container(
+            margin: const EdgeInsets.fromLTRB(15, 2.5, 15, 0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Page2Sponsor2()));
+              },
+              child: Card(
+              child: SizedBox(
+                height: 50
+                  ,child: _tile(_titleList[index],''))
               ),
             ),
-            // StreamBuilder<QuerySnapshot>(
-          ],
-        ),
+          );
+        },),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
+        onPressed: () {Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const Page2Sponsor3()));},
+        child: const Icon(Icons.add),
       ),
     );
   }
+  ListTile _tile(String title, String subTitle) => ListTile(
+    title: Text(
+      title,
+      style: const TextStyle(fontSize: 20,),
+    ),
+    subtitle: Text(subTitle),
+  );
 }

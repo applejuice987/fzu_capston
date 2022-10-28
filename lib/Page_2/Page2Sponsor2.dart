@@ -12,62 +12,71 @@ class Page2Sponsor2 extends StatefulWidget {
 class _Page2Sponsor2State extends State<Page2Sponsor2> {
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        // SliverOverlapInjector(
-        //   handle:
-        //   NestedScrollView.sliverOverlapAbsorberHandleFor(
-        //       context),
-        // ),
-        SliverToBoxAdapter(
-            child: Container(
-              padding: const EdgeInsets.all(30),
-              height: 400,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text("회사명",style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.normal),),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("제목 : ㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㄹ",style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.normal)),
-                      Spacer(),
-                      Text("지원자 수 : 200",style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.normal))
-                    ],
-                  ),
-                  Text("내용",style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.normal))
-                ],
-              ),
-            )
-        ),
-        // SliverOverlapInjector(
-        //   handle:
-        //   NestedScrollView.sliverOverlapAbsorberHandleFor(
-        //       context),
-        // ),
-        const SliverPersistentHeader(
-            pinned: true, delegate: CategoryBreadcrumbs()),
-        SliverList(
-            delegate: SliverChildBuilderDelegate(
-                    (context, index) =>
-                    GestureDetector(
-                      onTap: (){
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$index")));
-                      },
-                      child: Card(
-                        margin: const EdgeInsets.all(15),
-                        // 보는 재미를 위해 인덱스에 아무 숫자나 곱한 뒤 255로
-                        // 나눠 다른 색이 보이도록 함.
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 80,
-                          color: Colors.blue[100 * (index % 9 + 1)],
-                          child: Text("Item $index"),
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        surfaceTintColor: const Color(0xffc9b9ec),
+        foregroundColor: Colors.black,
+        backgroundColor: const Color(0xffc9b9ec),
+        title: const Text("FZU",style: TextStyle(fontWeight: FontWeight.bold),),
+      ),
+      body: CustomScrollView(
+        slivers: [
+          // SliverOverlapInjector(
+          //   handle:
+          //   NestedScrollView.sliverOverlapAbsorberHandleFor(
+          //       context),
+          // ),
+          SliverToBoxAdapter(
+              child: Container(
+                padding: const EdgeInsets.all(30),
+                height: 400,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text("회사명",style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.normal),),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("제목 : ㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㄹ",style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.normal)),
+                        Spacer(),
+                        Text("지원자 수 : 200",style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.normal))
+                      ],
+                    ),
+                    Text("내용",style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.normal))
+                  ],
+                ),
+              )
+          ),
+          // SliverOverlapInjector(
+          //   handle:
+          //   NestedScrollView.sliverOverlapAbsorberHandleFor(
+          //       context),
+          // ),
+          const SliverPersistentHeader(
+              pinned: true, delegate: CategoryBreadcrumbs()),
+          SliverList(
+              delegate: SliverChildBuilderDelegate(
+                      (context, index) =>
+                      GestureDetector(
+                        onTap: (){
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$index")));
+                        },
+                        child: Card(
+                          margin: const EdgeInsets.all(15),
+                          // 보는 재미를 위해 인덱스에 아무 숫자나 곱한 뒤 255로
+                          // 나눠 다른 색이 보이도록 함.
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: 80,
+                            color: Colors.blue[100 * (index % 9 + 1)],
+                            child: Text("Item $index"),
+                          ),
                         ),
                       ),
-                    ),
-                childCount: 20))
-      ],
+                  childCount: 20))
+        ],
+      ),
     );
     // return MaterialApp(
     //   home: Scaffold(
