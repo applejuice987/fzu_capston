@@ -111,6 +111,7 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
                   sponsor.doc(docId).collection('recruit').doc(titlebox).set(sponsorModel1.toJson());
                   user.doc('user').collection('user_sponsor').doc(docId)
                       .update({'adList':FieldValue.arrayUnion([titlebox])});
+                  sponsor.doc('fullad').update({'adList':FieldValue.arrayUnion([titlebox])});
 
                   Navigator.pop(context);
                   //sponsor.add({'title': '제목1', 'content': '내용1'});

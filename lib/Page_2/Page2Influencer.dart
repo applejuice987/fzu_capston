@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,7 +14,21 @@ class Page2Influencer extends StatefulWidget {
   State<Page2Influencer> createState() => _Page2InfluencerState();
 }
 
+
+
 class _Page2InfluencerState extends State<Page2Influencer> {
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference sponsor = FirebaseFirestore.instance.collection('sponsor');
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+  late String docId = auth.currentUser!.email.toString();
+
+
+  List<dynamic> _adList = [];
+  Map<String, dynamic> Middle_Datainfo = Map<String, dynamic>();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +48,7 @@ class _Page2InfluencerState extends State<Page2Influencer> {
                   children: [
                     CircleAvatar(radius: 70,),
                     SizedBox(height: 20,),
-                    Text('광고명'),
+                    Text("광고명"),
                     Text('회사명'),
                 ],
                 ),
@@ -46,6 +62,7 @@ class _Page2InfluencerState extends State<Page2Influencer> {
     );
   }
 }
+
 
 
 
