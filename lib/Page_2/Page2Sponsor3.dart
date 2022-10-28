@@ -67,8 +67,13 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
 
 
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
+      appBar: AppBar(
+        surfaceTintColor: const Color(0xffc9b9ec),
+        foregroundColor: Colors.black,
+        backgroundColor: const Color(0xffc9b9ec),
+        title: const Text("FZU",style: TextStyle(fontWeight: FontWeight.bold),),
+      ),
         body: GestureDetector(
           child: Column(
             children: [
@@ -126,7 +131,6 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
