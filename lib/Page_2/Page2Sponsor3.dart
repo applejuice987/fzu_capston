@@ -1,3 +1,5 @@
+//import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -51,6 +53,7 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
     super.dispose();
   }
   CollectionReference sponsor = FirebaseFirestore.instance.collection('sponsor');
+  CollectionReference user = FirebaseFirestore.instance.collection('userInfoTable');
 
   //void getdata() {
   //var db = FirebaseFirestore.instance;
@@ -106,6 +109,8 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
                 onPressed: (){
                   sponsorup sponsorModel1 = sponsorup(title: titlebox, content: contentbox);
                   sponsor.doc(docId).collection('recruit').doc(titlebox).set(sponsorModel1.toJson());
+                  user.doc('user').collection('user_sponsor').doc(docId)
+                      .update({'adList':FieldValue.arrayUnion([titlebox])});
 
                   Navigator.pop(context);
                   //sponsor.add({'title': '제목1', 'content': '내용1'});
