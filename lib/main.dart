@@ -95,10 +95,10 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isInflu = false;
   bool isadmin = false;
   var useremail = FirebaseAuth.instance.currentUser?.email.toString();
-
+  List<String> _titleList = [];
 
   void initState() {
-    super.initState();
+
     MySharedPreferences.instance.getBooleanValue("isInflu").then((value) =>
         setState(() {
           print('3-1$isInflu');
@@ -127,9 +127,22 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch(e){
       print(e);
     }
+    super.initState();
   }
 
   Widget build(BuildContext context) {
+    var useremail = FirebaseAuth.instance.currentUser?.email.toString();
+    FirebaseFirestore.instance.collection("sponsor").doc(useremail).collection('recruit').get().then((value) {
+      setState(() {
+        _titleList.clear();
+        for (var doc in value.docs) {
+          String title = doc["title"];
+          String content = doc["content"];
+          _titleList.add(doc['title'].toString());
+        }
+      });
+      // MySharedPreferences.instance.setStringList('albamon', _titleList);
+    });
 
     //인플루언서 로그인시 실행되야하는 바텀 아이템
     List<Widget> influ_bottom = <Widget>[
@@ -142,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //스폰서 로그인시 ~~
     List<Widget> spon_bottom = <Widget>[
       Page1Sponsor(),
-      Page2Sponsor(),
+      Page2Sponsor(list: _titleList),
       Page3(),
       Page4()
     ];
