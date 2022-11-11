@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/Page_1/Page1Influencer.dart';
 import 'package:fzu/Page_1/Page1Sponsor.dart';
+import 'package:fzu/Page_1/Create_Info.dart';
 import 'package:fzu/Page_2/Page2Influencer.dart';
 import 'package:fzu/Page_2/Page2Influencer2.dart';
 import 'package:fzu/Page_2/Page2Sponsor.dart';
@@ -15,8 +16,6 @@ import 'package:fzu/Page_4/Page4.dart';
 import 'package:fzu/firebase_options.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 import 'Page_2/Page2Sponsor2.dart';
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -95,16 +94,13 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isadmin = false;
   var useremail = FirebaseAuth.instance.currentUser?.email.toString();
 
-
   void initState() {
-    super.initState();
     MySharedPreferences.instance.getBooleanValue("isInflu").then((value) =>
         setState(() {
           print('3-1$isInflu');
           isInflu = value;
           print('3-2$isInflu');
         }));
-
     try {
       FirebaseFirestore.instance
           .collection("userInfoTable")
@@ -126,13 +122,14 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch(e){
       print(e);
     }
+    super.initState();
   }
 
   Widget build(BuildContext context) {
-
     //인플루언서 로그인시 실행되야하는 바텀 아이템
     List<Widget> influ_bottom = <Widget>[
-      Page1Influencer(),
+     Create_Info(),
+     // Page1Influencer(),
       Page2Influencer(),
       Page3(),
       Page4()
@@ -149,26 +146,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         surfaceTintColor: const Color(0xffc9b9ec),
         foregroundColor: Colors.black,
         backgroundColor: const Color(0xffc9b9ec),
         title: const Text("FZU",style: TextStyle(fontWeight: FontWeight.bold),),
-        actions: <Widget> [
-          Visibility(
-            visible: isadmin? true : false,
-            child: IconButton(onPressed: (){
-              if(isInflu = true){
-                MySharedPreferences.instance.setBooleanValue("isInflu", false);
-                isInflu = false;
-              }
-              else {
-                MySharedPreferences.instance.setBooleanValue("isInflu", true);
-                isInflu = true;
-              }
-              print(isInflu);
-            }, icon: const Icon(Icons.change_circle)),
-          )
-        ],
       ),
       body: Container(
         color: const Color(0xffc9b9ec),
@@ -195,10 +177,10 @@ class _MyHomePageState extends State<MyHomePage> {
           },
           type: BottomNavigationBarType.fixed,
           items: const[
-            BottomNavigationBarItem(icon: Icon(Icons.add),label: "First"),
-            BottomNavigationBarItem(icon: Icon(Icons.delete),label: "Second"),
-            BottomNavigationBarItem(icon: Icon(Icons.android),label: "Third"),
-            BottomNavigationBarItem(icon: Icon(Icons.apple),label: "Fourth"),
+            BottomNavigationBarItem(icon: Icon(Icons.add),label: "찾기"),
+            BottomNavigationBarItem(icon: Icon(Icons.delete),label: "내 광고"),
+            BottomNavigationBarItem(icon: Icon(Icons.android),label: "채팅"),
+            BottomNavigationBarItem(icon: Icon(Icons.apple),label: "내 정보"),
           ],
         ),
       ),

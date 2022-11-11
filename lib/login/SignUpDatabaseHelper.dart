@@ -18,7 +18,7 @@ class SignUpDatabaseHelper {
 
   }
 
-  Future<void> backUpInfluencerData(String email,String pw, String platform, String img64, String type) async{ //데이터 백업 함수
+  Future<void> backUpInfluencerData(String email,String pw, String platform, String img64, String type, String channelName, String contents) async{ //데이터 백업 함수
       final backUpData = <String, dynamic>{ //SQLite 데이터 매핑
         'email': email,
         'pw': pw,
@@ -32,14 +32,35 @@ class SignUpDatabaseHelper {
         'chatList' : [],
         'likeAdList' : [],
         'likeSpoList' : [],
-        'blackList' : []
+        'blackList' : [],
+        'channelName': channelName,
+        'contents' : contents
 
       };
       db.collection("userInfoTable").doc("user").collection("user_influencer").doc(email).set(backUpData);
+  Future<void> backUpInfluencerData(
+      String email, String pw, String platform, String img, String type, String channelName, String contents) async {
+    //데이터 백업 함수
+    final backUpData = <String, dynamic>{
+      //SQLite 데이터 매핑
+      'email': email,
+      'pw': pw,
+      'platform': platform,
+      'profile': img,
+      'type': type,
+      'channelName': channelName,
+      'contents' : contents
+    };
+    db
+        .collection("userInfoTable")
+        .doc("user")
+        .collection("user_influencer")
+        .doc(email)
+        .set(backUpData);
   }
 
   Future<void> backUpSponsorData(String email, String pw, String company,
-      String image, String type) async {
+      String image, String type, String ceoName) async {
     //데이터 백업 함수
     final backUpData = <String, dynamic>{
       //SQLite 데이터 매핑
@@ -51,8 +72,9 @@ class SignUpDatabaseHelper {
       'likeInfList' : [],
       'adList' : [],
       'chatList' : [],
-      'blackList' : []
+      'blackList' : [],
 
+      'ceoName' : ceoName
     };
     db
         .collection("userInfoTable")
@@ -183,5 +205,4 @@ class SignUpDatabaseHelper {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER);
   }
-
 }
