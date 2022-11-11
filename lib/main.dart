@@ -12,11 +12,13 @@ import 'package:fzu/Page_2/Page2Influencer.dart';
 import 'package:fzu/Page_2/Page2Influencer2.dart';
 import 'package:fzu/Page_2/Page2Sponsor.dart';
 import 'package:fzu/Page_3/Page3.dart';
+import 'package:fzu/Page_3/Page3influencer.dart';
+import 'package:fzu/Page_3/Page3sponser.dart';
 import 'package:fzu/Page_4/Page4.dart';
 import 'package:fzu/firebase_options.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 import 'Page_2/Page2Sponsor2.dart';
-
+String mytype="";
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -100,6 +102,11 @@ class _MyHomePageState extends State<MyHomePage> {
           print('3-1$isInflu');
           isInflu = value;
           print('3-2$isInflu');
+          if (value) {
+            mytype="inf";
+          } else {
+            mytype="spo";
+          }
         }));
     try {
       FirebaseFirestore.instance
@@ -131,14 +138,14 @@ class _MyHomePageState extends State<MyHomePage> {
      Create_Info(),
      // Page1Influencer(),
       Page2Influencer(),
-      Page3(),
+      Page3influencer(),
       Page4()
     ];
     //스폰서 로그인시 ~~
     List<Widget> spon_bottom = <Widget>[
       Page1Sponsor(),
       Page2Sponsor(),
-      Page3(),
+      Page3sponser(),
       Page4()
     ];
     print("2- ${isInflu.toString()}");
