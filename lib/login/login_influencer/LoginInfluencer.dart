@@ -36,80 +36,89 @@ class _LoginInfluencerState extends State<LoginInfluencer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          alignment: Alignment.center,
-          height: double.infinity,
-          color: const Color(0xffc9b9ec),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget> [
-              Column(
-                children: [
-                  const Text("인플루언서님 안녕하세요!", style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
-                  Container(
-                    height: 3,
-                    width: double.infinity,
-                    color: Colors.white,
-                    margin: const EdgeInsets.fromLTRB(50, 10, 50, 0),
-                  ),
-                ],
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(30, 0, 30, 30),
-                child: Column(
-                  children: <Widget> [
-                    TextField(
-                      controller: in_email_controller,
-                      decoration: buildInputDecoration("이메일", true)
-                    ),
-                    TextField(
-                      controller: in_pw_controller,
-                      obscureText: _passwordObscure,
-                      decoration: buildInputDecoration("비밀번호",false),
-                    ),
-                    const SizedBox(height: 10,),
-                    SizedBox(
+      body: GestureDetector(
+        onTap: () {
+          FocusNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+        },
+        child: Container(
+            alignment: Alignment.center,
+            height: double.infinity,
+            color: const Color(0xffc9b9ec),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget> [
+                Column(
+                  children: [
+                    const Text("인플루언서님 안녕하세요!", style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
+                    Container(
+                      height: 3,
                       width: double.infinity,
-                      height: 40,
-                      child: ElevatedButton(onPressed: () {
-                        SignUpDatabaseHelper().loginFunc(in_email_controller.text, in_pw_controller.text, context, true);
-                      }, style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            elevation: 15,
-                            shadowColor: Colors.black,
-                            side: const BorderSide(color: Colors.black, width : 1.5),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))
-                        ), child: const Text("로그인",style: TextStyle(color: Colors.black),),),
-                    ),
-                    const SizedBox(height: 30),
-                    SizedBox(
-                      width: double.infinity,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          SizedBox(height: 30,
-                            child: TextButton(onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpInfluencer()));
-                            }, child: const Text("회원가입",style: TextStyle(color: Colors.black),)),
-                          ),
-                          SizedBox(height: 30,
-                            child: TextButton(onPressed: (){
-                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MyApp()),(Route<dynamic> route) => false);
-                            }, child: const Text("메인으로 넘어가기", style: TextStyle(color: Colors.black),)),
-                          ),
-                          SizedBox(height: 30,
-                            child: TextButton(onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const FindAccount()));
-                            }, child: const Text("비밀번호를 잊으셨나요?", style: TextStyle(color: Colors.black),)),
-                          ),
-                        ],
-                      ),
+                      color: Colors.white,
+                      margin: const EdgeInsets.fromLTRB(50, 10, 50, 0),
                     ),
                   ],
                 ),
-              ),
-            ],
-          )),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+                  child: Column(
+                    children: <Widget> [
+                      TextField(
+                        controller: in_email_controller,
+                        decoration: buildInputDecoration("이메일", true)
+                      ),
+                      TextField(
+                        controller: in_pw_controller,
+                        obscureText: _passwordObscure,
+                        decoration: buildInputDecoration("비밀번호",false),
+                      ),
+                      const SizedBox(height: 10,),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 40,
+                        child: ElevatedButton(onPressed: () {
+                          SignUpDatabaseHelper().loginFunc(in_email_controller.text, in_pw_controller.text, context, true);
+                        }, style: ElevatedButton.styleFrom(
+                              primary: Colors.white,
+                              elevation: 15,
+                              shadowColor: Colors.black,
+                              side: const BorderSide(color: Colors.black, width : 1.5),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))
+                          ), child: const Text("로그인",style: TextStyle(color: Colors.black),),),
+                      ),
+                      const SizedBox(height: 30),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            SizedBox(height: 30,
+                              child: TextButton(onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpInfluencer()));
+                              }, child: const Text("회원가입",style: TextStyle(color: Colors.black),)),
+                            ),
+                            SizedBox(height: 30,
+                              child: TextButton(onPressed: (){
+                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MyApp()),(Route<dynamic> route) => false);
+                              }, child: const Text("메인으로 넘어가기", style: TextStyle(color: Colors.black),)),
+                            ),
+                            SizedBox(height: 30,
+                              child: TextButton(onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const FindAccount()));
+                              }, child: const Text("비밀번호를 잊으셨나요?", style: TextStyle(color: Colors.black),)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )),
+      ),
     );
   }
 
@@ -119,11 +128,11 @@ class _LoginInfluencerState extends State<LoginInfluencer> {
       return InputDecoration(
           labelText: asdf,
           focusColor: Colors.black,
-          enabledBorder: UnderlineInputBorder(
+          enabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.black)),
-          focusedBorder: UnderlineInputBorder(
+          focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.black)),
-          labelStyle: TextStyle(color: Colors.black),
+          labelStyle: const TextStyle(color: Colors.black),
           suffixIcon: IconButton(
               onPressed: () {
                 setState(() {
@@ -138,9 +147,9 @@ class _LoginInfluencerState extends State<LoginInfluencer> {
       return InputDecoration(
           labelText: asdf,
           focusColor: Colors.black,
-          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-          labelStyle: TextStyle(color: Colors.black)
+          enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+          focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+          labelStyle: const TextStyle(color: Colors.black)
       );
     }
   }
