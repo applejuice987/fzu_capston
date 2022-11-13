@@ -18,19 +18,23 @@ class Page2Sponsor3 extends StatefulWidget {
 class sponsorup {
   final String title;
   final String content;
+  final String id;
 
   sponsorup({
     required this.title,
     required this.content,
+    required this.id,
   });
 
   sponsorup.fromJson(Map<String, dynamic> json):
         title= json['title'],
-        content = json['content'];
+        content = json['content'],
+        id = json['id'];
 
   Map<String, dynamic> toJson() => {
     'title': title,
     'content': content,
+    'id': id,
   };
 
 
@@ -107,11 +111,12 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
               //height: submitButtonHeigh,
               child: ElevatedButton(
                 onPressed: (){
-                  sponsorup sponsorModel1 = sponsorup(title: titlebox, content: contentbox);
+                  sponsorup sponsorModel1 = sponsorup(title: titlebox, content: contentbox, id: docId);
                   sponsor.doc(docId).collection('recruit').doc(titlebox).set(sponsorModel1.toJson());
                   user.doc('user').collection('user_sponsor').doc(docId)
                       .update({'adList':FieldValue.arrayUnion([titlebox])});
                   sponsor.doc('fullad').update({'adList':FieldValue.arrayUnion([titlebox])});
+                  sponsor.doc('fullad').collection('recruit').doc(titlebox).set(sponsorModel1.toJson());
 
                   Navigator.pop(context);
                   //sponsor.add({'title': '제목1', 'content': '내용1'});

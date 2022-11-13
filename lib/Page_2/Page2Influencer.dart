@@ -26,27 +26,65 @@ class _Page2InfluencerState extends State<Page2Influencer> {
 
 
   List<String> _adList = [];
-  //Map<String, dynamic> Middle_Datainfo = Map<String, dynamic>();
+  Map<String, dynamic> Middle_Datainfo = Map<String, dynamic>();
+
+  void initState() {
+    super.initState();
+  }
+  refreshlist(){
+    FirebaseFirestore.instance.collection("sponsor").doc('fullad').collection('recruit').get().then((value) {
+      setState(() {
+        _adList.clear();
+        for (var doc in value.docs) {
+          String title = doc["title"];
+          String content = doc["content"];
+          _adList.add(doc['title'].toString());
+        }
+      });
+      // MySharedPreferences.instance.setStringList('albamon', _titleList);
+    });
+  }
+
+  // refreshlist() {
+  //   FirebaseFirestore.instance.collection("sponsor").get().then((value) {
+  //     setState(() {
+  //       _adList.clear();
+  //       for (var doc in value.docs) {
+  //         _adList.add(doc['adList'].toString());
+  //       }
+  //     });
+  //   });
+  // }
+  // getdata(){
+  //   FirebaseFirestore.instance.collection("sponsor").get().then((value) => _SnapshotResulMiddle = value.docs);
+  //
+  //   for (int i = 0; i< _SnapshotResulMiddle.length; i++){
+  //     Middle_Datainfo = _SnapshotResulMiddle[i].data() as Map<String, dynamic>;
+  //
+  //     _adList.addAll(List.from(Middle_Datainfo['adList']));
+  //   }
+  // }
+
 
 
   @override
   Widget build(BuildContext context) {
-    // FirebaseFirestore.instance.collection("sponsor").doc('fullad').get().then((value) {
+    // FirebaseFirestore.instance.collection("sponsor").get().then((value) {
     //   setState(() {
     //     _adList.clear();
     //     for (var doc in value.docs) {
-    //       String title = doc["title"];
-    //       _adList.add(doc['title'].toString());
+    //       _adList.add(doc['adList'].toString());
     //     }
     //   });
-    //   // MySharedPreferences.instance.setStringList('albamon', _titleList);
     // });
+     refreshlist();
+
 
     return Scaffold(
         body: GridView.count(
           crossAxisCount: 2,
           childAspectRatio: (1/1.5),
-          children: List.generate(100, (index) {
+          children: List.generate(_adList.length, (index) {
             return Container(
               child: InkWell(
                 onTap:() {
@@ -59,7 +97,7 @@ class _Page2InfluencerState extends State<Page2Influencer> {
                   children: [
                     CircleAvatar(radius: 70,),
                     SizedBox(height: 20,),
-                    Text("광고명"),
+                    Text(_adList[index]),
                     Text('회사명'),
                 ],
                 ),
@@ -73,10 +111,4 @@ class _Page2InfluencerState extends State<Page2Influencer> {
     );
   }
 }
-
-
-
-
-
-
 
