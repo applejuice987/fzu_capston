@@ -8,7 +8,7 @@ import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/Page_1/Page1Influencer.dart';
 import 'package:fzu/Page_1/Page1Sponsor.dart';
 import 'package:fzu/Page_2/Page2Influencer.dart';
-import 'package:fzu/Page_2/Page2Influencer2.dart';
+import 'package:fzu/Page_2/Page2Influencer3.dart';
 import 'package:fzu/Page_2/Page2Sponsor.dart';
 import 'package:fzu/Page_3/Page3.dart';
 import 'package:fzu/Page_4/Page4.dart';
