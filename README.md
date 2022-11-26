@@ -26,6 +26,7 @@ asdfasdf
 
 
 원정연
+2022/11/26 Page1 인플루언서가 자기PR용 설정을 하는 UI 및 기능 구현, Page2 계정 관련해서 DB와 매끄럽게 연결되도록 수정 (브랜치 : jeongYeon_6th)
 
 
 정민수-채팅기능
@@ -67,11 +68,10 @@ options: DefaultFirebaseOptions.currentPlatform,
 - PR텍스트는 홍보용 문구와 비슷한 개념임. 다만 회원가입 시 작성한 자기소개와는 별개의 개념임.(추후 그 자기소개를 그대로 갖다 쓸 수 있게 하는 체크박스도 구현할 예정)
 - 사실상 사용자에게 PR콘텐츠는 하나의 이미지처럼 노출됨.
 - FZU가 설정할 PR콘텐츠 프리셋은 다음과 같음.
-  <img height="320px" src="C:\Users\wonju\StudioProjects\capston_project\assets\images\pr.png"/></img>
   ![PR](./pr.png)
 - 사용자는 이런 프리셋을 사용하지 않고 <u>자신이 직접 커스텀한 이미지만 노출</u>하도록 할 수 있음.
 - FZU는 커스텀 기능은 제공하지 않음.
 ### 스폰서 노출
 - 스폰서는 Page1에서 인플루언서들의 정보를 확인할 수 있음.
 - 이 정보에는 PR콘텐츠, 인플루언서들의 간단한 스펙, 카테고리가 해당됨.
-- 
+- 스폰서는 이 정보 화면에서 채팅을 시도할 수 있음.
