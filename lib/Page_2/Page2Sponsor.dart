@@ -4,8 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fzu/MySharedPreferences.dart';
-import 'package:fzu/Page_2/Page2Sponsor2.dart';
-import 'package:fzu/Page_2/Page2Sponsor3.dart';
+import 'package:fzu/Page_2/Page2Sponsor_DetailAd.dart';
+import 'package:fzu/Page_2/Page2Sponsor_AddAd.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

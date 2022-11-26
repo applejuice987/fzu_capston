@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:fzu/Page_2/Page2Influencer2.dart';
+import 'package:fzu/Page_2/Page2Influencer_DetailAd.dart';
 
 //TODO!! 로그인 한 사람이 인플루언서 일 경우, 이 화면 출력
 

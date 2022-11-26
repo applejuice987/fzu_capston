@@ -14,7 +14,7 @@ import 'package:fzu/Page_3/Page3.dart';
 import 'package:fzu/Page_4/Page4.dart';
 import 'package:fzu/firebase_options.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
-import 'Page_2/Page2Sponsor2.dart';
+import 'Page_2/Page2Sponsor_DetailAd.dart';
 
 
 
