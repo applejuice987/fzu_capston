@@ -128,8 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     //인플루언서 로그인시 실행되야하는 바텀 아이템
     List<Widget> influ_bottom = <Widget>[
-     Create_Info(),
-     // Page1Influencer(),
+     //Create_Info(),
+      Page1Influencer(),
       Page2Influencer(),
       Page3(),
       Page4()

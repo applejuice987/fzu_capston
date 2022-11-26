@@ -24,36 +24,6 @@ class Create_Info extends StatefulWidget {
   State<Create_Info> createState() => _Create_InfoState();
 }
 
-reviseButton(dynamic image) {
-  return Container(
-    width: 300,
-    height: 40,
-    margin: const EdgeInsets.only(top: 20),
-    child: ElevatedButton(
-      onPressed: () async {
-        if(formKey.currentState!.validate()){
-          // validation 이 성공하면 true 리턴
-          formKey.currentState!.save();
-
-        }
-
-      },
-      style: ElevatedButton.styleFrom(
-          primary: Colors.white,
-          elevation: 15,
-          shadowColor: Colors.black,
-          side: const BorderSide(color: Colors.black, width : 1.5),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))
-      ),
-      child: const Text(
-        '수정하기',
-        style: TextStyle(
-          color: Colors.black,
-        ),
-      ),
-    ),
-  );
-}
 
 /*
 class FireModel {
@@ -98,8 +68,57 @@ class FireService{
 */
 class _Create_InfoState extends State<Create_Info> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
+  String _currentUser = '';
 
-  void Primage(dynamic image) async {
+  @override
+  void initState() {
+    super.initState();
+    _currentUser = auth.currentUser!.email.toString();
+
+  }
+
+
+  reviseButton(dynamic image) {
+    return Container(
+      width: 300,
+      height: 40,
+      margin: const EdgeInsets.only(top: 20),
+      child: ElevatedButton(
+        onPressed: () async {
+          if(formKey.currentState!.validate()){
+            // validation 이 성공하면 true 리턴
+            formKey.currentState!.save();
+          }
+
+          final updateData = <String, dynamic>{
+            'PRImage': Primage(image),
+            'PRText': prTextController.text,
+          };
+          firestore.collection('userInfoTable').doc('user').collection('user_influencer').doc(_currentUser).update(updateData).then((value) {
+            Navigator.pop(context);
+          });
+
+
+        },
+        style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            elevation: 15,
+            shadowColor: Colors.black,
+            side: const BorderSide(color: Colors.black, width : 1.5),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))
+        ),
+        child: const Text(
+          '수정하기',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
+
+  String Primage(dynamic image) {
     final FirebaseAuth auth = FirebaseAuth.instance;
     var img64;
     if (image != null) {
@@ -108,108 +127,148 @@ class _Create_InfoState extends State<Create_Info> {
     } else {
       img64 = '';
     }
+    return img64;
   }
+
+  bool _isOnlyImage = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.black),
+          title: Text('홍보 설정하기', style: TextStyle(color: Colors.black),),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 5,
+
+        ),
         backgroundColor: Color(0xffC9B9EC),
         body: SingleChildScrollView(
-          child: Column(children: <Widget>[
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
-              alignment: AlignmentDirectional.center,
-              child: Text('자기 PR',
-                  style: TextStyle(
-                      color: Colors.black,
-                      letterSpacing: 2.0,
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.bold)),
-            ),
-            Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Form(key: formKey,
-                      child: Container(
-                    margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 200,
-                            height: 200,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: ((builder) => bottomSheet()));
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.black,
-                                  onSurface: Colors.grey,
-                                  backgroundColor: Colors.grey,
-                                  side: BorderSide(width: 0)),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Visibility(
-                                    visible: _showImage,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: const [
-                                        CircularProgressIndicator(),
-                                      ],
-                                    ),
-                                  ),
-                                  Visibility(
-                                      visible: true,
-                                      child: _imageFile == null
-                                          ? Text('+')
-                                          : Image(
-                                              image: FileImage(
-                                                  File(_imageFile.path)),
-                                            ))
-                                ],
-                              ),
-                            ),
-                          ),
-                          Container(
-                            child: Form(
-                              child: Container(
-                                height: 500,
-                                child: Column(
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(30, 10, 30, 0),
+            child: Column(children: <Widget>[
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                alignment: AlignmentDirectional.center,
+                child: Text('자기 PR',
+                    style: TextStyle(
+                        color: Colors.black,
+                        letterSpacing: 2.0,
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.bold)),
+              ),
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Form(key: formKey,
+                        child: Container(
+                      margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 200,
+                              height: 200,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: ((builder) => bottomSheet()));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.black,
+                                    onSurface: Colors.grey,
+                                    backgroundColor: Colors.grey,
+                                    side: BorderSide(width: 0)),
+                                child: Stack(
+                                  alignment: Alignment.center,
                                   children: [
-                                    renderTextFormField(
-                                      label: '자기PR',
-                                      onSaved: (val) {},
-                                      validator: (val) {
-                                        return null;
-                                      },
+                                    Visibility(
+                                      visible: _showImage,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: const [
+                                          CircularProgressIndicator(),
+                                        ],
+                                      ),
                                     ),
-                                    renderTextFormField(
-                                      label: '아무거나',
-                                      onSaved: (val) {},
-                                      validator: (val) {
-                                        return null;
-                                      },
-                                    ),
+                                    Visibility(
+                                        visible: true,
+                                        child: _imageFile == null
+                                            ? Text('+\n이미지 추가', textAlign: TextAlign.center,)
+                                            : Image(
+                                                image: FileImage(
+                                                    File(_imageFile.path)),
+                                              ))
                                   ],
                                 ),
                               ),
                             ),
-                          ),
-                          reviseButton(_imageFile)
-                        ]),
-                  ))
-                ])
-          ]),
+                            Container(
+                              child: Form(
+                                child: Container(
+                                  height: 500,
+                                  child: Column(
+                                    children: [
+                                      renderTextFormField(
+                                        label: '자기PR',
+                                        controller: prTextController,
+                                        onSaved: (val) {},
+                                        validator: (val) {
+                                          return null;
+                                        },
+                                      ),
+                                      renderTextFormField(
+
+                                        controller: anyController,
+                                        label: '아무거나',
+                                        onSaved: (val) {},
+                                        validator: (val) {
+                                          return null;
+                                        },
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text("이미지만 사용"),
+
+                                          Switch(value: _isOnlyImage, onChanged: (value) {
+                                            setState(() {
+                                              _isOnlyImage = value;
+                                            });
+
+                                          },
+                                          ),
+                                          Tooltip(
+                                            message: '이미지만 사용하고 싶으신가요?\nFZU는 자유로운 자기PR 시스템을 제공합니다.\n프로필 사진이 아닌 별개의 홍보용 이미지를 등록하고\n'
+                                                '그와 동시에 홍보문구를 작성하실 수 있으며,\n자신이 꾸민 홍보용 이미지만 노출되도록 설정하실 수 있습니다.\n직접 꾸민 이미지만 사용하고 싶으시다면,'
+                                                ' 스위치를 켜 주세요.',
+                                            triggerMode: TooltipTriggerMode.tap,
+                                            showDuration: Duration(seconds: 15),
+                                            child: Icon(Icons.question_mark),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            reviseButton(_imageFile)
+                          ]),
+                    ))
+                  ])
+            ]),
+          ),
         ));
   }
 
   List<dynamic> imageList = [];
+  final prTextController = TextEditingController();
+  final anyController = TextEditingController();
 
   Widget bottomSheet() {
     SchedulerBinding.instance!.addPostFrameCallback((_) {
@@ -262,6 +321,7 @@ class _Create_InfoState extends State<Create_Info> {
     required String label,
     required FormFieldSetter onSaved,
     required FormFieldValidator validator,
+    required TextEditingController controller
   }) {
     assert(onSaved != null);
     assert(validator != null);
@@ -280,6 +340,8 @@ class _Create_InfoState extends State<Create_Info> {
           ],
         ),
         TextFormField(
+          enabled: !_isOnlyImage,
+          controller: controller,
           onSaved: onSaved,
           validator: validator,
         ),
