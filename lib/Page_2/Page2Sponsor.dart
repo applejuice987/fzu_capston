@@ -4,8 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fzu/MySharedPreferences.dart';
-import 'package:fzu/Page_2/Page2Sponsor2.dart';
-import 'package:fzu/Page_2/Page2Sponsor3.dart';
+import 'package:fzu/Page_2/Page2Sponsor_DetailAd.dart';
+import 'package:fzu/Page_2/Page2Sponsor_AddAd.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,7 +24,7 @@ class _Page2SponsorState extends State<Page2Sponsor> {
   late final DocumentSnapshot documentData;
   List<String> _titleList = [];
   //_Page2SponsorState(this.documentData);
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  var db = FirebaseFirestore.instance;
   //CollectionReference sponsor = FirebaseFirestore.instance.collection('sponsor');
 
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -39,15 +39,22 @@ class _Page2SponsorState extends State<Page2Sponsor> {
   // return result;
   // }
 
+  String _currentUser = '';
+
+
+  @override
   void initState() {
     super.initState();
+    setData();
   }
-  refreshlist(){
-    var useremail = FirebaseAuth.instance.currentUser?.email.toString();
-    FirebaseFirestore.instance.collection("sponsor").doc(useremail).collection('recruit').get().then((value) {
+
+  void setData() {
+    _currentUser = FirebaseAuth.instance.currentUser!.email.toString();
+    db.collection("AdTable").where("email", isEqualTo: _currentUser).get().then((value) {
       setState(() {
         _titleList.clear();
         for (var doc in value.docs) {
+          print(doc['title']);
           _titleList.add(doc['title'].toString());
         }
       });
@@ -56,9 +63,9 @@ class _Page2SponsorState extends State<Page2Sponsor> {
 
   @override
   Widget build(BuildContext context) {
-    refreshlist();
    // var _titleList = MySharedPreferences.instance.getStringList('albamon');
    //  List<String> _titleList = widget.list;
+    //setData();
     return Scaffold(
       // appBar: PreferredSize(
       //   preferredSize: Size.fromHeight(30),
@@ -79,7 +86,7 @@ class _Page2SponsorState extends State<Page2Sponsor> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const Page2Sponsor2()));
+                        builder: (context) => const Page2Sponsor_DetailAd()));
               },
               child: Card(
               child: SizedBox(
@@ -92,10 +99,13 @@ class _Page2SponsorState extends State<Page2Sponsor> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xfff4cccc),
-        onPressed: () {Navigator.push(
+        onPressed: () {
+          Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const Page2Sponsor3()));},
+                builder: (context) => const Page2Sponsor_AddAd()));
+
+          },
         child: const Icon(Icons.add),
       ),
     );

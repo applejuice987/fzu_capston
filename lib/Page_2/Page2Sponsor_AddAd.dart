@@ -5,46 +5,61 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:fzu/Page_2/Page2Sponsor2.dart';
+import 'package:fzu/Page_2/Page2Sponsor_DetailAd.dart';
+
+import 'Page2Sponsor.dart';
 
 //TODO!! 로그인 한 사람이 스폰서 일 경우, 이 화면 출력
 
-class Page2Sponsor3 extends StatefulWidget {
-  const Page2Sponsor3({Key? key}) : super(key: key);
+class Page2Sponsor_AddAd extends StatefulWidget {
+  const Page2Sponsor_AddAd({Key? key}) : super(key: key);
 
   @override
-  State<Page2Sponsor3> createState() => _Page2Sponsor3State();
+  State<Page2Sponsor_AddAd> createState() => _Page2Sponsor_AddAdState();
 }
 class sponsorup {
   final String title;
   final String content;
+  final String email;
 
   sponsorup({
     required this.title,
     required this.content,
+    required this.email
   });
 
   sponsorup.fromJson(Map<String, dynamic> json):
         title= json['title'],
-        content = json['content'];
+        content = json['content'],
+        email = json['email'];
 
   Map<String, dynamic> toJson() => {
     'title': title,
     'content': content,
+    'email': email
   };
 
 
 }
 
-class _Page2Sponsor3State extends State<Page2Sponsor3> {
+class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
   final _nameController = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
+  late final String _currentUser;
 
 
   late String titlebox;
   late String contentbox;
   late String docId = auth.currentUser!.email.toString();
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _currentUser = auth.currentUser!.email.toString();
+    });
+  }
 
 
   @override
@@ -53,6 +68,7 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
     super.dispose();
   }
   CollectionReference sponsor = FirebaseFirestore.instance.collection('sponsor');
+  CollectionReference AdTable = FirebaseFirestore.instance.collection('AdTable');
   CollectionReference user = FirebaseFirestore.instance.collection('userInfoTable');
 
   //void getdata() {
@@ -112,13 +128,15 @@ class _Page2Sponsor3State extends State<Page2Sponsor3> {
               //height: submitButtonHeigh,
               child: ElevatedButton(
                 onPressed: (){
-                  sponsorup sponsorModel1 = sponsorup(title: titlebox, content: contentbox);
-                  sponsor.doc(docId).collection('recruit').doc(titlebox).set(sponsorModel1.toJson());
+                  sponsorup sponsorModel1 = sponsorup(title: titlebox, content: contentbox, email: _currentUser);
+                  //sponsor.doc(docId).collection('recruit').doc(titlebox).set(sponsorModel1.toJson());
+                  AdTable.doc(titlebox).set(sponsorModel1.toJson());
                   user.doc('user').collection('user_sponsor').doc(docId)
                       .update({'adList':FieldValue.arrayUnion([titlebox])});
-                  sponsor.doc('fullad').update({'adList':FieldValue.arrayUnion([titlebox])});
+                  //sponsor.doc('fullad').update({'adList':FieldValue.arrayUnion([titlebox])});
 
                   Navigator.pop(context);
+
                   //sponsor.add({'title': '제목1', 'content': '내용1'});
 
                 },

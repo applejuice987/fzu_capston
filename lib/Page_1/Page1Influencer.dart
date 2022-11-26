@@ -21,6 +21,5 @@ class _Page1InfluencerState extends State<Page1Influencer> {
         Text('인플루언서 1페이지')
         ),
       );
-
   }
 }

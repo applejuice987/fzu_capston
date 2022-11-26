@@ -33,9 +33,11 @@ class _Page4_MyAdState extends State<Page4_MyAd> {
   void initState() {
     super.initState();
     _currentUser = auth.currentUser!.email.toString();
-    db.collection('userInfoTable').doc('user').collection('user_sponsor').doc(_currentUser).get().then((DocumentSnapshot doc) {
+    db.collection('sponsor').doc(_currentUser).collection('recruit').get().then((event) {
       setState(() {
-        _myAdList = doc['adList'];
+        for (var doc in event.docs) {
+          _myAdList.add(doc['title']);
+        }
       });
     });
     print(_myAdList);
