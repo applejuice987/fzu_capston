@@ -53,6 +53,7 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
           SignUpDatabaseHelper().backUpInfluencerData(
               email, password,
               platformName, img64, 'inf', channel_platformName, main_contents);
+          // TODO!! String email, String pw, String platform, String img64, String type, String channelName, String contents
 
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
