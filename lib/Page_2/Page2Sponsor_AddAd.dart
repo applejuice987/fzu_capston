@@ -144,7 +144,7 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
                       child: SizedBox(
                         height: double.infinity,
                         child: TextFormField(
-                          maxLines: null,
+                          maxLines: 1000,
                           controller: contentController,
                           keyboardType: TextInputType.multiline,
                           textInputAction: TextInputAction.newline,
