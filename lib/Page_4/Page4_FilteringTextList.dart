@@ -99,8 +99,14 @@ class _Page4_FilteringTextListState extends State<Page4_FilteringTextList> {
                   List<dynamic> newFilteringText = [];
                   newFilteringText.add(filteringController.text);
                   db.collection('userInfoTable').doc('user').collection(_userPath).doc(_currentUser).update({'filteringTextList' : FieldValue.arrayUnion(newFilteringText)
+                  }).then((value) {
+                    setState(() {
+                      _filteringTextList.add(filteringController.text);
+                      filteringController.text = '';
+                    });
+
                   });
-                  filteringController.text = '';
+
                   Navigator.pop(context);
                 },
               ),
