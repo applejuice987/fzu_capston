@@ -61,19 +61,18 @@ class _Page1InfluencerState extends State<Page1Influencer> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Container(child:
-                  _prImage != '' ? Image.memory(Base64Decoder().convert(_profileImage))
+                  Container(
+                    child:
+                  _prImage != '' ? Image.memory(Base64Decoder().convert(_prImage))
                       : Text('아직 설정하신 이미지가 없습니다.'),
                   ),
-
                   _prText != '' ? Text(_prText)
                       : Text("아직 설정하신 인사말이 없습니다.")
-
                 ],
               ),
             ),
             FloatingActionButton(onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => Create_Info()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => Create_Info(prImage: _prImage, prText: _prText)));
             },
             child: Text('홍보 설정하기'),)
           ]

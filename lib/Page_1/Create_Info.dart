@@ -18,7 +18,9 @@ final formKey = GlobalKey<FormState>();
 String Ptext = '';
 
 class Create_Info extends StatefulWidget {
-  const Create_Info({Key? key}) : super(key: key);
+  final String prImage;
+  final String prText;
+  const Create_Info({Key? key, required this.prImage, required this.prText}) : super(key: key);
 
   @override
   State<Create_Info> createState() => _Create_InfoState();
@@ -75,7 +77,14 @@ class _Create_InfoState extends State<Create_Info> {
   void initState() {
     super.initState();
     _currentUser = auth.currentUser!.email.toString();
+    anyController.text = '';
+    prTextController.text = widget.prText;
 
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
 
@@ -124,8 +133,10 @@ class _Create_InfoState extends State<Create_Info> {
     if (image != null) {
       var bytes = File(image!.path).readAsBytesSync();
       img64 = base64Encode(bytes);
-    } else {
+    } else if (widget.prImage == ''){
       img64 = '';
+    } else {
+      img64 = widget.prImage;
     }
     return img64;
   }
@@ -198,12 +209,14 @@ class _Create_InfoState extends State<Create_Info> {
                                     ),
                                     Visibility(
                                         visible: true,
-                                        child: _imageFile == null
+                                        child: widget.prImage == '' && _imageFile == null
                                             ? Text('+\n이미지 추가', textAlign: TextAlign.center,)
-                                            : Image(
-                                                image: FileImage(
+                                            : _imageFile != null ?
+                                        Image(
+                                                image:  FileImage(
                                                     File(_imageFile.path)),
-                                              ))
+                                              )
+                                            : Image.memory(Base64Decoder().convert(widget.prImage)))
                                   ],
                                 ),
                               ),
@@ -271,9 +284,9 @@ class _Create_InfoState extends State<Create_Info> {
   final anyController = TextEditingController();
 
   Widget bottomSheet() {
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
-      Navigator.of(context).pushReplacementNamed(bottomSheet().toString());
-    });
+    // SchedulerBinding.instance!.addPostFrameCallback((_) {
+    //   Navigator.of(context).pushReplacementNamed(bottomSheet().toString());
+    // });
 
     return Container(
       height: 150,
