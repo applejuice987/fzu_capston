@@ -222,15 +222,7 @@ class _Page4State extends State<Page4> {
                   children: <Widget>[
                     Expanded(
                         child: InkWell(
-                            onTap: isInflu
-                                ? () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                      const Page4_LikeAd()));
-                            }
-                                : () {
+                            onTap:  () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

@@ -353,6 +353,13 @@ class _Create_InfoState extends State<Create_Info> {
           ],
         ),
         TextFormField(
+          decoration: InputDecoration(
+            focusColor: Colors.black,
+            disabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey)),
+            labelStyle: _isOnlyImage ? TextStyle(color: Colors.grey) : TextStyle(color: Colors.black),
+          ),
+          style: _isOnlyImage ? TextStyle(color: Colors.grey) : TextStyle(color: Colors.black),
           enabled: !_isOnlyImage,
           controller: controller,
           onSaved: onSaved,

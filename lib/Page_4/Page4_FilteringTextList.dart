@@ -29,6 +29,7 @@ class _Page4_FilteringTextListState extends State<Page4_FilteringTextList> {
   String _currentUser = '';
   List<dynamic> _filteringTextList = [];
   String _userPath = '';
+  dynamic filteringController = TextEditingController();
 
   @override
   void initState() {
@@ -53,6 +54,61 @@ class _Page4_FilteringTextListState extends State<Page4_FilteringTextList> {
 
   }
 
+  void showAddFilteringTextDialog() {
+    showDialog(
+        context: context,
+        //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            //Dialog Main Title
+            title: Column(
+              children: <Widget>[
+                Text("필터링 단어 추가"),
+              ],
+            ),
+            //
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "추가하실 단어를 입력하세요.",
+                ),
+                Container(
+                  width: double.infinity,
+                    height: 50,
+                    child: TextField(
+                      controller: filteringController,
+                    )),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text("취소"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              TextButton(
+                child: Text("확인"),
+                onPressed: () {
+                  List<dynamic> newFilteringText = [];
+                  newFilteringText.add(filteringController.text);
+                  db.collection('userInfoTable').doc('user').collection(_userPath).doc(_currentUser).update({'filteringTextList' : FieldValue.arrayUnion(newFilteringText)
+                  });
+                  filteringController.text = '';
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +119,9 @@ class _Page4_FilteringTextListState extends State<Page4_FilteringTextList> {
           Padding(
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  showAddFilteringTextDialog();
+                },
                 child: Icon(
                     Icons.add
                 ),

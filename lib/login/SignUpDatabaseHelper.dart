@@ -35,6 +35,7 @@ class SignUpDatabaseHelper {
       'likeAdList': [],
       'likeSpoList': [],
       'blackList': [],
+      'filteringTextList': [],
       'channelName': channelName,
       'contents': contents,
       'subscribers' : ''
@@ -56,10 +57,10 @@ class SignUpDatabaseHelper {
         'profile': image,
         'type': type,
         'likeInfList': [],
+        'filteringTextList': [],
         'adList': [],
         'chatList': [],
         'blackList': [],
-
         'ceoName': ceoName
       };
       db
