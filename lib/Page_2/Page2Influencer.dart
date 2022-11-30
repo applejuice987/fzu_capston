@@ -32,7 +32,7 @@ class _Page2InfluencerState extends State<Page2Influencer> {
     super.initState();
   }
   refreshlist(){
-    FirebaseFirestore.instance.collection("sponsor").doc('fullad').collection('recruit').get().then((value) {
+    FirebaseFirestore.instance.collection("AdTable").get().then((value) {
       setState(() {
         _adList.clear();
         for (var doc in value.docs) {
@@ -77,7 +77,7 @@ class _Page2InfluencerState extends State<Page2Influencer> {
     //     }
     //   });
     // });
-     refreshlist();
+    refreshlist();
 
 
     return Scaffold(
@@ -90,18 +90,18 @@ class _Page2InfluencerState extends State<Page2Influencer> {
                 onTap:() {
                   Navigator.push(context, MaterialPageRoute(builder: (_) => Page2Influencer2()));
                 },
-              child: Container(
-                height: 1000,
-                margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                child: Column(
-                  children: [
-                    CircleAvatar(radius: 70,),
-                    SizedBox(height: 20,),
-                    Text(_adList[index]),
-                    Text('회사명'),
-                ],
+                child: Container(
+                  height: 1000,
+                  margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                  child: Column(
+                    children: [
+                      CircleAvatar(radius: 70,),
+                      SizedBox(height: 20,),
+                      Text(_adList[index]),
+                      Text('회사명'),
+                    ],
+                  ),
                 ),
-            ),
               ),
             );
           }

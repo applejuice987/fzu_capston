@@ -66,3 +66,19 @@ await Firebase.initializeApp(
 options: DefaultFirebaseOptions.currentPlatform,
 );
 
+## Page1 -  인플루언서 홍보용 PR 방향
+### PR 콘텐츠
+- 여기서 PR콘텐츠란, FZU에서 사용자의 입력을 받아 생성한 인플루언서의 홍보용 프리셋임.
+- PR콘텐츠는 사용자가 입력한 PR이미지, PR텍스트, ETC... 등으로 구성됨.
+- PR이미지는 프로필사진과 별개의 개념임.
+- PR텍스트는 홍보용 문구와 비슷한 개념임. 다만 회원가입 시 작성한 자기소개와는 별개의 개념임.(추후 그 자기소개를 그대로 갖다 쓸 수 있게 하는 체크박스도 구현할 예정)
+- 사실상 사용자에게 PR콘텐츠는 하나의 이미지처럼 노출됨.
+- FZU가 설정할 PR콘텐츠 프리셋은 다음과 같음.
+  <img height="320px" src="C:\Users\wonju\StudioProjects\capston_project\assets\images\pr.png"/></img>
+![PR](./pr.png)
+- 사용자는 이런 프리셋을 사용하지 않고 <u>자신이 직접 커스텀한 이미지만 노출</u>하도록 할 수 있음.
+- FZU는 커스텀 기능은 제공하지 않음.
+### 스폰서 노출
+- 스폰서는 Page1에서 인플루언서들의 정보를 확인할 수 있음.
+- 이 정보에는 PR콘텐츠, 인플루언서들의 간단한 스펙, 카테고리가 해당됨.
+- 

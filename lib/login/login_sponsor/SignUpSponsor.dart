@@ -45,10 +45,11 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const MainLoginScreen()),
-            (Route<dynamic> route) => false);
+                (Route<dynamic> route) => false);
       }
       SignUpDatabaseHelper()
           .backUpSponsorData(email, password, companyName, img64, 'spo', ceoName);
+      // TODO!! String email, String pw, String company,String image, String type, String ceoName
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         ScaffoldMessenger.of(context)
@@ -116,10 +117,10 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
 
   renderTextFormField(
       {required String label,
-      required FormFieldSetter onSaved,
-      required FormFieldValidator validator,
-      required String value,
-      required String hint}) {
+        required FormFieldSetter onSaved,
+        required FormFieldValidator validator,
+        required String value,
+        required String hint}) {
     assert(onSaved != null);
     assert(validator != null);
 
@@ -148,18 +149,18 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
               hintStyle: const TextStyle(fontSize: 13),
               suffixIcon: value == 'password' || value == 'passwordCheck'
                   ? IconButton(
-                      icon: Icon(
-                        _passwordVisible
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _passwordVisible = !_passwordVisible;
-                        });
-                      },
-                    )
+                icon: Icon(
+                  _passwordVisible
+                      ? Icons.visibility_off
+                      : Icons.visibility,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _passwordVisible = !_passwordVisible;
+                  });
+                },
+              )
                   : null),
           onChanged: (text) {
             if (value == 'password') {
@@ -212,6 +213,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -279,9 +281,9 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
                                       visible: _showImage,
                                       child: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        MainAxisAlignment.center,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                         children: const [
                                           CircularProgressIndicator(),
                                         ],
@@ -292,9 +294,9 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
                                         child: _imageFile == null
                                             ? const Text('+')
                                             : Image(
-                                                image: FileImage(
-                                                    File(_imageFile.path)),
-                                              ))
+                                          image: FileImage(
+                                              File(_imageFile.path)),
+                                        ))
                                   ],
                                 ),
                               ),
@@ -451,7 +453,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
 
   takePhoto(ImageSource source) async {
     final pickedFile =
-        await _picker.pickImage(source: source, imageQuality: 30);
+    await _picker.pickImage(source: source, imageQuality: 30);
     setState(() {
       _imageFile = pickedFile;
       _showImage = true;

@@ -5,17 +5,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'chatMessageModel.dart';
 
 //TODO!! Page3에서 클릭 하였을때, 누른 1:1 채팅창의 화면 출력.
 
 class Page3Detail extends StatefulWidget {
   final String roomid;
-  final String origin_inf;
-  final String origin_spo;
   final String origin_opponent_email;
-  const Page3Detail(this.origin_opponent_email,this.origin_inf,this.origin_spo,this.roomid,{Key? key}) : super(key: key);
+  const Page3Detail(this.origin_opponent_email,this.roomid,{Key? key}) : super(key: key);
   @override
   State<Page3Detail> createState() => _Page3DetailState();
 }
@@ -43,6 +40,7 @@ class _Page3DetailState extends State<Page3Detail> {
     String opponent_email = widget.origin_opponent_email;
     String room = widget.roomid;
     CollectionReference chat_log = FirebaseFirestore.instance.collection('chat_log').doc(room).collection('dummy');
+
 
     return Scaffold(
       appBar: AppBar(
@@ -177,10 +175,9 @@ class _Page3DetailState extends State<Page3Detail> {
                         'sender_email':FirebaseAuth.instance.currentUser?.email.toString(),
                         'chat':input_text.text
                       });
-                      firestore.collection('chat_log').doc(room).set({
+                      firestore.collection('chat_log').doc(room).update({
                         'lastchat':input_text.text,
-                        'inf':widget.origin_inf,
-                        'spo':widget.origin_spo
+
                       });
 
                       input_text.text="";
