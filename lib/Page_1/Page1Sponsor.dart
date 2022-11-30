@@ -164,8 +164,10 @@ class _Page1SponsorState extends State<Page1Sponsor>
                                         padding:
                                         EdgeInsets.fromLTRB(50, 0, 50, 15),
                                         child: Container(
+                                            child: Image.memory(Base64Decoder()
                                             child: docs[index]['profile'] != '' ? Image.memory(Base64Decoder()
                                                 .convert(
+                                                docs[index]['profile']))
                                                 docs[index]['profile']),)
                                                 : Text(_nullValue)
                                           //Base64Decoder().convert(docs['profile'])
@@ -187,6 +189,8 @@ class _Page1SponsorState extends State<Page1Sponsor>
                                       child: Container(
                                           padding:
                                           EdgeInsets.fromLTRB(30, 5, 30, 5),
+                                          child: Text(
+                                            docs[index]['platform'],
                                           child: Text( docs[index]['platform'] != '' ?
                                             docs[index]['platform'] :
                                             _nullValue,
@@ -199,10 +203,13 @@ class _Page1SponsorState extends State<Page1Sponsor>
                                       child: Container(
                                           padding:
                                           EdgeInsets.fromLTRB(30, 5, 30, 5),
+                                          child: Text(
+                                            docs[index]['Subscribers'],
                                           child: docs[index]['subscribers'] != '' ? Text(
                                             docs[index]['subscribers'],
                                             style: TextStyle( color: Colors.purple,
                                                 fontSize: 15.0),
+                                          )),
                                           ) : Text(_nullValue)),
                                     ),
                                     Flexible(
@@ -210,10 +217,13 @@ class _Page1SponsorState extends State<Page1Sponsor>
                                       child: Container(
                                           padding:
                                           EdgeInsets.fromLTRB(30, 5, 30, 5),
+                                          child: Text(
+                                            docs[index]['Category'],
                                           child: docs[index]['category'] != '' ? Text(
                                             docs[index]['category'].toString(),
                                             style: TextStyle( color: Colors.purple,
                                                 fontSize: 15.0),
+                                          )),
                                           ) : Text(_nullValue)),
                                     ),
 
@@ -257,3 +267,4 @@ class _Page1SponsorState extends State<Page1Sponsor>
     );
   }
 }
+

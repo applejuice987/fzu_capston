@@ -24,7 +24,7 @@ class _Page2SponsorState extends State<Page2Sponsor> {
   late final DocumentSnapshot documentData;
   List<String> _titleList = [];
   //_Page2SponsorState(this.documentData);
-  var db = FirebaseFirestore.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
   //CollectionReference sponsor = FirebaseFirestore.instance.collection('sponsor');
 
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -39,82 +39,86 @@ class _Page2SponsorState extends State<Page2Sponsor> {
   // return result;
   // }
 
-  String _currentUser = '';
-
-
-  @override
   void initState() {
     super.initState();
-    setData();
   }
-
-  void setData() {
-    _currentUser = FirebaseAuth.instance.currentUser!.email.toString();
-    db.collection("AdTable").where("email", isEqualTo: _currentUser).get().then((value) {
+  refreshlist(){
+    var useremail = FirebaseAuth.instance.currentUser?.email.toString();
+    FirebaseFirestore.instance.collection("sponsor").doc(useremail).collection('recruit').get().then((value) {
       setState(() {
         _titleList.clear();
         for (var doc in value.docs) {
-          print(doc['title']);
+          String title = doc["title"];
+          String content = doc["content"];
           _titleList.add(doc['title'].toString());
         }
       });
+      // MySharedPreferences.instance.setStringList('albamon', _titleList);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    refreshlist();
    // var _titleList = MySharedPreferences.instance.getStringList('albamon');
    //  List<String> _titleList = widget.list;
-    //setData();
-    return Scaffold(
-      // appBar: PreferredSize(
-      //   preferredSize: Size.fromHeight(30),
-      //   child: AppBar(
-      //     backgroundColor: Color(0xffC9B9EC),
-      //     title: Text("광고확인"),
-      //   ),
-      // ),
-      body: Container(
-        color: Color(0xffd6cdea),
-        child:
-        ListView.builder(itemCount: _titleList.length,
-        itemBuilder: (ctx, index){
-          return Container(
-            margin: const EdgeInsets.fromLTRB(15, 2.5, 15, 0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const Page2Sponsor_DetailAd()));
-              },
-              child: Card(
-              child: SizedBox(
-                height: 50
-                  ,child: _tile(_titleList[index],''))
+    return MaterialApp(
+      home: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            //const SliverAppBar(
+            //title: Text("새로운 광고모집을 추가하세요"),
+            //floating: true,
+            //flexibleSpace: Placeholder(),
+            // expandedHeight: 100,
+            // ),
+            SliverToBoxAdapter(
+
+                child: Container(
+                  padding: const EdgeInsets.all(30),
+                  height: 200,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Page2Sponsor_AddAd()));
+                      }, child: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.black,
+                        child: const Icon(
+                          CupertinoIcons.plus,
+                        ),),),
+                      //CircleAvatar(
+                      //radius: 30,
+                      // backgroundColor: Colors.black,
+                      // child: const Icon(
+                      // CupertinoIcons.plus,
+                      // ),),
+                      Text("새로운 광고 모집하기"),
+
+                    ],
+                  ),
+                )
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) => _titleList.isEmpty ? Text("아무것도 없음") : ListTile(title:Text(_titleList[index]),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Page2Sponsor_DetailAd()));
+                  },),
+                childCount: _titleList.length,
               ),
             ),
-          );
-        },),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xfff4cccc),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const Page2Sponsor_AddAd()));
-
-          },
-        child: const Icon(Icons.add),
+            // StreamBuilder<QuerySnapshot>(
+          ],
+        ),
       ),
     );
   }
-  ListTile _tile(String title, String subTitle) => ListTile(
-    title: Text(
-      title,
-      style: const TextStyle(fontSize: 20,),
-    ),
-    subtitle: Text(subTitle),
-  );
 }
