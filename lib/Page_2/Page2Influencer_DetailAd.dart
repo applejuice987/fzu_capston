@@ -30,7 +30,7 @@ class _Page2Influencer2State extends State<Page2Influencer2> {
 
   @override
 
-  CollectionReference sponsor = FirebaseFirestore.instance.collection('sponsor');
+  CollectionReference adtable = FirebaseFirestore.instance.collection('AdTable');
   CollectionReference user = FirebaseFirestore.instance.collection('userInfoTable');
 
   Widget build(BuildContext context) {
@@ -53,7 +53,8 @@ class _Page2Influencer2State extends State<Page2Influencer2> {
             child: SizedBox(
               //height: submitButtonHeigh,
               child: ElevatedButton(
-                onPressed: (){},
+                onPressed: (){
+                },
                 style: ElevatedButton.styleFrom(
                   textStyle: Theme.of(context).textTheme.subtitle1,
                 ),
