@@ -1,6 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fzu/Page_2/Page2Influencer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+//TODO!! 로그인 한 사람이 스폰서 일 경우, 이 화면 출력
 
 class Page2Influencer2 extends StatefulWidget {
   const Page2Influencer2({Key? key}) : super(key: key);
@@ -10,60 +15,51 @@ class Page2Influencer2 extends StatefulWidget {
 }
 
 class _Page2Influencer2State extends State<Page2Influencer2> {
+  final _nameController = TextEditingController();
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+
+  late String titlebox;
+  late String contentbox;
+  late String docId = auth.currentUser!.email.toString();
+
+
   @override
+
+  CollectionReference adtable = FirebaseFirestore.instance.collection('AdTable');
+  CollectionReference user = FirebaseFirestore.instance.collection('userInfoTable');
+
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
     return MaterialApp(
       home: Scaffold(
-        body: Container(
-          child: CustomScrollView(
-            slivers: [
-               SliverAppBar(
-                 centerTitle: true,
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    new Container(
-                      child: Column(
-                          children:[
-                            Container(
-                              child: Text("회사명"),
-                            ),
-                            Container(
-                              child: Text("광고명"),
-                            ),
-                            Container(
-                              child: Text("광고내용"),
-                            ),
-                          ]
-                      ),
-                    ),
-                ],
+        body: GestureDetector(
+          child: Column(
+            children: [
+              Text("회사명"),
+              Text("제목"),
+
+              Text("내용"),
+
+            ],
+          ),
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: SizedBox(
+              //height: submitButtonHeigh,
+              child: ElevatedButton(
+                onPressed: (){
+
+                },
+                style: ElevatedButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.subtitle1,
                 ),
-
-
-
-                floating: true,
-                flexibleSpace: FlexibleSpaceBar(
-                   titlePadding: EdgeInsetsDirectional.only(
-                     top: AppBar().preferredSize.height,
-                     bottom: AppBar().preferredSize.height
+                child: Text('지원하기'),
 
               ),
             ),
-                expandedHeight: 500,
-              ),
-
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                      (context, index) => ListTile(title: Text("지원자 목록")),
-                  childCount: 20,
-                ),
-              ),
-            ],
           ),
         ),
       ),
