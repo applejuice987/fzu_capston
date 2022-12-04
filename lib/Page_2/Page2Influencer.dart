@@ -88,7 +88,8 @@ class _Page2InfluencerState extends State<Page2Influencer> {
             return Container(
               child: InkWell(
                 onTap:() {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => Page2Influencer2()));
+                  String applicant = _adList[index];
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => Page2Influencer2(applicant: applicant)));
                 },
                 child: Container(
                   height: 1000,

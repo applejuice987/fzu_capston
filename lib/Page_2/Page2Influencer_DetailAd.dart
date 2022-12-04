@@ -8,8 +8,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 //TODO!! 로그인 한 사람이 스폰서 일 경우, 이 화면 출력
 
 class Page2Influencer2 extends StatefulWidget {
-  const Page2Influencer2({Key? key}) : super(key: key);
+  final String applicant;
 
+  const Page2Influencer2({Key? key, required this.applicant }) : super(key: key);
   @override
   State<Page2Influencer2> createState() => _Page2Influencer2State();
 }
@@ -23,12 +24,15 @@ class _Page2Influencer2State extends State<Page2Influencer2> {
   late String titlebox;
   late String contentbox;
   late String docId = auth.currentUser!.email.toString();
+  //final applicant = ModalRoute.of(context)!.settings.arguments as applicant;
 
 
   @override
 
   CollectionReference adtable = FirebaseFirestore.instance.collection('AdTable');
   CollectionReference user = FirebaseFirestore.instance.collection('userInfoTable');
+
+
 
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -51,12 +55,13 @@ class _Page2Influencer2State extends State<Page2Influencer2> {
               //height: submitButtonHeigh,
               child: ElevatedButton(
                 onPressed: (){
-
+                  adtable.doc(widget.applicant).update({'applicant':FieldValue.arrayUnion([docId])});
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   textStyle: Theme.of(context).textTheme.subtitle1,
                 ),
-                child: Text('지원하기'),
+                child: Text("지원하기"),
 
               ),
             ),
