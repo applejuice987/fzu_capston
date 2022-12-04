@@ -21,7 +21,7 @@ class _Page3DetailState extends State<Page3Detail> {
   final input_text = TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   ScrollController _controller=ScrollController();
-
+  bool _visibility= false;
 // This is what you're looking for!
 
 
@@ -168,7 +168,7 @@ class _Page3DetailState extends State<Page3Detail> {
                     ),
                   ),
                   SizedBox(width: 15,),
-                  FloatingActionButton(
+                  Visibility(child: FloatingActionButton(
                     onPressed: (){
 
                       firestore.collection('chat_log').doc(room).collection('dummy').doc(DateTime.now().toString()).set({
@@ -187,6 +187,9 @@ class _Page3DetailState extends State<Page3Detail> {
 
                     elevation: 0,
                   ),
+                  visible: _visibility,
+                  )
+
                 ],
 
               ),
