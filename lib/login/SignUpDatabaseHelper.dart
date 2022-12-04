@@ -6,6 +6,7 @@ import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 import '../main.dart';
 
+
 class SignUpDatabaseHelper {
   String _currentUser = '';
   var db = FirebaseFirestore.instance;
@@ -14,48 +15,61 @@ class SignUpDatabaseHelper {
   void initState() {
     FirebaseAuth auth = FirebaseAuth.instance;
     _currentUser = auth.currentUser!.email.toString(); //로그인 EMail 확인
+
   }
 
-  Future<void> backUpInfluencerData(
-      String email, String pw, String platform, String img, String type, String channelName, String contents) async {
+  Future<void> backUpInfluencerData(String email, String pw, String platform,
+      String img64, String type, String channelName, String contents) async {
     //데이터 백업 함수
-    final backUpData = <String, dynamic>{
-      //SQLite 데이터 매핑
+    final backUpData = <String, dynamic>{ //SQLite 데이터 매핑
       'email': email,
       'pw': pw,
       'platform': platform,
-      'profile': img,
+      'profile': img64,
+      'PRImage': '',
+      "PRText": '',
       'type': type,
+      'displayName': '',
+      'category': [],
+      'chatList': [],
+      'likeAdList': [],
+      'likeSpoList': [],
+      'blackList': [],
+      'filteringTextList': [],
       'channelName': channelName,
-      'contents' : contents
+      'contents': contents,
+      'subscribers' : ''
     };
-    db
-        .collection("userInfoTable")
-        .doc("user")
+    db.collection("userInfoTable").doc("user")
         .collection("user_influencer")
         .doc(email)
         .set(backUpData);
   }
 
-  Future<void> backUpSponsorData(String email, String pw, String company,
-      String image, String type, String ceoName) async {
-    //데이터 백업 함수
-    final backUpData = <String, dynamic>{
-      //SQLite 데이터 매핑
-      'email': email,
-      'pw': pw,
-      'company': company,
-      'profile': image,
-      'type': type,
-      'ceoName' : ceoName
-    };
-    db
-        .collection("userInfoTable")
-        .doc("user")
-        .collection("user_sponsor")
-        .doc(email)
-        .set(backUpData);
-  }
+    Future<void> backUpSponsorData(String email, String pw, String company,
+        String image, String type, String ceoName) async {
+      //데이터 백업 함수
+      final backUpData = <String, dynamic>{
+        //SQLite 데이터 매핑
+        'email': email,
+        'pw': pw,
+        'company': company,
+        'profile': image,
+        'type': type,
+        'likeInfList': [],
+        'filteringTextList': [],
+        'adList': [],
+        'chatList': [],
+        'blackList': [],
+        'ceoName': ceoName
+      };
+      db
+          .collection("userInfoTable")
+          .doc("user")
+          .collection("user_sponsor")
+          .doc(email)
+          .set(backUpData);
+    }
 
   Future<void> loginFunc(
       String email, String pw, BuildContext context, bool isInflu) async {
@@ -94,7 +108,6 @@ class SignUpDatabaseHelper {
               MaterialPageRoute(builder: (context) => const MyApp()),
                   (Route<dynamic> route) => false);
         }
-
         //TODO!! 나중에 각주 삭제 2
         // }
         // else {
@@ -179,4 +192,5 @@ class SignUpDatabaseHelper {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER);
   }
+
 }

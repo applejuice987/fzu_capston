@@ -78,6 +78,7 @@ class _Page3State extends State<Page3> {
               }
 
               final docs = snapshot.data!.docs;
+              //TODO 채팅이 아예 없을 경우 예외처리
               return ListView.builder(
 
 

@@ -2,14 +2,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-class Page2Sponsor2 extends StatefulWidget {
-  const Page2Sponsor2({Key? key}) : super(key: key);
+class Page2Sponsor_DetailAd extends StatefulWidget {
+  const Page2Sponsor_DetailAd({Key? key}) : super(key: key);
 
   @override
-  State<Page2Sponsor2> createState() => _Page2Sponsor2State();
+  State<Page2Sponsor_DetailAd> createState() => _Page2Sponsor_DetailAdState();
 }
 
-class _Page2Sponsor2State extends State<Page2Sponsor2> {
+class _Page2Sponsor_DetailAdState extends State<Page2Sponsor_DetailAd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -49,6 +49,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
       }
       SignUpDatabaseHelper()
           .backUpSponsorData(email, password, companyName, img64, 'spo', ceoName);
+      // TODO!! String email, String pw, String company,String image, String type, String ceoName
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         ScaffoldMessenger.of(context)
@@ -212,6 +213,7 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
