@@ -93,14 +93,17 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isInflu = false;
   bool isadmin = false;
   var useremail = FirebaseAuth.instance.currentUser?.email.toString();
+  List<String> _titleList = [];
 
   void initState() {
+
     MySharedPreferences.instance.getBooleanValue("isInflu").then((value) =>
         setState(() {
           print('3-1$isInflu');
           isInflu = value;
           print('3-2$isInflu');
         }));
+
     try {
       FirebaseFirestore.instance
           .collection("userInfoTable")
@@ -124,8 +127,23 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     super.initState();
   }
+  refreshlist(){
+    var useremail = FirebaseAuth.instance.currentUser?.email.toString();
+    FirebaseFirestore.instance.collection("sponsor").doc(useremail).collection('recruit').get().then((value) {
+      setState(() {
+        _titleList.clear();
+        for (var doc in value.docs) {
+          String title = doc["title"];
+          String content = doc["content"];
+          _titleList.add(doc['title'].toString());
+        }
+      });
+      // MySharedPreferences.instance.setStringList('albamon', _titleList);
+    });
+  }
 
   Widget build(BuildContext context) {
+    // refreshlist();
     //인플루언서 로그인시 실행되야하는 바텀 아이템
     List<Widget> influ_bottom = <Widget>[
      //Create_Info(),
@@ -137,7 +155,9 @@ class _MyHomePageState extends State<MyHomePage> {
     //스폰서 로그인시 ~~
     List<Widget> spon_bottom = <Widget>[
       Page1Sponsor(),
-      Page2Sponsor(),
+      Page2Sponsor(
+          // list: _titleList
+      ),
       Page3(),
       Page4()
     ];
@@ -151,6 +171,22 @@ class _MyHomePageState extends State<MyHomePage> {
         foregroundColor: Colors.black,
         backgroundColor: const Color(0xffc9b9ec),
         title: const Text("FZU",style: TextStyle(fontWeight: FontWeight.bold),),
+        actions: <Widget> [
+          Visibility(
+            visible: isadmin? true : false,
+            child: IconButton(onPressed: (){
+              if(isInflu = true){
+                MySharedPreferences.instance.setBooleanValue("isInflu", false);
+                isInflu = false;
+              }
+              else {
+                MySharedPreferences.instance.setBooleanValue("isInflu", true);
+                isInflu = true;
+              }
+              print(isInflu);
+            }, icon: const Icon(Icons.change_circle)),
+          )
+        ],
       ),
       body: Container(
         color: const Color(0xffc9b9ec),

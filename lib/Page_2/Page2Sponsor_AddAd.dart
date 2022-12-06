@@ -73,15 +73,6 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
   CollectionReference user =
       FirebaseFirestore.instance.collection('userInfoTable');
 
-  //void getdata() {
-  //var db = FirebaseFirestore.instance;
-  // db.collection("sponsor").get().then((value) {
-  // for (var doc in value.docs) {
-  //  String title = doc["title"];
-  //  String content = doc["content"];
-  // }
-  // })
-  // }
 
   Widget build(BuildContext context) {
     final ImagePicker _picker = ImagePicker();
