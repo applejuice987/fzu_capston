@@ -1,5 +1,6 @@
 //import 'dart:html';
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,17 +26,21 @@ class sponsorup {
   final String title;
   final String content;
   final String email;
+  final String image;
+  final List<String> applicant;
 
 
-  sponsorup({required this.title, required this.content, required this.email});
+  sponsorup({required this.title, required this.content, required this.email, required this.image, required this.applicant});
 
   sponsorup.fromJson(Map<String, dynamic> json)
       : title = json['title'],
         content = json['content'],
-        email = json['email'];
+        email = json['email'],
+        image = json['image'],
+        applicant = json['applicant'];
 
   Map<String, dynamic> toJson() =>
-      {'title': title, 'content': content, 'email': email};
+      {'title': title, 'content': content, 'email': email, 'image': image, 'applicant': applicant};
 }
 
 class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
@@ -44,6 +49,8 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
   final ImagePicker _picker = ImagePicker();
   dynamic _imageFile;
   bool _showImage = false;
+  DateTime startDate = DateTime(0, 0, 0);
+  DateTime endDate = DateTime(0, 0, 0);
 
   FirebaseAuth auth = FirebaseAuth.instance;
   late final String _currentUser;
@@ -208,10 +215,14 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
+                            var bytes = File(_imageFile!.path).readAsBytesSync();
+                            String image = base64Encode(bytes);
                             sponsorup sponsorModel1 = sponsorup(
                                 title: titlebox,
                                 content: contentbox,
-                                email: _currentUser);
+                                email: _currentUser,
+                                image: image,
+                                applicant: []);
                             AdTable.doc(titlebox).set(sponsorModel1.toJson());
                             user
                                 .doc('user')
