@@ -34,7 +34,12 @@ class _Page2Influencer2State extends State<Page2Influencer2> {
   String _content = '';
   String _email = '';
   String _image = '';
+  String _duration = '';
   dynamic _applicant = [];
+  String _buttonText = '지원하기';
+  bool _isAfterDate = false;
+  late DateTime startDate;
+  late DateTime endDate;
   CollectionReference adtable =
       FirebaseFirestore.instance.collection('AdTable');
   CollectionReference user =
@@ -51,8 +56,21 @@ class _Page2Influencer2State extends State<Page2Influencer2> {
         _email = ds['email'];
         _image = ds['image'];
         _applicant = ds['applicant'];
+        _duration = ds['duration'];
+        List<String> Detailduration = _duration.split(" ");
+        startDate = DateTime.parse(Detailduration[0]);
+        endDate = DateTime.parse(Detailduration[2]);
+        if (startDate.isAfter(DateTime.now())) {
+          _isAfterDate = true;
+          _buttonText = '아직 모집 기간이 아닙니다.';
+        }
+        if (DateTime.now().isAfter(endDate)) {
+          _isAfterDate = true;
+          _buttonText = '모집이 종료되었습니다.';
+        }
       });
     });
+
   }
 
   @override
@@ -78,6 +96,7 @@ class _Page2Influencer2State extends State<Page2Influencer2> {
                 Text(_title),
                 Text(_content),
                 Text(_email),
+                Text('모집 기간 : $_duration')
               ],
             ),
           ),
@@ -88,7 +107,8 @@ class _Page2Influencer2State extends State<Page2Influencer2> {
             child: SizedBox(
               //height: submitButtonHeigh,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: _isAfterDate ? null
+                  : () {
                   if (_applicant.contains(auth.currentUser!.email.toString())) {
                     Fluttertoast.showToast(msg: "이미 지원하신 광고입니다.");
                   } else {
@@ -101,7 +121,7 @@ class _Page2Influencer2State extends State<Page2Influencer2> {
                 style: ElevatedButton.styleFrom(
                   textStyle: Theme.of(context).textTheme.subtitle1,
                 ),
-                child: Text("지원하기"),
+                child: Text(_buttonText),
               ),
             ),
           ),

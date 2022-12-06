@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -28,19 +28,32 @@ class sponsorup {
   final String email;
   final String image;
   final List<String> applicant;
+  final String duration;
 
-
-  sponsorup({required this.title, required this.content, required this.email, required this.image, required this.applicant});
+  sponsorup(
+      {required this.title,
+      required this.content,
+      required this.email,
+      required this.image,
+      required this.applicant,
+      required this.duration});
 
   sponsorup.fromJson(Map<String, dynamic> json)
       : title = json['title'],
         content = json['content'],
         email = json['email'],
         image = json['image'],
-        applicant = json['applicant'];
+        applicant = json['applicant'],
+        duration = json['duration'];
 
-  Map<String, dynamic> toJson() =>
-      {'title': title, 'content': content, 'email': email, 'image': image, 'applicant': applicant};
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'content': content,
+        'email': email,
+        'image': image,
+        'applicant': applicant,
+        'duration': duration
+      };
 }
 
 class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
@@ -49,8 +62,8 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
   final ImagePicker _picker = ImagePicker();
   dynamic _imageFile;
   bool _showImage = false;
-  DateTime startDate = DateTime(0, 0, 0);
-  DateTime endDate = DateTime(0, 0, 0);
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
   double _imageHeight = 0.0;
 
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -59,6 +72,8 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
   late String titlebox;
   late String contentbox;
   late String docId = auth.currentUser!.email.toString();
+  String _duration = '모집기간 설정';
+  DateTimeRange? _applyDuration;
 
   @override
   void initState() {
@@ -72,6 +87,28 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
   void dispose() {
     contentController.dispose();
     super.dispose();
+  }
+
+  void applyDuration() async {
+    _applyDuration = await showDateRangePicker(
+        context: context,
+        initialDateRange: DateTimeRange(
+            start: DateTime.now(),
+            end: DateTime(DateTime.now().year, DateTime.now().month,
+                DateTime.now().day + 1)),
+        firstDate: startDate,
+        lastDate: DateTime(
+            DateTime.now().year, DateTime.now().month + 6, DateTime.now().day),
+      saveText: "완료",
+      helpText: "모집기간 설정",
+      cancelText: "취소"
+    );
+    if (_applyDuration!.start.isAfter(DateTime.now())) {
+      //TODO 늦게 시작하는 광고모집 처리
+    }
+    setState(() {
+      _duration = '${DateFormat('yyyy-MM-dd').format(_applyDuration!.start)} - ${DateFormat('yyyy-MM-dd').format(_applyDuration!.end)}';
+    });
   }
 
   CollectionReference sponsor =
@@ -168,11 +205,12 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
                           ),
                           Container(
                             padding: const EdgeInsets.all(5),
-                            height: MediaQuery.of(context).size.height * 0.6
-                                - _imageHeight <= 0
+                            height: MediaQuery.of(context).size.height * 0.6 -
+                                        _imageHeight <=
+                                    0
                                 ? MediaQuery.of(context).size.height * 0.3
-                                : MediaQuery.of(context).size.height * 0.6 - _imageHeight
-                            ,
+                                : MediaQuery.of(context).size.height * 0.6 -
+                                    _imageHeight,
                             child: SizedBox(
                               height: double.infinity,
                               child: TextFormField(
@@ -195,6 +233,29 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
                           ),
                         ],
                       ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: 50,
+                      child: OutlinedButton(
+                          onPressed: () {
+                            setState(() {
+                              applyDuration();
+                              print("DSFdasfsafdsafsdafas$_applyDuration");
+                            });
+
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: Colors.black),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.zero)
+                                )
+
+                          ),
+                          child: Text(
+                            _duration,
+                            style: TextStyle(color: Colors.black),
+                          )),
                     ),
                     const SizedBox(
                       height: 10,
@@ -228,12 +289,14 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
+                            print('dsfdsafasdfas$_applyDuration');
                             sponsorup sponsorModel1 = sponsorup(
-                                title: titlebox,
-                                content: contentbox,
-                                email: _currentUser,
-                                applicant: [],
-                                image: img64(_imageFile),
+                              title: titlebox,
+                              content: contentbox,
+                              email: _currentUser,
+                              applicant: [],
+                              image: img64(_imageFile),
+                              duration: _duration
                             );
                             AdTable.doc(titlebox).set(sponsorModel1.toJson());
                             user
@@ -332,7 +395,6 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
       ),
     );
   }
-
 
   takePhoto(ImageSource source) async {
     final pickedFile =
