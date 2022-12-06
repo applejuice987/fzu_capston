@@ -1,5 +1,6 @@
 //import 'dart:html';
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -231,7 +232,7 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
                                 title: titlebox,
                                 content: contentbox,
                                 email: _currentUser,
-                                applicant: []
+                                applicant: [],
                                 image: img64(_imageFile),
                             );
                             AdTable.doc(titlebox).set(sponsorModel1.toJson());
