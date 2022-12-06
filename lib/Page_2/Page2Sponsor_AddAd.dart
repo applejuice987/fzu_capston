@@ -1,5 +1,6 @@
 //import 'dart:html';
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,17 +26,22 @@ class sponsorup {
   final String title;
   final String content;
   final String email;
+  final String image;
 
-
-  sponsorup({required this.title, required this.content, required this.email});
+  sponsorup(
+      {required this.title,
+      required this.content,
+      required this.email,
+      required this.image});
 
   sponsorup.fromJson(Map<String, dynamic> json)
       : title = json['title'],
         content = json['content'],
+        image = json['image'],
         email = json['email'];
 
   Map<String, dynamic> toJson() =>
-      {'title': title, 'content': content, 'email': email};
+      {'title': title, 'content': content, 'image': image, 'email': email};
 }
 
 class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
@@ -44,6 +50,7 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
   final ImagePicker _picker = ImagePicker();
   dynamic _imageFile;
   bool _showImage = false;
+  double _imageHeight = 0.0;
 
   FirebaseAuth auth = FirebaseAuth.instance;
   late final String _currentUser;
@@ -73,18 +80,7 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
   CollectionReference user =
       FirebaseFirestore.instance.collection('userInfoTable');
 
-  //void getdata() {
-  //var db = FirebaseFirestore.instance;
-  // db.collection("sponsor").get().then((value) {
-  // for (var doc in value.docs) {
-  //  String title = doc["title"];
-  //  String content = doc["content"];
-  // }
-  // })
-  // }
-
   Widget build(BuildContext context) {
-    final ImagePicker _picker = ImagePicker();
     return Scaffold(
       backgroundColor: const Color(0xffc9b9ec),
       appBar: AppBar(
@@ -137,28 +133,65 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
                 Column(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(5),
-                      height: MediaQuery.of(context).size.height * 0.66,
+                      padding: EdgeInsets.all(0.4),
                       decoration: BoxDecoration(
                           border: Border.all(width: 1, color: Colors.black)),
-                      child: SizedBox(
-                        height: double.infinity,
-                        child: TextFormField(
-                          maxLines: 1000,
-                          controller: contentController,
-                          keyboardType: TextInputType.multiline,
-                          textInputAction: TextInputAction.newline,
-                          style: Theme.of(context).textTheme.bodyText1,
-                          decoration: const InputDecoration.collapsed(
-                            focusColor: Colors.black,
-                            hintText: "내용",
-                            hintStyle: TextStyle(fontSize: 15),
+                      child: Column(
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Visibility(
+                                visible: _showImage,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: const [
+                                    CircularProgressIndicator(),
+                                  ],
+                                ),
+                              ),
+                              Visibility(
+                                  visible: _imageFile == null ? false : true,
+                                  child: _imageFile == null
+                                      ? const Text(
+                                          '이미지 등록',
+                                          style: TextStyle(color: Colors.black),
+                                        )
+                                      : Image(
+                                          image:
+                                              FileImage(File(_imageFile.path)),
+                                        ))
+                            ],
                           ),
-                          maxLength: 1000,
-                          onChanged: (value) {
-                            contentbox = value;
-                          },
-                        ),
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            height: MediaQuery.of(context).size.height * 0.6
+                                - _imageHeight <= 0
+                                ? MediaQuery.of(context).size.height * 0.3
+                                : MediaQuery.of(context).size.height * 0.6 - _imageHeight
+                            ,
+                            child: SizedBox(
+                              height: double.infinity,
+                              child: TextFormField(
+                                maxLines: 1000,
+                                controller: contentController,
+                                keyboardType: TextInputType.multiline,
+                                textInputAction: TextInputAction.newline,
+                                style: Theme.of(context).textTheme.bodyText1,
+                                decoration: const InputDecoration.collapsed(
+                                  focusColor: Colors.black,
+                                  hintText: "내용",
+                                  hintStyle: TextStyle(fontSize: 15),
+                                ),
+                                maxLength: 1000,
+                                onChanged: (value) {
+                                  contentbox = value;
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(
@@ -168,58 +201,35 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                              context: context,
-                              builder: ((builder) => bottomSheet()));
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(width: 1.5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)
-                          )
-                          ),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Visibility(
-                              visible: _showImage,
-                              child: Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.center,
-                                crossAxisAlignment:
-                                CrossAxisAlignment.center,
-                                children: const [
-                                  CircularProgressIndicator(),
-                                ],
-                              ),
-                            ),
-                            Visibility(
-                                visible: true,
-                                child: _imageFile == null
-                                    ? const Text('이미지 등록',style: TextStyle(color: Colors.black),)
-                                    : Image(
-                                  image: FileImage(
-                                      File(_imageFile.path)),
-                                ))
-                          ],
-                        ),
-                      ),
+                          onPressed: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: ((builder) => bottomSheet()));
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              side: const BorderSide(width: 1.5),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))),
+                          child: const Text(
+                            '이미지 등록',
+                            style: TextStyle(color: Colors.black),
+                          )),
                     ),
-
                     const SizedBox(
-                      height: 5,
+                      height: 15,
                     ),
                     Container(
                       alignment: Alignment.bottomCenter,
                       child: SizedBox(
+                        height: 50,
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
                             sponsorup sponsorModel1 = sponsorup(
                                 title: titlebox,
                                 content: contentbox,
+                                image: img64(_imageFile),
                                 email: _currentUser);
                             AdTable.doc(titlebox).set(sponsorModel1.toJson());
                             user
@@ -253,16 +263,18 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
           ),
         ),
       ),
-      // bottomNavigationBar: SafeArea(
-      //   child: Padding(
-      //     padding: EdgeInsets.symmetric(horizontal: 20),
-      //     child: SizedBox(
-      //       //height: submitButtonHeigh,
-      //       child:
-      //     ),
-      //   ),
-      // ),
     );
+  }
+
+  static String img64(dynamic image) {
+    var img64;
+    if (image != null) {
+      var bytes = File(image!.path).readAsBytesSync();
+      img64 = base64Encode(bytes);
+    } else {
+      img64 = '';
+    }
+    return img64;
   }
 
   Widget bottomSheet() {
@@ -308,10 +320,9 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
     );
   }
 
-
   takePhoto(ImageSource source) async {
     final pickedFile =
-    await _picker.pickImage(source: source, imageQuality: 30);
+        await _picker.pickImage(source: source, imageQuality: 30);
     setState(() {
       _imageFile = pickedFile;
       _showImage = true;
