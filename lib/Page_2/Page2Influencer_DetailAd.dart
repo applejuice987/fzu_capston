@@ -64,6 +64,7 @@ class _Page2Influencer2State extends State<Page2Influencer2> {
           _isAfterDate = true;
           _buttonText = '아직 모집 기간이 아닙니다.';
         }
+
         if (DateTime.now().isAfter(endDate)) {
           _isAfterDate = true;
           _buttonText = '모집이 종료되었습니다.';
