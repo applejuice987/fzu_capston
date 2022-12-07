@@ -29,6 +29,7 @@ class sponsorup {
   final String image;
   final List<String> applicant;
   final String duration;
+  final int recruitNum;
 
   sponsorup(
       {required this.title,
@@ -36,7 +37,8 @@ class sponsorup {
       required this.email,
       required this.image,
       required this.applicant,
-      required this.duration});
+      required this.duration,
+      required this.recruitNum});
 
   sponsorup.fromJson(Map<String, dynamic> json)
       : title = json['title'],
@@ -44,7 +46,8 @@ class sponsorup {
         email = json['email'],
         image = json['image'],
         applicant = json['applicant'],
-        duration = json['duration'];
+        duration = json['duration'],
+        recruitNum = json['recruitNum'];
 
   Map<String, dynamic> toJson() => {
         'title': title,
@@ -52,7 +55,8 @@ class sponsorup {
         'email': email,
         'image': image,
         'applicant': applicant,
-        'duration': duration
+        'duration': duration,
+        'recruitNum': recruitNum
       };
 }
 
@@ -65,6 +69,7 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
   double _imageHeight = 0.0;
+  int _recruitNum = 0;
 
   FirebaseAuth auth = FirebaseAuth.instance;
   late final String _currentUser;
@@ -103,9 +108,9 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
       helpText: "모집기간 설정",
       cancelText: "취소"
     );
-    if (_applyDuration!.start.isAfter(DateTime.now())) {
-      //TODO 늦게 시작하는 광고모집 처리
-    }
+    // if (_applyDuration!.start.isAfter(DateTime.now())) {
+    //   //TODO 늦게 시작하는 광고모집 처리
+    // }
     setState(() {
       _duration = '${DateFormat('yyyy-MM-dd').format(_applyDuration!.start)} - ${DateFormat('yyyy-MM-dd').format(_applyDuration!.end)}';
     });
@@ -296,7 +301,8 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
                               email: _currentUser,
                               applicant: [],
                               image: img64(_imageFile),
-                              duration: _duration
+                              duration: _duration,
+                              recruitNum: _recruitNum
                             );
                             AdTable.doc(titlebox).set(sponsorModel1.toJson());
                             user
