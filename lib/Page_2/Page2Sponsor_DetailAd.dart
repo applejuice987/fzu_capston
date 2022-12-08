@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +11,24 @@ class Page2Sponsor_DetailAd extends StatefulWidget {
 }
 
 class _Page2Sponsor_DetailAdState extends State<Page2Sponsor_DetailAd> {
+
+  CollectionReference AdTable = FirebaseFirestore.instance.collection('AdTable');
+  List<String> _applicantList= [];
+
   @override
+
+  void setData() {
+    AdTable.get().then((value) {
+      setState(() {
+        _applicantList.clear();
+        for (var doc in value.docs) {
+          print(doc['title']);
+          _applicantList.add(doc['title'].toString());
+        }
+      });
+    });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
