@@ -1,5 +1,3 @@
-//import 'dart:html';
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:intl/intl.dart';
@@ -8,10 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:fzu/Page_2/Page2Sponsor_DetailAd.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'Page2Sponsor.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 //TODO!! 로그인 한 사람이 스폰서 일 경우, 이 화면 출력
 
@@ -30,6 +26,7 @@ class sponsorup {
   final List<String> applicant;
   final String duration;
   final int recruitNum;
+  final bool isChecked;
 
   sponsorup(
       {required this.title,
@@ -38,7 +35,8 @@ class sponsorup {
       required this.image,
       required this.applicant,
       required this.duration,
-      required this.recruitNum});
+      required this.recruitNum,
+      required this.isChecked});
 
   sponsorup.fromJson(Map<String, dynamic> json)
       : title = json['title'],
@@ -47,7 +45,8 @@ class sponsorup {
         image = json['image'],
         applicant = json['applicant'],
         duration = json['duration'],
-        recruitNum = json['recruitNum'];
+        recruitNum = json['recruitNum'],
+        isChecked = json['isChecked'];
 
   Map<String, dynamic> toJson() => {
         'title': title,
@@ -56,7 +55,8 @@ class sponsorup {
         'image': image,
         'applicant': applicant,
         'duration': duration,
-        'recruitNum': recruitNum
+        'recruitNum': recruitNum,
+        'isChecked': isChecked
       };
 }
 
@@ -79,6 +79,7 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
   late String docId = auth.currentUser!.email.toString();
   String _duration = '모집기간 설정';
   DateTimeRange? _applyDuration;
+  bool _isChecked = false;
 
   @override
   void initState() {
@@ -104,15 +105,15 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
         firstDate: startDate,
         lastDate: DateTime(
             DateTime.now().year, DateTime.now().month + 6, DateTime.now().day),
-      saveText: "완료",
-      helpText: "모집기간 설정",
-      cancelText: "취소"
-    );
+        saveText: "완료",
+        helpText: "모집기간 설정",
+        cancelText: "취소");
     // if (_applyDuration!.start.isAfter(DateTime.now())) {
     //   //TODO 늦게 시작하는 광고모집 처리
     // }
     setState(() {
-      _duration = '${DateFormat('yyyy-MM-dd').format(_applyDuration!.start)} - ${DateFormat('yyyy-MM-dd').format(_applyDuration!.end)}';
+      _duration =
+          '${DateFormat('yyyy-MM-dd').format(_applyDuration!.start)} - ${DateFormat('yyyy-MM-dd').format(_applyDuration!.end)}';
     });
   }
 
@@ -122,6 +123,37 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
       FirebaseFirestore.instance.collection('AdTable');
   CollectionReference user =
       FirebaseFirestore.instance.collection('userInfoTable');
+
+  void showSelectApplicantNumDialog() {
+    showDialog<int>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Container(
+                alignment: Alignment.center, child: Text("모집인원을 선택하세요")),
+            content: StatefulBuilder(builder: (context, SBsetState) {
+              return NumberPicker(
+                  value: _recruitNum,
+                  minValue: 0,
+                  maxValue: 50,
+                  onChanged: (value) {
+                    setState(() =>
+                        _recruitNum = value); // to change on widget level state
+                    SBsetState(() =>
+                        _recruitNum = value); //* to change on dialog state
+                  });
+            }),
+            actions: [
+              TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
 
   Widget build(BuildContext context) {
     final ImagePicker _picker = ImagePicker();
@@ -173,6 +205,74 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
                 ),
                 const SizedBox(
                   height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      children: [
+                        const Text("모집인원"),
+                        const SizedBox(
+                          width: 40,
+                        ),
+                        SizedBox(
+                            height: 50,
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  showSelectApplicantNumDialog();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    side: const BorderSide(
+                                        color: Colors.black, width: 1.5),
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0)))),
+                                child: Text(_recruitNum.toString()))),
+                      ],
+                    ),
+                    const SizedBox(width: 40,),
+                    Row(
+                      children: [
+                        const Text("별도 지원"),
+                        Checkbox(
+                            value: _isChecked,
+                            onChanged: (value) {
+                              setState(() {
+                                _isChecked = value!;
+                              });
+                            })
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: OutlinedButton(
+                      onPressed: () {
+                        setState(() {
+                          applyDuration();
+                          print("DSFdasfsafdsafsdafas$_applyDuration");
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side:
+                              const BorderSide(color: Colors.black, width: 1.5),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)))),
+                      child: Text(
+                        _duration,
+                        style: const TextStyle(color: Colors.black),
+                      )),
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
                 Column(
                   children: [
@@ -239,29 +339,6 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
                         ],
                       ),
                     ),
-                    Container(
-                      width: double.infinity,
-                      height: 50,
-                      child: OutlinedButton(
-                          onPressed: () {
-                            setState(() {
-                              applyDuration();
-                              print("DSFdasfsafdsafsdafas$_applyDuration");
-                            });
-
-                          },
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: Colors.black),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.zero)
-                                )
-
-                          ),
-                          child: Text(
-                            _duration,
-                            style: TextStyle(color: Colors.black),
-                          )),
-                    ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -296,14 +373,14 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
                           onPressed: () {
                             print('dsfdsafasdfas$_applyDuration');
                             sponsorup sponsorModel1 = sponsorup(
-                              title: titlebox,
-                              content: contentbox,
-                              email: _currentUser,
-                              applicant: [],
-                              image: img64(_imageFile),
-                              duration: _duration,
-                              recruitNum: _recruitNum
-                            );
+                                title: titlebox,
+                                content: contentbox,
+                                email: _currentUser,
+                                applicant: [],
+                                image: img64(_imageFile),
+                                duration: _duration,
+                                recruitNum: _recruitNum,
+                                isChecked: _isChecked);
                             AdTable.doc(titlebox).set(sponsorModel1.toJson());
                             user
                                 .doc('user')
