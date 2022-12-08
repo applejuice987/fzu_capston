@@ -87,7 +87,7 @@ class _Page2InfluencerState extends State<Page2Influencer> {
     //     }
     //   });
     // });
-    refreshlist();
+    //refreshlist();
 
     String deadLine(String duration) {
       List<String> data = duration.split(" ");
