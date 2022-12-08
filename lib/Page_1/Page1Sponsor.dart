@@ -109,6 +109,8 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                 },
                 child: StreamBuilder<dynamic>(
                     stream: FirebaseFirestore.instance
+                        .collection('userInfoTable')
+                        .doc('user')
                         .collection('user_influencer')
                         .snapshots(),
                     builder: (context, snapshot) {
@@ -129,14 +131,49 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                               return Container(
                                 child: Column(
                                   children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(20.0),
-                                        child: Container(
-                                            child: Image.memory(Base64Decoder()
-                                                .convert(
-                                                    docs[index]['profile']))
-                                            //Base64Decoder().convert(docs['profile'])
-                                            )),
+                                    docs[index]['isOnlyImage'] ? Container(
+                                      height: MediaQuery.of(context).size.height * 0.4,
+                                      width: double.infinity,
+                                      alignment: Alignment.center,
+                                      child:
+                                      docs[index]['PRImage'] != '' ? Image.memory(Base64Decoder().convert(docs[index]['PRImage']))
+                                          : Text('아직 설정하신 이미지가 없습니다.'),
+                                      //TODO 이미지 크기(정확히는 세로길이)가 너무 크면 OverFlow가 발생한다. 이를 방지해야 함
+                                    )
+                                        : Container(
+                                      color: Colors.white,
+                                      height: MediaQuery.of(context).size.height * 0.4,
+                                      width: double.infinity,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Container(
+                                                width: MediaQuery.of(context).size.width*0.55,
+                                                height: MediaQuery.of(context).size.width*0.55,
+                                                alignment: Alignment.center,
+                                                child:
+                                                docs[index]['PRImage'] != '' ? Image.memory(Base64Decoder().convert(docs[index]['PRImage']))
+                                                    : Text('아직 설정하신 이미지가 없습니다.'),
+                                                //TODO 이미지 크기(정확히는 세로길이)가 너무 크면 OverFlow가 발생한다. 이를 방지해야 함
+                                              ),
+                                              Container(
+                                                width: 100,
+                                                height: MediaQuery.of(context).size.width*0.55,
+                                                alignment: Alignment.center,
+                                                child: docs[index]['PRAny'] != '' ? Text(docs[index]['PRAny'])
+                                                    : Text("아직 설정하신 추가내용이 없습니다."),
+                                              )
+                                            ],
+                                          ),
+                                          docs[index]['PRText'] != '' ? Text(docs[index]['PRText'])
+                                              : Text("아직 설정하신 인사말이 없습니다.")
+                                        ],
+                                      ),
+                                    ),
                                     Flexible(
                                       flex: 1,
                                       child: Container(
@@ -161,7 +198,7 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                                       child: Container(
                                           padding: EdgeInsets.all(5.0),
                                           child: Text(
-                                            docs[index]['Subscribers'],
+                                            docs[index]['subscribers'],
                                             style: TextStyle(fontSize: 15.0),
                                           )),
                                     ),
@@ -170,12 +207,12 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                                       child: Container(
                                           padding: EdgeInsets.all(5.0),
                                           child: Text(
-                                            docs[index]['Category'],
+                                            docs[index]['category'].toString(),
                                             style: TextStyle(fontSize: 15.0),
                                           )),
                                     ),
                                     ElevatedButton(
-                                        onPressed: () {}, child: Text('자세히보기'))
+                                        onPressed: () {}, child: Text('자세히 보기'))
                                   ],
                                 ),
                               );

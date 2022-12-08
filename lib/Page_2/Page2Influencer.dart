@@ -25,19 +25,16 @@ class _Page2InfluencerState extends State<Page2Influencer> {
   FirebaseAuth auth = FirebaseAuth.instance;
   late String docId = auth.currentUser!.email.toString();
 
-  List<String> _adList = [];
-  List<String> _durationList = [];
-  List<String> _profileList = [];
+  final List<String> _adList = [];
+  final List<String> _durationList = [];
+  final List<String> _profileList = [];
   bool _isNeedy = false;
   Color dateColor = Colors.black;
   var db = FirebaseFirestore.instance;
 
+  @override
   void initState() {
     super.initState();
-    refreshlist();
-  }
-
-  refreshlist() {
     db.collection("AdTable").get().then((value) {
       setState(() {
         _adList.clear();
@@ -49,12 +46,20 @@ class _Page2InfluencerState extends State<Page2Influencer> {
           _adList.add(title);
           _durationList.add(duration);
           db.collection('userInfoTable').doc('user').collection('user_sponsor').doc(email).get().then((DocumentSnapshot ds) {
-            _profileList.add(ds['profile']);
+            setState(() {
+              _profileList.add(ds['profile']);
+            });
+
           });
         }
       });
       // MySharedPreferences.instance.setStringList('albamon', _titleList);
     });
+    refreshlist();
+  }
+
+  refreshlist() {
+
   }
 
   // refreshlist() {

@@ -20,8 +20,10 @@ String Ptext = '';
 class Create_Info extends StatefulWidget {
   final String prImage;
   final String prText;
+  final String prAny;
+  final bool isOnlyImage;
 
-  const Create_Info({Key? key, required this.prImage, required this.prText})
+  const Create_Info({Key? key, required this.prImage, required this.prText, required this.prAny, required this.isOnlyImage})
       : super(key: key);
 
   @override
@@ -73,12 +75,14 @@ class _Create_InfoState extends State<Create_Info> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
   String _currentUser = '';
+  bool _isOnlyImage = false;
 
   @override
   void initState() {
     super.initState();
+    _isOnlyImage = widget.isOnlyImage;
     _currentUser = auth.currentUser!.email.toString();
-    anyController.text = '';
+    anyController.text = widget.prAny;
     prTextController.text = widget.prText;
   }
 
@@ -102,6 +106,8 @@ class _Create_InfoState extends State<Create_Info> {
           final updateData = <String, dynamic>{
             'PRImage': !_isNoImage ? Primage(image) : "",
             'PRText': prTextController.text,
+            'PRAny' : anyController.text,
+            'isOnlyImage' : _isOnlyImage
           };
           firestore
               .collection('userInfoTable')
@@ -144,7 +150,7 @@ class _Create_InfoState extends State<Create_Info> {
     return img64;
   }
 
-  bool _isOnlyImage = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -162,8 +168,11 @@ class _Create_InfoState extends State<Create_Info> {
         backgroundColor: Color(0xffC9B9EC),
         body: SingleChildScrollView(
           child: Container(
+            height: MediaQuery.of(context).size.height*0.8,
             margin: const EdgeInsets.fromLTRB(30, 10, 30, 0),
-            child: Column(children: <Widget>[
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
               Container(
                 margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
                 alignment: AlignmentDirectional.center,
@@ -254,7 +263,7 @@ class _Create_InfoState extends State<Create_Info> {
                                 Container(
                                   child: Form(
                                     child: Container(
-                                      height: 500,
+                                      // height: 500,
                                       child: Column(
                                         children: [
                                           renderTextFormField(
@@ -303,10 +312,11 @@ class _Create_InfoState extends State<Create_Info> {
                                     ),
                                   ),
                                 ),
-                                reviseButton(_imageFile)
+
                               ]),
                         ))
-                  ])
+                  ]),
+              reviseButton(_imageFile)
             ]),
           ),
         ));
@@ -424,7 +434,7 @@ class _Create_InfoState extends State<Create_Info> {
 
   takePhoto(ImageSource source) async {
     final pickedFile =
-        await _picker.pickImage(source: source, imageQuality: 30);
+        await _picker.pickImage(source: source, imageQuality: 20);
     setState(() {
       _imageFile = pickedFile;
       _showImage = true;

@@ -202,9 +202,8 @@ class _Page3DetailState extends State<Page3Detail> {
                   ),
                   SizedBox(width: 15,),
                   FloatingActionButton(
-                    onPressed: (){
-
-                      if(input_text.text!="") {
+                    onPressed: () {
+                      if (input_text.text != "") {
                         firestore.collection('chat_log').doc(room).collection(
                             'dummy').doc(DateTime.now().toString()).set({
                           'sender_email': FirebaseAuth.instance.currentUser
@@ -215,12 +214,13 @@ class _Page3DetailState extends State<Page3Detail> {
                           'lastchat': input_text.text,
 
                         }).catchError((e) {
-                          if (e.toString() == '[cloud_firestore/not-found] Some requested document was not found.') {
+                          if (e.toString() ==
+                              '[cloud_firestore/not-found] Some requested document was not found.') {
                             firestore.collection('chat_log').doc(room).set({
-                              'inf' : inf,
-                              'spo' : spo,
-                              'infimage' : infImage,
-                              'spoimage' : spoImage,
+                              'inf': inf,
+                              'spo': spo,
+                              'infimage': infImage,
+                              'spoimage': spoImage,
                               'lastchat': input_text.text
                             });
                           }
@@ -229,6 +229,7 @@ class _Page3DetailState extends State<Page3Detail> {
 
                         input_text.text = "";
                       }
+                    },
 
                     child: Icon(Icons.send,color: Colors.white,size: 18,),
                     backgroundColor:Color(0xFFc9b9ec),

@@ -86,10 +86,11 @@ class _Page2Influencer2State extends State<Page2Influencer2> {
               TextButton(
                 child: Text("확인"),
                 onPressed: () {
+                  Navigator.pop(context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Page3Detail(_email, '${_currentUser}${_email}')));
+                          builder: (context) => Page3Detail(_email, '$_currentUser$_email')));
                   //Navigator.pop(context);
 //                  Navigator.pop(context);
                 },
