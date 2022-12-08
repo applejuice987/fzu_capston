@@ -210,6 +210,7 @@ class _detailPage_InfluencerState extends State<detailPage_Influencer> {
             Text('카테고리 : $category'),
             Text('연락처 : $email'),
             Row(
+
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
