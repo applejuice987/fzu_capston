@@ -97,29 +97,41 @@ class _Page2SponsorState extends State<Page2Sponsor> {
     //  List<String> _titleList = widget.list;
     return Scaffold(
       body: Container(
-        child: ListView.builder(
+        child: ListView.separated(
           itemCount: _titleList.isEmpty ? 1 : _titleList.length,
           itemBuilder: (ctx, index) {
-            return ListTile(
-              title: Container(
-                child: _titleList.isEmpty
-                    ? const Text(
-                        "새로운 공고를 추가해보세요",
-                        style: TextStyle(color: Colors.black),
-                      )
-                    : Text(
-                        _titleList[index],
-                        style: const TextStyle(color: Colors.black),
-                      ),
+            return GestureDetector(
+              child: Container(
+                margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                height: 20,
+                  child: _titleList.isEmpty
+                      ? const Text(
+                          "새로운 공고를 추가해보세요",
+                          style: TextStyle(color: Colors.black),
+                        )
+                      : Text(
+                          _titleList[index],
+                          style: const TextStyle(color: Colors.black),
+                        ),
+
               ),
-              onTap: () {
+              onTap : () {
+                _titleList.isEmpty ? print("nothing") :
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => Page2Sponsor_DetailAd(title : _titleList[index].toString())));
                 // ScaffoldMessenger.of(context)
                 //     .showSnackBar(SnackBar(content: Text(_titleList[index])));
-              },
+              },);
+          },
+          separatorBuilder: (context, index){
+            return Container(
+              margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: const Divider(
+                thickness: 1,
+                color: Colors.black,
+              ),
             );
           },
         ),
