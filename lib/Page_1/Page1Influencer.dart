@@ -22,8 +22,10 @@ class _Page1InfluencerState extends State<Page1Influencer> {
   String _currentUser = '';
   String _prImage = '';
   String _prText = '';
+  String _prAny = '';
   String _displayName = '';
   String _profileImage = '';
+  bool _isOnlyImage = false;
   var db = FirebaseFirestore.instance;
 
   @override
@@ -36,6 +38,8 @@ class _Page1InfluencerState extends State<Page1Influencer> {
         print(ds['displayName']);
         _prImage = ds['PRImage'];
         _prText = ds['PRText'];
+        _isOnlyImage = ds['isOnlyImage'];
+        _prAny = ds['PRAny'];
         _profileImage = ds['profile'];
       });
     });
@@ -53,7 +57,16 @@ class _Page1InfluencerState extends State<Page1Influencer> {
           children: <Widget> [
           Text('$_displayName님 환영합니다!'),
             Text('현재 설정한 프로필'),
-            Container(
+            _isOnlyImage ? Container(
+              height: MediaQuery.of(context).size.height * 0.4,
+              width: double.infinity,
+              alignment: Alignment.center,
+              child:
+              _prImage != '' ? Image.memory(Base64Decoder().convert(_prImage))
+                  : Text('아직 설정하신 이미지가 없습니다.'),
+              //TODO 이미지 크기(정확히는 세로길이)가 너무 크면 OverFlow가 발생한다. 이를 방지해야 함
+            )
+            : Container(
               color: Colors.white,
               height: MediaQuery.of(context).size.height * 0.4,
               width: double.infinity,
@@ -61,21 +74,41 @@ class _Page1InfluencerState extends State<Page1Influencer> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Container(
-                    child:
-                  _prImage != '' ? Image.memory(Base64Decoder().convert(_prImage))
-                      : Text('아직 설정하신 이미지가 없습니다.'),
-                    //TODO 이미지 크기(정확히는 세로길이)가 너무 크면 OverFlow가 발생한다. 이를 방지해야 함
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width*0.55,
+                        height: MediaQuery.of(context).size.width*0.55,
+                        alignment: Alignment.center,
+                        child:
+                      _prImage != '' ? Image.memory(Base64Decoder().convert(_prImage))
+                          : Text('아직 설정하신 이미지가 없습니다.'),
+                        //TODO 이미지 크기(정확히는 세로길이)가 너무 크면 OverFlow가 발생한다. 이를 방지해야 함
+                      ),
+                      Container(
+                        width: 100,
+                        height: MediaQuery.of(context).size.width*0.55,
+                        alignment: Alignment.center,
+                        child: _prAny != '' ? Text(_prAny)
+                            : Text("아직 설정하신 추가내용이 없습니다."),
+                      )
+                    ],
                   ),
                   _prText != '' ? Text(_prText)
                       : Text("아직 설정하신 인사말이 없습니다.")
                 ],
               ),
             ),
-            FloatingActionButton(onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => Create_Info(prImage: _prImage, prText: _prText)));
-            },
-            child: Text('홍보 설정하기'),)
+            Container(
+              width: MediaQuery.of(context).size.width*0.4,
+              child: FittedBox(
+                child: FloatingActionButton.extended(onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => Create_Info(prImage: _prImage, prText: _prText, prAny: _prAny, isOnlyImage: _isOnlyImage,)));
+                },
+                label: Text('홍보 설정하기'),),
+              ),
+            )
           ]
           ),
       ),

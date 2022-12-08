@@ -33,22 +33,24 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
       img64 = '';
     }
     try {
-      UserCredential result = (await auth.createUserWithEmailAndPassword(
+      UserCredential result = (
+          await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       ));
       if (result.user != null) {
         auth.currentUser?.sendEmailVerification();
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("해당 이메일로 인증메일을 보냈습니다!")));
+            SnackBar(content: Text("해당 이메일로 인증메일을 보냈습니다!")));
         auth.signOut();
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const MainLoginScreen()),
                 (Route<dynamic> route) => false);
       }
-      SignUpDatabaseHelper()
-          .backUpSponsorData(email, password, companyName, img64, 'spo', ceoName);
+      SignUpDatabaseHelper().backUpSponsorData(
+          email, password,
+          companyName, img64, 'spo', ceoName);
       // TODO!! String email, String pw, String company,String image, String type, String ceoName
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {

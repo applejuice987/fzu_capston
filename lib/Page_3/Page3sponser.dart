@@ -18,15 +18,15 @@ import 'package:fzu/main.dart';
 
 //TODO!! 모든 채팅창 출력
 //TODO!! 3초 이상 누르면 삭제 하는 다이얼로그 출력
-class Page3 extends StatefulWidget {
+class Page3sponser extends StatefulWidget {
 
-  const Page3({Key? key}) : super(key: key);
+  const Page3sponser({Key? key}) : super(key: key);
 
   @override
-  State<Page3> createState() => _Page3State();
+  State<Page3sponser> createState() => _Page3sponserState();
 }
 
-class _Page3State extends State<Page3> {
+class _Page3sponserState extends State<Page3sponser> {
   String you = "";
   String yourimage = "";
   String email="";
@@ -55,7 +55,7 @@ class _Page3State extends State<Page3> {
         body: StreamBuilder<dynamic>(
 
             stream: FirebaseFirestore.instance.collection(
-                'chat_log').where("inf", isEqualTo: email)
+                'chat_log').where("spo", isEqualTo: email)
                 .snapshots(),
 
             builder: (context, snapshot) {
@@ -78,7 +78,6 @@ class _Page3State extends State<Page3> {
               }
 
               final docs = snapshot.data!.docs;
-              //TODO 채팅이 아예 없을 경우 예외처리
               return ListView.builder(
 
 
@@ -118,7 +117,8 @@ class _Page3State extends State<Page3> {
                                   )
 
                               )
-                          ),
+                          )
+                          ,
 
                           Column(children: [
                             Container(
@@ -169,7 +169,6 @@ class _Page3State extends State<Page3> {
                     );
                   });
             })
-
     );
   }
 }

@@ -63,8 +63,7 @@ class SignUpDatabaseHelper {
         'blackList': [],
         'ceoName': ceoName
       };
-      db
-          .collection("userInfoTable")
+      db.collection("userInfoTable")
           .doc("user")
           .collection("user_sponsor")
           .doc(email)

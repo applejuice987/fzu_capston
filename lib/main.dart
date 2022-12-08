@@ -12,11 +12,14 @@ import 'package:fzu/Page_2/Page2Influencer.dart';
 import 'package:fzu/Page_2/Page2Influencer_DetailAd.dart';
 import 'package:fzu/Page_2/Page2Sponsor.dart';
 import 'package:fzu/Page_3/Page3.dart';
+import 'package:fzu/Page_3/Page3influencer.dart';
+import 'package:fzu/Page_3/Page3sponser.dart';
 import 'package:fzu/Page_4/Page4.dart';
 import 'package:fzu/firebase_options.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 import 'Page_2/Page2Sponsor_DetailAd.dart';
 
+String mytype="";
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -38,6 +41,26 @@ class _MyAppState extends State<MyApp> {
 
   bool isInflu = false;
   bool isadmin = false;
+
+  MaterialColor createMaterialColor(Color color) {
+    List strengths = <double>[.05];
+    Map<int, Color> swatch = {};
+    final int r = color.red, g = color.green, b = color.blue;
+
+    for (int i = 1; i < 10; i++) {
+      strengths.add(0.1 * i);
+    }
+    strengths.forEach((strength) {
+      final double ds = 0.5 - strength;
+      swatch[(strength * 1000).round()] = Color.fromRGBO(
+        r + ((ds < 0 ? r : (255 - r)) * ds).round(),
+        g + ((ds < 0 ? g : (255 - g)) * ds).round(),
+        b + ((ds < 0 ? b : (255 - b)) * ds).round(),
+        1,
+      );
+    });
+    return MaterialColor(color.value, swatch);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +95,7 @@ class _MyAppState extends State<MyApp> {
           // or simply save your changes to "hot reload" in a Flutter IDE).
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
-          primarySwatch: Colors.blue,
+          primarySwatch: createMaterialColor(const Color(0xffc9b9ec)),
         ),
         home: firstwidget,
       ),
@@ -96,12 +119,16 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> _titleList = [];
 
   void initState() {
-
     MySharedPreferences.instance.getBooleanValue("isInflu").then((value) =>
         setState(() {
           print('3-1$isInflu');
           isInflu = value;
           print('3-2$isInflu');
+          if (value) {
+            mytype="inf";
+          } else {
+            mytype="spo";
+          }
         }));
 
     try {
@@ -143,22 +170,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget build(BuildContext context) {
-    // refreshlist();
     //인플루언서 로그인시 실행되야하는 바텀 아이템
     List<Widget> influ_bottom = <Widget>[
      //Create_Info(),
       Page1Influencer(),
       Page2Influencer(),
-      Page3(),
+      Page3influencer(),
       Page4()
     ];
     //스폰서 로그인시 ~~
     List<Widget> spon_bottom = <Widget>[
       Page1Sponsor(),
-      Page2Sponsor(
-          // list: _titleList
-      ),
-      Page3(),
+      Page2Sponsor(),
+      Page3sponser(),
       Page4()
     ];
     print("2- ${isInflu.toString()}");
