@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/src/rendering/object.dart';
+import 'package:fzu/detailPage_Influencer.dart';
 
 //TODO!! 로그인 한 사람이 광고주 일 경우, 이 화면 출력
 
@@ -23,6 +24,7 @@ class _Page1SponsorState extends State<Page1Sponsor> {
 
   int _Count = 0;
   var _isChecked = false;
+  String _email = '';
   category _Cate = category.Car;
 
   void _incrementCounter() {
@@ -122,6 +124,10 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                       return SizedBox(
                         height: 600,
                         child: PageView.builder(
+                          onPageChanged: (value) {
+                            print(value);
+                              _email = docs[value]['email'];
+                          },
                             controller: _controller,
                             scrollDirection: Axis.horizontal,
                             pageSnapping: true,
@@ -132,44 +138,71 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                                 child: Column(
                                   children: <Widget>[
                                     docs[index]['isOnlyImage'] ? Container(
-                                      height: MediaQuery.of(context).size.height * 0.4,
+                                      height: MediaQuery
+                                          .of(context)
+                                          .size
+                                          .height * 0.4,
                                       width: double.infinity,
                                       alignment: Alignment.center,
                                       child:
-                                      docs[index]['PRImage'] != '' ? Image.memory(Base64Decoder().convert(docs[index]['PRImage']))
+                                      docs[index]['PRImage'] != '' ? Image
+                                          .memory(Base64Decoder().convert(
+                                          docs[index]['PRImage']))
                                           : Text('아직 설정하신 이미지가 없습니다.'),
                                       //TODO 이미지 크기(정확히는 세로길이)가 너무 크면 OverFlow가 발생한다. 이를 방지해야 함
                                     )
                                         : Container(
                                       color: Colors.white,
-                                      height: MediaQuery.of(context).size.height * 0.4,
+                                      height: MediaQuery
+                                          .of(context)
+                                          .size
+                                          .height * 0.4,
                                       width: double.infinity,
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .spaceAround,
                                         children: [
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                            mainAxisAlignment: MainAxisAlignment
+                                                .spaceAround,
                                             children: [
                                               Container(
-                                                width: MediaQuery.of(context).size.width*0.55,
-                                                height: MediaQuery.of(context).size.width*0.55,
+                                                width: MediaQuery
+                                                    .of(context)
+                                                    .size
+                                                    .width * 0.55,
+                                                height: MediaQuery
+                                                    .of(context)
+                                                    .size
+                                                    .width * 0.55,
                                                 alignment: Alignment.center,
                                                 child:
-                                                docs[index]['PRImage'] != '' ? Image.memory(Base64Decoder().convert(docs[index]['PRImage']))
-                                                    : Text('아직 설정하신 이미지가 없습니다.'),
+                                                docs[index]['PRImage'] != ''
+                                                    ? Image.memory(
+                                                    Base64Decoder().convert(
+                                                        docs[index]['PRImage']))
+                                                    : Text(
+                                                    '아직 설정하신 이미지가 없습니다.'),
                                                 //TODO 이미지 크기(정확히는 세로길이)가 너무 크면 OverFlow가 발생한다. 이를 방지해야 함
                                               ),
                                               Container(
                                                 width: 100,
-                                                height: MediaQuery.of(context).size.width*0.55,
+                                                height: MediaQuery
+                                                    .of(context)
+                                                    .size
+                                                    .width * 0.55,
                                                 alignment: Alignment.center,
-                                                child: docs[index]['PRAny'] != '' ? Text(docs[index]['PRAny'])
-                                                    : Text("아직 설정하신 추가내용이 없습니다."),
+                                                child: docs[index]['PRAny'] !=
+                                                    '' ? Text(
+                                                    docs[index]['PRAny'])
+                                                    : Text(
+                                                    "아직 설정하신 추가내용이 없습니다."),
                                               )
                                             ],
                                           ),
-                                          docs[index]['PRText'] != '' ? Text(docs[index]['PRText'])
+                                          docs[index]['PRText'] != '' ? Text(
+                                              docs[index]['PRText'])
                                               : Text("아직 설정하신 인사말이 없습니다.")
                                         ],
                                       ),
@@ -211,8 +244,7 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                                             style: TextStyle(fontSize: 15.0),
                                           )),
                                     ),
-                                    ElevatedButton(
-                                        onPressed: () {}, child: Text('자세히 보기'))
+
                                   ],
                                 ),
                               );
@@ -224,12 +256,28 @@ class _Page1SponsorState extends State<Page1Sponsor> {
           ),
         ),
         bottomNavigationBar: SafeArea(
-            child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.subtitle1),
-          child: Text('매칭하기'),
-        )),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => detailPage_Influencer(email: _email)));
+                    }, child: Text('자세히 보기')),
+                ElevatedButton(
+                  onPressed: () {
+
+                  },
+                  style: ElevatedButton.styleFrom(
+                      textStyle: Theme
+                          .of(context)
+                          .textTheme
+                          .subtitle1),
+                  child: Text('매칭하기'),
+                ),
+              ],
+            )),
       ),
     );
   }
