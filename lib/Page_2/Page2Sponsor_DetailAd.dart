@@ -56,8 +56,6 @@ class _Page2Sponsor_DetailAdState extends State<Page2Sponsor_DetailAd> {
         _image = ds['image'];
         _applicant = ds['applicant'];
         _duration = ds['duration'];
-        // _applicant = ds['applicant'];
-        // print("applicant = $_applicant");
         List<dynamic> Detailduration = _duration.split(" ");
         startDate = DateTime.parse(Detailduration[0]);
         endDate = DateTime.parse(Detailduration[2]);
@@ -65,16 +63,6 @@ class _Page2Sponsor_DetailAdState extends State<Page2Sponsor_DetailAd> {
         _StartDate_YMD =
             "${startDate.year}년 ${startDate.month}월 ${startDate.day}일";
         _EndDate_YMD = "${endDate.year}년 ${endDate.month}월 ${endDate.day}일";
-
-        // if (startDate.isAfter(DateTime.now())) {
-        //   _isAfterDate = true;
-        //   _buttonText = '아직 모집 기간이 아닙니다.';
-        // }
-        //
-        // if (DateTime.now().isAfter(endDate)) {
-        //   _isAfterDate = true;
-        //   _buttonText = '모집이 종료되었습니다.';
-        // }
       });
     }).then((value) {
       user
@@ -102,7 +90,7 @@ class _Page2Sponsor_DetailAdState extends State<Page2Sponsor_DetailAd> {
                 borderRadius: BorderRadius.circular(10.0)),
             //Dialog Main Title
             title: Column(
-              children: <Widget>[
+              children: const <Widget>[
                 Text("삭제하기"),
               ],
             ),
@@ -111,7 +99,7 @@ class _Page2Sponsor_DetailAdState extends State<Page2Sponsor_DetailAd> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center
               ,
-              children: <Widget>[
+              children: const <Widget>[
                 Text(
                   "공고를 삭제하시겠습니까?",
                 ),
@@ -215,11 +203,6 @@ class _Page2Sponsor_DetailAdState extends State<Page2Sponsor_DetailAd> {
               ],
             ),
           )),
-          // SliverOverlapInjector(
-          //   handle:
-          //   NestedScrollView.sliverOverlapAbsorberHandleFor(
-          //       context),
-          // ),
           const SliverPersistentHeader(
               pinned: true, delegate: CategoryBreadcrumbs()),
           SliverList(
