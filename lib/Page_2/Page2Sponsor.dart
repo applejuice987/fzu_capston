@@ -1,4 +1,6 @@
 //import 'dart:html';
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +14,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 //TODO!! 로그인 한 사람이 스폰서 일 경우, 이 화면 출력
 
 class Page2Sponsor extends StatefulWidget {
-  const Page2Sponsor({Key? key,
+  const Page2Sponsor({
+    Key? key,
     // required this.list
   }) : super(key: key);
+
   // final List<String> list;
   @override
   State<Page2Sponsor> createState() => _Page2SponsorState();
@@ -23,11 +27,14 @@ class Page2Sponsor extends StatefulWidget {
 class _Page2SponsorState extends State<Page2Sponsor> {
   late final DocumentSnapshot documentData;
   List<String> _titleList = [];
+
   //_Page2SponsorState(this.documentData);
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   //CollectionReference sponsor = FirebaseFirestore.instance.collection('sponsor');
 
   FirebaseAuth auth = FirebaseAuth.instance;
+
   // getData() async {
   // var result = await firestore.collection("sponsor").doc("docId").get().then((value){
   // for(var doc in ){
@@ -40,11 +47,14 @@ class _Page2SponsorState extends State<Page2Sponsor> {
   // }
 
   void initState() {
-    super.initState();
-  }
-  refreshlist(){
     var useremail = FirebaseAuth.instance.currentUser?.email.toString();
-    FirebaseFirestore.instance.collection("sponsor").doc(useremail).collection('recruit').get().then((value) {
+    FirebaseFirestore.instance
+        .collection("AdTable")
+    // .doc(useremail)
+    // .collection('recruit')
+        .where("email", isEqualTo: useremail)
+        .get()
+        .then((value) {
       setState(() {
         _titleList.clear();
         for (var doc in value.docs) {
@@ -55,68 +65,76 @@ class _Page2SponsorState extends State<Page2Sponsor> {
       });
       // MySharedPreferences.instance.setStringList('albamon', _titleList);
     });
+    print("initState work in page2Sponsor");
+    super.initState();
   }
+
+  // refreshlist() {
+  //   var useremail = FirebaseAuth.instance.currentUser?.email.toString();
+  //   FirebaseFirestore.instance
+  //       .collection("AdTable")
+  //       // .doc(useremail)
+  //       // .collection('recruit')
+  //       .where("email", isEqualTo: useremail)
+  //       .get()
+  //       .then((value) {
+  //     setState(() {
+  //       _titleList.clear();
+  //       for (var doc in value.docs) {
+  //         String title = doc["title"];
+  //         String content = doc["content"];
+  //         _titleList.add(doc['title'].toString());
+  //       }
+  //     });
+  //     // MySharedPreferences.instance.setStringList('albamon', _titleList);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    refreshlist();
-   // var _titleList = MySharedPreferences.instance.getStringList('albamon');
-   //  List<String> _titleList = widget.list;
-    return MaterialApp(
-      home: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            //const SliverAppBar(
-            //title: Text("새로운 광고모집을 추가하세요"),
-            //floating: true,
-            //flexibleSpace: Placeholder(),
-            // expandedHeight: 100,
-            // ),
-            SliverToBoxAdapter(
-
-                child: Container(
-                  padding: const EdgeInsets.all(30),
-                  height: 200,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Page2Sponsor_AddAd()));
-                      }, child: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: Colors.black,
-                        child: const Icon(
-                          CupertinoIcons.plus,
-                        ),),),
-                      //CircleAvatar(
-                      //radius: 30,
-                      // backgroundColor: Colors.black,
-                      // child: const Icon(
-                      // CupertinoIcons.plus,
-                      // ),),
-                      Text("새로운 광고 모집하기"),
-
-                    ],
-                  ),
-                )
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) => _titleList.isEmpty ? Text("아무것도 없음") : ListTile(title:Text(_titleList[index]),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Page2Sponsor_DetailAd()));
-                  },),
-                childCount: _titleList.length,
+    // refreshlist();
+    // var _titleList = MySharedPreferences.instance.getStringList('albamon');
+    //  List<String> _titleList = widget.list;
+    return Scaffold(
+      body: Container(
+        child: ListView.builder(
+          itemCount: _titleList.isEmpty ? 1 : _titleList.length,
+          itemBuilder: (ctx, index) {
+            return ListTile(
+              title: Container(
+                child: _titleList.isEmpty
+                    ? const Text(
+                        "새로운 공고를 추가해보세요",
+                        style: TextStyle(color: Colors.black),
+                      )
+                    : Text(
+                        _titleList[index],
+                        style: const TextStyle(color: Colors.black),
+                      ),
               ),
-            ),
-            // StreamBuilder<QuerySnapshot>(
-          ],
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Page2Sponsor_DetailAd(title : _titleList[index].toString())));
+                // ScaffoldMessenger.of(context)
+                //     .showSnackBar(SnackBar(content: Text(_titleList[index])));
+              },
+            );
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const Page2Sponsor_AddAd()));
+        },
+        backgroundColor: const Color(0xffc9b9ec),
+        child: const Text(
+          "+",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
       ),
     );
