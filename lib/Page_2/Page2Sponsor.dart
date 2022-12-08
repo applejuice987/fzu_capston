@@ -1,4 +1,6 @@
 //import 'dart:html';
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +14,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 //TODO!! 로그인 한 사람이 스폰서 일 경우, 이 화면 출력
 
 class Page2Sponsor extends StatefulWidget {
-  const Page2Sponsor({Key? key,
+  const Page2Sponsor({
+    Key? key,
     // required this.list
   }) : super(key: key);
+
   // final List<String> list;
   @override
   State<Page2Sponsor> createState() => _Page2SponsorState();
@@ -23,11 +27,14 @@ class Page2Sponsor extends StatefulWidget {
 class _Page2SponsorState extends State<Page2Sponsor> {
   late final DocumentSnapshot documentData;
   List<String> _titleList = [];
+
   //_Page2SponsorState(this.documentData);
-  var db = FirebaseFirestore.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   //CollectionReference sponsor = FirebaseFirestore.instance.collection('sponsor');
 
   FirebaseAuth auth = FirebaseAuth.instance;
+
   // getData() async {
   // var result = await firestore.collection("sponsor").doc("docId").get().then((value){
   // for(var doc in ){
@@ -39,82 +46,97 @@ class _Page2SponsorState extends State<Page2Sponsor> {
   // return result;
   // }
 
-  String _currentUser = '';
-
-
-  @override
   void initState() {
-    super.initState();
-    setData();
-  }
-
-  void setData() {
-    _currentUser = FirebaseAuth.instance.currentUser!.email.toString();
-    db.collection("AdTable").where("email", isEqualTo: _currentUser).get().then((value) {
+    var useremail = FirebaseAuth.instance.currentUser?.email.toString();
+    FirebaseFirestore.instance
+        .collection("AdTable")
+    // .doc(useremail)
+    // .collection('recruit')
+        .where("email", isEqualTo: useremail)
+        .get()
+        .then((value) {
       setState(() {
         _titleList.clear();
         for (var doc in value.docs) {
-          print(doc['title']);
+          String title = doc["title"];
+          String content = doc["content"];
           _titleList.add(doc['title'].toString());
         }
       });
+      // MySharedPreferences.instance.setStringList('albamon', _titleList);
     });
+    print("initState work in page2Sponsor");
+    super.initState();
   }
+
+  // refreshlist() {
+  //   var useremail = FirebaseAuth.instance.currentUser?.email.toString();
+  //   FirebaseFirestore.instance
+  //       .collection("AdTable")
+  //       // .doc(useremail)
+  //       // .collection('recruit')
+  //       .where("email", isEqualTo: useremail)
+  //       .get()
+  //       .then((value) {
+  //     setState(() {
+  //       _titleList.clear();
+  //       for (var doc in value.docs) {
+  //         String title = doc["title"];
+  //         String content = doc["content"];
+  //         _titleList.add(doc['title'].toString());
+  //       }
+  //     });
+  //     // MySharedPreferences.instance.setStringList('albamon', _titleList);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-   // var _titleList = MySharedPreferences.instance.getStringList('albamon');
-   //  List<String> _titleList = widget.list;
-    //setData();
+    // refreshlist();
+    // var _titleList = MySharedPreferences.instance.getStringList('albamon');
+    //  List<String> _titleList = widget.list;
     return Scaffold(
-      // appBar: PreferredSize(
-      //   preferredSize: Size.fromHeight(30),
-      //   child: AppBar(
-      //     backgroundColor: Color(0xffC9B9EC),
-      //     title: Text("광고확인"),
-      //   ),
-      // ),
       body: Container(
-        color: Color(0xffd6cdea),
-        child:
-        ListView.builder(itemCount: _titleList.length,
-        itemBuilder: (ctx, index){
-          return Container(
-            margin: const EdgeInsets.fromLTRB(15, 2.5, 15, 0),
-            child: GestureDetector(
+        child: ListView.builder(
+          itemCount: _titleList.isEmpty ? 1 : _titleList.length,
+          itemBuilder: (ctx, index) {
+            return ListTile(
+              title: Container(
+                child: _titleList.isEmpty
+                    ? const Text(
+                        "새로운 공고를 추가해보세요",
+                        style: TextStyle(color: Colors.black),
+                      )
+                    : Text(
+                        _titleList[index],
+                        style: const TextStyle(color: Colors.black),
+                      ),
+              ),
               onTap: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const Page2Sponsor_DetailAd()));
+                        builder: (context) => Page2Sponsor_DetailAd(title : _titleList[index].toString())));
+                // ScaffoldMessenger.of(context)
+                //     .showSnackBar(SnackBar(content: Text(_titleList[index])));
               },
-              child: Card(
-              child: SizedBox(
-                height: 50
-                  ,child: _tile(_titleList[index],''))
-              ),
-            ),
-          );
-        },),
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xfff4cccc),
         onPressed: () {
           Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const Page2Sponsor_AddAd()));
-
-          },
-        child: const Icon(Icons.add),
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const Page2Sponsor_AddAd()));
+        },
+        backgroundColor: const Color(0xffc9b9ec),
+        child: const Text(
+          "+",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
       ),
     );
   }
-  ListTile _tile(String title, String subTitle) => ListTile(
-    title: Text(
-      title,
-      style: const TextStyle(fontSize: 20,),
-    ),
-    subtitle: Text(subTitle),
-  );
 }

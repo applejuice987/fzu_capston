@@ -48,7 +48,10 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
             ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("해당 이메일로 인증메일을 보냈습니다!")));
             auth.signOut();
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MainLoginScreen()),(Route<dynamic> route) => false);
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const MainLoginScreen()),
+                    (Route<dynamic> route) => false);
           }
           SignUpDatabaseHelper().backUpInfluencerData(
               email, password,

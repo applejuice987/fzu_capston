@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class Page2Sponsor_DetailAd extends StatefulWidget {
-  const Page2Sponsor_DetailAd({Key? key}) : super(key: key);
+  final String title;
+  const Page2Sponsor_DetailAd({Key? key, required this.title}) : super(key: key);
 
   @override
   State<Page2Sponsor_DetailAd> createState() => _Page2Sponsor_DetailAdState();
@@ -22,25 +23,19 @@ class _Page2Sponsor_DetailAdState extends State<Page2Sponsor_DetailAd> {
       ),
       body: CustomScrollView(
         slivers: [
-          // SliverOverlapInjector(
-          //   handle:
-          //   NestedScrollView.sliverOverlapAbsorberHandleFor(
-          //       context),
-          // ),
           SliverToBoxAdapter(
               child: Container(
                 padding: const EdgeInsets.all(30),
-                height: 400,
+                height: 200,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text("회사명",style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.normal),),
+                    Text(widget.title,style: const TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.normal),),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("제목 : ㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㄹ",style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.normal)),
-                        Spacer(),
-                        Text("지원자 수 : 200",style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.normal))
+                        const SizedBox(),
+                        Text(widget.title,style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.normal))
                       ],
                     ),
                     Text("내용",style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.normal))
@@ -78,60 +73,6 @@ class _Page2Sponsor_DetailAdState extends State<Page2Sponsor_DetailAd> {
         ],
       ),
     );
-    // return MaterialApp(
-    //   home: Scaffold(
-    //     body: Container(
-    //       child: CustomScrollView(
-    //         slivers: [
-    //            SliverAppBar(
-    //              centerTitle: true,
-    //             title: Column(
-    //               crossAxisAlignment: CrossAxisAlignment.center,
-    //               mainAxisAlignment: MainAxisAlignment.center,
-    //               mainAxisSize: MainAxisSize.min,
-    //               children: <Widget>[
-    //                 new Container(
-    //                   child: Column(
-    //                       children:[
-    //                         Container(
-    //                           child: Text("회사명"),
-    //                         ),
-    //                         Container(
-    //                           child: Text("광고명"),
-    //                         ),
-    //                         Container(
-    //                           child: Text("광고내용"),
-    //                         ),
-    //                       ]
-    //                   ),
-    //                 ),
-    //             ],
-    //             ),
-    //
-    //
-    //
-    //             floating: true,
-    //             flexibleSpace: FlexibleSpaceBar(
-    //                titlePadding: EdgeInsetsDirectional.only(
-    //                  top: AppBar().preferredSize.height,
-    //                  bottom: AppBar().preferredSize.height
-    //
-    //           ),
-    //         ),
-    //             expandedHeight: 500,
-    //           ),
-    //
-    //           SliverList(
-    //             delegate: SliverChildBuilderDelegate(
-    //                   (context, index) => ListTile(title: Text("지원자 목록")),
-    //               childCount: 20,
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 }
 class CategoryBreadcrumbs extends SliverPersistentHeaderDelegate {

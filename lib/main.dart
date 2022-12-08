@@ -194,6 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //isInflu가 true이면 왼쪽, 아니면 오른쪽
 
       bottomNavigationBar: Container(
+        // height: 91,
         decoration: const BoxDecoration(
           color:Colors.grey,
           border: Border(top: BorderSide(color: Colors.grey, width : 1.0)),
