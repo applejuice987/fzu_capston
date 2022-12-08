@@ -22,7 +22,7 @@ class _Page3DetailState extends State<Page3Detail> {
   final input_text = TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   ScrollController _controller=ScrollController();
-
+  bool _visibility= false;
 // This is what you're looking for!
 
 
@@ -204,12 +204,13 @@ class _Page3DetailState extends State<Page3Detail> {
                   FloatingActionButton(
                     onPressed: (){
 
-
-                      firestore.collection('chat_log').doc(room).collection('dummy').doc(DateTime.now().toString()).set({
-                        'sender_email':FirebaseAuth.instance.currentUser?.email.toString(),
-                        'chat':input_text.text
-                      });
-                      
+                      if(input_text.text!="") {
+                        firestore.collection('chat_log').doc(room).collection(
+                            'dummy').doc(DateTime.now().toString()).set({
+                          'sender_email': FirebaseAuth.instance.currentUser
+                              ?.email.toString(),
+                          'chat': input_text.text
+                        });
                         firestore.collection('chat_log').doc(room).update({
                           'lastchat': input_text.text,
 
@@ -224,15 +225,17 @@ class _Page3DetailState extends State<Page3Detail> {
                             });
                           }
                         });
-                      
 
-                      input_text.text="";
-                    },
+
+                        input_text.text = "";
+                      }
+
                     child: Icon(Icons.send,color: Colors.white,size: 18,),
                     backgroundColor:Color(0xFFc9b9ec),
 
                     elevation: 0,
                   ),
+
                 ],
 
               ),
