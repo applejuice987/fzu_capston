@@ -241,7 +241,17 @@ class _Page2Sponsor_AddAdState extends State<Page2Sponsor_AddAd> {
                               setState(() {
                                 _isChecked = value!;
                               });
-                            })
+                            }),
+                        Tooltip(
+                          message:
+                          'FZU의 시스템을 사용하지 않고\nDM 등의 별도 지원 방식을 사용합니다.\n이 때 지원 방식을 꼭 명시해주세요.',
+                          triggerMode:
+                          TooltipTriggerMode.tap,
+                          showDuration:
+                          Duration(seconds: 15),
+                          child:
+                          Icon(Icons.question_mark),
+                        )
                       ],
                     ),
                   ],

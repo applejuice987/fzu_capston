@@ -8,6 +8,7 @@ import 'package:fzu/Page_2/Page2Influencer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fzu/Page_3/Page3Detail.dart';
+import 'package:fzu/detailPage_Sponsor.dart';
 
 //TODO!! 로그인 한 사람이 스폰서 일 경우, 이 화면 출력
 
@@ -169,23 +170,34 @@ class _Page2Influencer2State extends State<Page2Influencer2> {
                       SizedBox(
                         width: 80,
                         height: 80,
-                        child: CircleAvatar(
-                            radius: 60.0,
-                            backgroundColor: Colors.lightBlue,
-                            child: ClipOval(
-                                child: _profile != ''
-                                    ? Image.memory(
-                                    Base64Decoder().convert(_profile))
-                                    : Image.asset(
-                                    "assets/images/default_profile_image.jpg"))),
+                        child: OutlinedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => detailPage_Sponsor(email: _email)));
+                          },
+                          child: CircleAvatar(
+                              radius: 60.0,
+                              backgroundColor: Colors.lightBlue,
+                              child: ClipOval(
+                                  child: _profile != ''
+                                      ? Image.memory(
+                                      Base64Decoder().convert(_profile))
+                                      : Image.asset(
+                                      "assets/images/default_profile_image.jpg"))),
+                        ),
                       ),
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(_company),
-                          Text(_email)
-                        ],
+                      Container(
+                        width: MediaQuery.of(context).size.width-140,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(_company),
+                            Text(_email)
+                          ],
+                        ),
                       )
                     ],
                   ),
