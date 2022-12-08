@@ -131,6 +131,7 @@ class _Page3sponserState extends State<Page3sponser> {
                       ),
                       onTap: () {
                         Navigator.push(
+
                             context,
                             MaterialPageRoute(builder: (_) =>
                                 Page3Detail(snapshot.data!.docs[index][you],
