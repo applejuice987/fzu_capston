@@ -266,11 +266,21 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                                     MaterialPageRoute(
                                         builder: (_) => detailPage_Influencer(email: _email)));
                               },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  elevation: 15,
+                                  shadowColor: Colors.black,
+                                  side: const BorderSide(color: Colors.black, width : 1.5),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))),
                               child: Text('자세히 보기')),
                           ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
-                                textStyle: Theme.of(context).textTheme.subtitle1),
+                                backgroundColor: Colors.white,
+                                elevation: 15,
+                                shadowColor: Colors.black,
+                                side: const BorderSide(color: Colors.black, width : 1.5),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))),
                             child: Text('매칭하기'),
                           ),
                         ],
