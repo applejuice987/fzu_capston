@@ -80,10 +80,6 @@ class SignUpDatabaseHelper {
       collectionPath = 'user_influencer';
       requireType = 'inf';
     } 
-    // else {
-    //   collectionPath = 'user_sponsor';
-    //   requireType = 'spo';
-    // }
 
     type = await FirebaseFirestore.instance
         .collection("userInfoTable")
