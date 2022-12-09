@@ -68,7 +68,7 @@ class _LoginSponsorState extends State<LoginSponsor> {
                       obscureText: _passwordObscure,
                       decoration: buildInputDecoration("비밀번호", false)
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     SizedBox(
@@ -144,11 +144,11 @@ class _LoginSponsorState extends State<LoginSponsor> {
       return InputDecoration(
           labelText: format,
           focusColor: Colors.black,
-          enabledBorder: UnderlineInputBorder(
+          enabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.black)),
-          focusedBorder: UnderlineInputBorder(
+          focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.black)),
-          labelStyle: TextStyle(color: Colors.black),
+          labelStyle: const TextStyle(color: Colors.black),
           suffixIcon: IconButton(
               onPressed: () {
                 setState(() {
