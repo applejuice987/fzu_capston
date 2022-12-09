@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/Page_4/Page4_BlackList.dart';
 import 'package:fzu/Page_4/Page4_LikeAd.dart';
@@ -12,11 +13,13 @@ import 'package:fzu/Page_4/Page4_LikeInfluencer.dart';
 import 'package:fzu/Page_4/Page4_MyAd.dart';
 import 'package:fzu/Page_4/Page4_FilteringTextList.dart';
 import 'package:fzu/Page_4/Page4_Notice.dart';
+import 'package:fzu/Page_4/Page4_manageInfoSponsor.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 import 'package:fzu/login/login_sponsor/LoginSponsor.dart';
 
 import 'Page4_FAQ.dart';
 import 'Page4_LikeSponsor.dart';
+import 'Page4_manageInfoInfluencer.dart';
 
 //TODO!! 로그인의 관계 없이 같은 화면 출력
 //TODO!! 로그인 한 사람의 프로필 수정이라던가 이것저것 만들 예정.
@@ -38,6 +41,7 @@ class _Page4State extends State<Page4> {
   String self_auth = '';
   String _collectionPath = '';
   List<dynamic> _filteringTextList = [];
+  dynamic pwController = TextEditingController();
 
   @override
   void initState() {
@@ -341,7 +345,10 @@ class _Page4State extends State<Page4> {
                       Expanded(
                         child: OutlinedButton(
                             style: ButtonStyle(),
-                            onPressed: () {},
+                            onPressed: () {
+                              //TODO FZU 홍보용 포스터같은거 넣을 예정
+                              Fluttertoast.showToast(msg: '준비중입니다.');
+                            },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -385,7 +392,9 @@ class _Page4State extends State<Page4> {
               height: 90,
               child: Expanded(
                   child: OutlinedButton(
-                onPressed: () {},
+                onPressed: () {
+                  showAddFilteringTextDialog();
+                },
                 child: Text('내 정보 수정'),
               )),
             ),
@@ -407,5 +416,70 @@ class _Page4State extends State<Page4> {
     MySharedPreferences.instance.setBooleanValue("loggedin", false);
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => const MainLoginScreen()));
+  }
+
+  void showAddFilteringTextDialog() async {
+    pwController.text = '';
+    showDialog(
+        context: context,
+        //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            //Dialog Main Title
+            title: Column(
+              children: <Widget>[
+                Text("비밀번호 확인"),
+              ],
+            ),
+            //
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "비밀번호를 입력해주세요.",
+                ),
+                Container(
+                    width: double.infinity,
+                    height: 50,
+                    child: TextField(
+                      controller: pwController,
+                      obscureText: true,
+                    )),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text("취소"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              TextButton(
+                child: Text("확인"),
+                onPressed: () {
+                  AuthCredential credential = EmailAuthProvider.credential(email: _currentUser, password: pwController.text);
+                  FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(credential).catchError((_) {
+                    Fluttertoast.showToast(msg: '비밀번호가 올바르지 않습니다.');
+                  }).then((value) {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => isInflu ? Page4_manageInfoInfluencer(currentUser: _currentUser)
+                            : Page4_manageInfoSponsor(currentUser: _currentUser,)));
+
+                  });
+
+
+                },
+              ),
+            ],
+          );
+        });
   }
 }
