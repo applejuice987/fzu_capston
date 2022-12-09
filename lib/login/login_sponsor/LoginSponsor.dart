@@ -79,7 +79,7 @@ class _LoginSponsorState extends State<LoginSponsor> {
                             SignUpDatabaseHelper().loginFunc(sp_email_controller.text, sp_pw_controller.text, context, false);
                             },
                           style: ElevatedButton.styleFrom(
-                              primary: Colors.white,
+                              backgroundColor: Colors.white,
                               elevation: 15,
                               shadowColor: Colors.black,
                               side: const BorderSide(color: Colors.black, width : 1.5),
