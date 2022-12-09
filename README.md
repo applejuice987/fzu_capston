@@ -58,14 +58,6 @@ asdfasdf
 2022/10/07  로그인쪽 관련 화면 UI 만지는 중
 2022/10/10  로그인 화면 전부 완성
 
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-
-// ...
-
-await Firebase.initializeApp(
-options: DefaultFirebaseOptions.currentPlatform,
-);
 
 ## Page1 -  인플루언서 홍보용 PR 방향
 ### PR 콘텐츠

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/Page_4/Page4_Authentication.dart';
 import 'package:fzu/Page_4/Page4_BlackList.dart';
@@ -14,6 +15,7 @@ import 'package:fzu/Page_4/Page4_MyAd.dart';
 import 'package:fzu/Page_4/Page4_FilteringTextList.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 import 'package:fzu/login/login_sponsor/LoginSponsor.dart';
+import 'package:package_info/package_info.dart';
 
 import 'Page4_LikeSponsor.dart';
 
@@ -83,6 +85,95 @@ class _Page4State extends State<Page4> {
             }));
 
   }
+
+  //인증을 위한 이메일 보내기
+  String user_email = FirebaseAuth.instance.currentUser!.email.toString();
+
+  Future<String> _getEmailBody() async {
+    String body = "";
+    String type = "인플루언서";
+    PackageInfo info = await PackageInfo.fromPlatform();
+    MySharedPreferences.instance
+        .getBooleanValue("isInflu")
+        .then((value) => setState(() {
+      if (value == false) {
+        type = "광고주";
+      }
+    }));
+
+    body += "==============\n";
+    body += "아래 내용을 함께 보내주시면 큰 도움이 됩니다 \n";
+    body += "이메일 : $user_email\n";
+    body += "회원 타입 : $type\n";
+    body += "Fzu 버전 : ${info.version}\n";
+    body += "==============\n";
+    if (type == "인플루언서") {
+      body += "자신이 해당 채널 혹은 계정을 운영하고 있다는 증거와 사업자 등록증을 제출하주시길 바랍니다.";
+    } else {
+      body += "자신의 기업을 운영하고 있다는 증거와 사업자 등록증을 제출해 주시길 바랍니다.";
+      body += "개인 사업자 일 경우, 사업자 등록번호 및 신분증을 제출해 주시길 바랍니다.";
+    }
+
+    return body;
+  }
+
+  void _sendEmail() async {
+    String body = await _getEmailBody();
+    final Email email = Email(
+      body: body,
+      subject: '[FZU 인증하기]',
+      recipients: ['forcapstoneproject1@gmail.com'],
+      cc: [],
+      bcc: [],
+      attachmentPaths: [],
+      isHTML: false,
+    );
+    try {
+      await FlutterEmailSender.send(email);
+    } catch (error) {
+      String title = "오류";
+      String message =
+          "기본 메일 앱을 사용할 수 없기 때문에 앱에서 바로 문의를 전송하기 어려운 상황입니다.\n아래 이메일로 연락주시면 친절하게 답변해드릴게요 :)\n\nforcapstoneproject1@gmail.com";
+      _showErrorAlertDialog(title, message);
+    }
+  }
+
+  void _showErrorAlertDialog(String title, String message) {
+    showDialog(
+        context: context,
+        //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            //Dialog Main Title
+            title: Column(
+              children: <Widget>[
+                Text(title),
+              ],
+            ),
+            //
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(message),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text("확인"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+// 인증을 위한 이메일 보내기
 
 
   @override
@@ -355,8 +446,7 @@ class _Page4State extends State<Page4> {
                         child: OutlinedButton(
                             style: ButtonStyle(),
                             onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => Page4_Authentication()));
+                             _sendEmail();
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
