@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:chips_choice/chips_choice.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
@@ -55,7 +56,7 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
           }
           SignUpDatabaseHelper().backUpInfluencerData(
               email, password,
-              platformName, img64, 'inf', channel_platformName, main_contents);
+              platformName, img64, 'inf', channel_platformName, main_contents, category);
           // TODO!! String email, String pw, String platform, String img64, String type, String channelName, String contents
 
     } on FirebaseAuthException catch (e) {
@@ -111,6 +112,24 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
     super.initState();
     _passwordVisible = false;
   }
+
+  // multiple choice default value
+  List<String> category = [];
+
+  // list of string options
+  List<String> options = [
+    '뷰티',
+    '음식',
+    '게임',
+    '모바일게임',
+    '자동차',
+    '옷',
+    '공부',
+    'Travel',
+    'Food',
+    'Tech',
+    'Science',
+  ];
 
   renderTextFormField({
     required String label,
@@ -398,6 +417,41 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
                                 value: 'platformName',
                                 hint: main_contentsHint
                             ),
+                          const SizedBox(height: 20,),
+                            Container(
+                              alignment: AlignmentDirectional.topStart,
+                              child: const Text(
+                                "카테고리",
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          Container(
+                            alignment: AlignmentDirectional.centerStart,
+                            width: double.infinity,
+                            child: Flexible(
+                              child: ChipsChoice<String>.multiple(
+                                value: category,
+                                onChanged: (val) => setState(() {
+                                  category = val;
+                                  print(category);
+                                }),
+                                choiceItems: C2Choice.listFrom<String, String>(
+                                  source: options,
+                                  value: (i, v) => v,
+                                  label: (i, v) => v,
+                                  tooltip: (i, v) => v,
+                                ),
+                                choiceCheckmark: true,
+                                choiceStyle: C2ChipStyle.outlined(
+                                    checkmarkColor: Colors.white,
+                                    color: Colors.white,
+                                    foregroundStyle: const TextStyle(color: Colors.black)),
+                              ),
+                            ),
+                          ),
 
                           renderButton(_imageFile),
                           ],

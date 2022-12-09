@@ -19,7 +19,7 @@ class SignUpDatabaseHelper {
   }
 
   Future<void> backUpInfluencerData(String email, String pw, String platform,
-      String img64, String type, String channelName, String contents) async {
+      String img64, String type, String channelName, String contents, List<String> category) async {
     //데이터 백업 함수
     final backUpData = <String, dynamic>{ //SQLite 데이터 매핑
       'email': email,
@@ -30,7 +30,7 @@ class SignUpDatabaseHelper {
       "PRText": '',
       'type': type,
       'displayName': '',
-      'category': [],
+      'category': category,
       'chatList': [],
       'likeAdList': [],
       'likeSpoList': [],
@@ -72,24 +72,32 @@ class SignUpDatabaseHelper {
 
   Future<void> loginFunc(
       String email, String pw, BuildContext context, bool isInflu) async {
-    String collectionPath = '';
-    String requireType = '';
+    String collectionPath = 'user_sponsor';
+    String requireType = 'spo';
+    String type = "";
 
     if (isInflu) {
       collectionPath = 'user_influencer';
       requireType = 'inf';
-    } else {
-      collectionPath = 'user_sponsor';
-      requireType = 'spo';
-    }
+    } 
+    // else {
+    //   collectionPath = 'user_sponsor';
+    //   requireType = 'spo';
+    // }
 
-    String type = await FirebaseFirestore.instance
+    type = await FirebaseFirestore.instance
         .collection("userInfoTable")
         .doc("user")
         .collection(collectionPath)
         .doc(email)
         .get()
+        // .catchError(onError)
         .then((value) {
+          print("asdasdasd ${value.data()?['type']}");
+          if(value.data()?['type'] == null) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text("계정을 확인해주세요.")));
+          }
       return value.data()?['type']; // Access your after your get the data
     });
     if(type == requireType){
