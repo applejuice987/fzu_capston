@@ -109,7 +109,7 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                 onTap: () {
                   FocusScope.of(context).unfocus();
                 },
-                child: StreamBuilder<dynamic>(
+                child: StreamBuilder<dynamic> (
                     stream: FirebaseFirestore.instance
                         .collection('userInfoTable')
                         .doc('user')

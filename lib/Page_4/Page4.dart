@@ -11,9 +11,11 @@ import 'package:fzu/Page_4/Page4_LikeAd.dart';
 import 'package:fzu/Page_4/Page4_LikeInfluencer.dart';
 import 'package:fzu/Page_4/Page4_MyAd.dart';
 import 'package:fzu/Page_4/Page4_FilteringTextList.dart';
+import 'package:fzu/Page_4/Page4_Notice.dart';
 import 'package:fzu/login/MainLoginScreen.dart';
 import 'package:fzu/login/login_sponsor/LoginSponsor.dart';
 
+import 'Page4_FAQ.dart';
 import 'Page4_LikeSponsor.dart';
 
 //TODO!! 로그인의 관계 없이 같은 화면 출력
@@ -286,7 +288,10 @@ class _Page4State extends State<Page4> {
                       Expanded(
                         child: OutlinedButton(
                             style: ButtonStyle(),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => Page4_Notice()));
+                            },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -309,7 +314,10 @@ class _Page4State extends State<Page4> {
                       Expanded(
                         child: OutlinedButton(
                             style: ButtonStyle(),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => Page4_FAQ()));
+                            },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
