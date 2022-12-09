@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fzu/MySharedPreferences.dart';
+import 'package:fzu/Page_4/Page4_Authentication.dart';
 import 'package:fzu/Page_4/Page4_BlackList.dart';
 import 'package:fzu/Page_4/Page4_LikeAd.dart';
 import 'package:fzu/Page_4/Page4_LikeInfluencer.dart';
@@ -353,7 +354,10 @@ class _Page4State extends State<Page4> {
                       Expanded(
                         child: OutlinedButton(
                             style: ButtonStyle(),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => Page4_Authentication()));
+                            },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -381,15 +385,20 @@ class _Page4State extends State<Page4> {
                 child: Text('내 정보 수정'),
               )),
             ),
-            SizedBox(
-              child: ElevatedButton(
+            ElevatedButton(
                   onPressed: () {
                     signOutMethod(context);
                   },
                   child: const Text("로그아웃")),
-            ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          signOutMethod(context);
+        },
+        child: Text("ㅂㅇ"),
+
       ),
     );
   }
