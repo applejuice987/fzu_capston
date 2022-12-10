@@ -25,32 +25,31 @@ class _Page2InfluencerState extends State<Page2Influencer> {
   FirebaseAuth auth = FirebaseAuth.instance;
   late String docId = auth.currentUser!.email.toString();
 
-  final List<String> _adList = [];
-  final List<String> _durationList = [];
-  final List<String> _profileList = [];
   bool _isNeedy = false;
   Color dateColor = Colors.black;
+  Map<String, List<String>> adMap = {};
   var db = FirebaseFirestore.instance;
+  
 
   @override
   void initState() {
     super.initState();
-    db.collection("AdTable").get().then((value) {
+    db.collection("AdTable").orderBy('duration').get().then((value) {
       setState(() {
-        _adList.clear();
-        _durationList.clear();
         for (var doc in value.docs) {
+          List<String> adValue = [];
           String title = doc["title"];
           String duration = doc["duration"];
           String email = doc['email'];
-          _adList.add(title);
-          _durationList.add(duration);
+          adValue.add(doc['duration']);
           db.collection('userInfoTable').doc('user').collection('user_sponsor').doc(email).get().then((DocumentSnapshot ds) {
             setState(() {
-              _profileList.add(ds['profile']);
+              adValue.add(ds['profile']);
             });
 
+
           });
+          adMap.putIfAbsent(title, () => adValue);
         }
       });
       // MySharedPreferences.instance.setStringList('albamon', _titleList);
@@ -119,12 +118,12 @@ class _Page2InfluencerState extends State<Page2Influencer> {
     return Scaffold(
         body: GridView.count(
       crossAxisCount: 2,
-      childAspectRatio: (1 / 1.5),
-      children: List.generate(_adList.length, (index) {
+      childAspectRatio: (1 / 1.1),
+      children: List.generate(adMap.length, (index) {
         return Container(
           child: InkWell(
             onTap: () {
-              String applicant = _adList[index];
+              String applicant = adMap.keys.elementAt(index);
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -137,14 +136,14 @@ class _Page2InfluencerState extends State<Page2Influencer> {
                 children: [
                   CircleAvatar(
                     radius: 70,
-                    child: Image.memory(Base64Decoder().convert(_profileList[index])),
+                    child: Image.memory(Base64Decoder().convert(adMap.values.elementAt(index)[1])),
                   ),
                   SizedBox(
                     height: 20,
                   ),
-                  Text(_adList[index]),
+                  Text(adMap.keys.elementAt(index)),
                   Text(
-                    deadLine(_durationList[index]),
+                    deadLine(adMap.values.elementAt(index)[0]),
                     style:
                         //TextStyle(color: _isNeedy ? Colors.red : Colors.black),
                     TextStyle(color: dateColor),
