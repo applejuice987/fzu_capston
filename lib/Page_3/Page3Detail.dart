@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,6 +32,8 @@ class _Page3DetailState extends State<Page3Detail> {
   String spo = '';
   String infImage = '';
   String spoImage = '';
+  String myImage='';
+  String yourImage='';
   @override
   void initState(){
     super.initState();
@@ -90,6 +93,7 @@ class _Page3DetailState extends State<Page3Detail> {
             },
             child:StreamBuilder<dynamic>(
 
+
                 stream: chat_log.snapshots(),
                 builder: (context,snapshot){
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -101,6 +105,8 @@ class _Page3DetailState extends State<Page3Detail> {
                     }
                   });
                   return SingleChildScrollView(
+
+
                     controller: _controller,
 
 
@@ -117,26 +123,67 @@ class _Page3DetailState extends State<Page3Detail> {
 
 
                             return Container(
+                              color:Colors.white10,
                               padding: EdgeInsets.only(
                                   left: 14, right: 14, top: 10, bottom: 10),
-                              child: Align(
-                                alignment: (snapshot.data.docs[index]['sender_email'] ==
-                                    opponent_email ? Alignment.topLeft : Alignment
-                                    .topRight),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: (snapshot.data.docs[index]['sender_email'] ==
-                                        opponent_email ? Colors.grey.shade200 : Color(0xFFc9b9ec)),
+
+                                child: Row(
+                                  mainAxisAlignment : (snapshot.data.docs[index]['sender_email'] ==
+                                      opponent_email ?  MainAxisAlignment.start : MainAxisAlignment.end),
+
+                                    children: [
+                                      Visibility(child: CircleAvatar(
+
+
+                                        radius: 20,
+                                        // child:Text
+                                        backgroundImage: (_currentUser==inf ?  MemoryImage(
+                                          Base64Decoder().convert(spoImage),
+                                        ) : MemoryImage(
+                                          Base64Decoder().convert(infImage),
+                                        ))
+
+
+                                    ),
+                                      visible:(snapshot.data.docs[index]['sender_email'] ==
+                                          opponent_email ? true : false),
+                                    ),
+
+                                  Container(
+                                    margin:EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: (snapshot.data.docs[index]['sender_email'] ==
+                                          opponent_email ? Colors.grey.shade200 : Color(0xFFc9b9ec)),
+                                    ),
+
+                                    padding: EdgeInsets.all(16),
+                                    //child: Text(messages[index].messageContent, style: TextStyle(fontSize: 15),),
+                                    child: Text(snapshot.data!.docs[index]['chat'],
+                                      style: TextStyle(fontSize: 15),),
+
                                   ),
+                                      Visibility(child: CircleAvatar(
 
-                                  padding: EdgeInsets.all(16),
-                                  //child: Text(messages[index].messageContent, style: TextStyle(fontSize: 15),),
-                                  child: Text(snapshot.data!.docs[index]['chat'],
-                                    style: TextStyle(fontSize: 15),),
+                                          radius: 20,
+                                          // child:Text
+                                          backgroundImage: (_currentUser==inf ?  MemoryImage(
+                                            Base64Decoder().convert(infImage),
+                                          ) : MemoryImage(
+                                            Base64Decoder().convert(spoImage),
+                                          ))
 
-                                ),
-                              ),
+                                      ),
+                                          visible:(snapshot.data.docs[index]['sender_email'] ==
+                                              opponent_email ? false : true),
+                                      )
+
+
+                                ],
+
+
+                                )
+
                             );
                           },
                         ),
