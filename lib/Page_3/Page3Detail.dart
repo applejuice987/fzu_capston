@@ -14,12 +14,15 @@ import 'chatMessageModel.dart';
 class Page3Detail extends StatefulWidget {
   final String roomid;
   final String origin_opponent_email;
+
   const Page3Detail(this.origin_opponent_email,this.roomid,{Key? key}) : super(key: key);
   @override
   State<Page3Detail> createState() => _Page3DetailState();
 }
 
 class _Page3DetailState extends State<Page3Detail> {
+  List<dynamic> _adList = [];
+
   final input_text = TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   ScrollController _controller=ScrollController();
@@ -37,6 +40,9 @@ class _Page3DetailState extends State<Page3Detail> {
   @override
   void initState(){
     super.initState();
+    FirebaseFirestore.instance.collection('chat_log').doc(widget.roomid).get().then((DocumentSnapshot doc){
+      _adList = doc['adList'];
+    });
     MySharedPreferences.instance.getBooleanValue('isInflu').then((value) {
       setState(() {
         if (value) {
@@ -76,6 +82,17 @@ class _Page3DetailState extends State<Page3Detail> {
     String opponent_email = widget.origin_opponent_email;
     String room = widget.roomid;
     CollectionReference chat_log = FirebaseFirestore.instance.collection('chat_log').doc(room).collection('dummy');
+
+    String adlistMessage = '진행중인 광고건목록은\n';
+    for(int i=0;i<_adList.length;i++)
+      {
+        adlistMessage += _adList[i].toString();
+        adlistMessage +='\n';
+
+      }
+    adlistMessage +='입니다.';
+
+
 
 
     return Scaffold(
@@ -221,14 +238,17 @@ class _Page3DetailState extends State<Page3Detail> {
                     onTap: (){
                       _controller.jumpTo(_controller.position.maxScrollExtent);
                     },
-                    child: Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFc9b9ec),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Icon(Icons.add, color: Colors.white, size: 20, ),
+                    child: Tooltip(
+                      message:
+                      adlistMessage,
+
+
+                      triggerMode:
+                      TooltipTriggerMode.tap,
+                      showDuration:
+                      Duration(seconds: 15),
+                      child:
+                      Icon(Icons.question_mark,color:Color(0xFFc9b9ec)),
                     ),
                   ),
                   SizedBox(width: 15,),

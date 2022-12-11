@@ -87,6 +87,8 @@ class _Page2Influencer2State extends State<Page2Influencer2> {
               TextButton(
                 child: Text("확인"),
                 onPressed: () {
+                  FirebaseFirestore.instance.collection('chat_log').doc('$_currentUser$_email').update(
+                      {'adList': FieldValue.arrayUnion([_title])});
                   Navigator.pop(context);
                   Navigator.push(
                       context,
@@ -235,6 +237,8 @@ class _Page2Influencer2State extends State<Page2Influencer2> {
                           adtable.doc(widget.applicant).update({
                             'applicant': FieldValue.arrayUnion([docId])
                           });
+                          FirebaseFirestore.instance.collection('chat_log').doc('$_currentUser$_email').update(
+                              {'adList': FieldValue.arrayUnion([_title])});
                           Fluttertoast.showToast(msg: "지원이 완료되었습니다.");
                         }
                       },
