@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,12 +14,15 @@ import 'chatMessageModel.dart';
 class Page3Detail extends StatefulWidget {
   final String roomid;
   final String origin_opponent_email;
+
   const Page3Detail(this.origin_opponent_email,this.roomid,{Key? key}) : super(key: key);
   @override
   State<Page3Detail> createState() => _Page3DetailState();
 }
 
 class _Page3DetailState extends State<Page3Detail> {
+  List<dynamic> _adList = [];
+
   final input_text = TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   ScrollController _controller=ScrollController();
@@ -31,9 +35,14 @@ class _Page3DetailState extends State<Page3Detail> {
   String spo = '';
   String infImage = '';
   String spoImage = '';
+  String myImage='';
+  String yourImage='';
   @override
   void initState(){
     super.initState();
+    FirebaseFirestore.instance.collection('chat_log').doc(widget.roomid).get().then((DocumentSnapshot doc){
+      _adList = doc['adList'];
+    });
     MySharedPreferences.instance.getBooleanValue('isInflu').then((value) {
       setState(() {
         if (value) {
@@ -74,6 +83,17 @@ class _Page3DetailState extends State<Page3Detail> {
     String room = widget.roomid;
     CollectionReference chat_log = FirebaseFirestore.instance.collection('chat_log').doc(room).collection('dummy');
 
+    String adlistMessage = '진행중인 광고건목록은\n';
+    for(int i=0;i<_adList.length;i++)
+      {
+        adlistMessage += _adList[i].toString();
+        adlistMessage +='\n';
+
+      }
+    adlistMessage +='입니다.';
+
+
+
 
     return Scaffold(
       appBar: AppBar(
@@ -90,6 +110,7 @@ class _Page3DetailState extends State<Page3Detail> {
             },
             child:StreamBuilder<dynamic>(
 
+
                 stream: chat_log.snapshots(),
                 builder: (context,snapshot){
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -101,6 +122,8 @@ class _Page3DetailState extends State<Page3Detail> {
                     }
                   });
                   return SingleChildScrollView(
+
+
                     controller: _controller,
 
 
@@ -117,26 +140,67 @@ class _Page3DetailState extends State<Page3Detail> {
 
 
                             return Container(
+                              color:Colors.white10,
                               padding: EdgeInsets.only(
                                   left: 14, right: 14, top: 10, bottom: 10),
-                              child: Align(
-                                alignment: (snapshot.data.docs[index]['sender_email'] ==
-                                    opponent_email ? Alignment.topLeft : Alignment
-                                    .topRight),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: (snapshot.data.docs[index]['sender_email'] ==
-                                        opponent_email ? Colors.grey.shade200 : Color(0xFFc9b9ec)),
+
+                                child: Row(
+                                  mainAxisAlignment : (snapshot.data.docs[index]['sender_email'] ==
+                                      opponent_email ?  MainAxisAlignment.start : MainAxisAlignment.end),
+
+                                    children: [
+                                      Visibility(child: CircleAvatar(
+
+
+                                        radius: 20,
+                                        // child:Text
+                                        backgroundImage: (_currentUser==inf ?  MemoryImage(
+                                          Base64Decoder().convert(spoImage),
+                                        ) : MemoryImage(
+                                          Base64Decoder().convert(infImage),
+                                        ))
+
+
+                                    ),
+                                      visible:(snapshot.data.docs[index]['sender_email'] ==
+                                          opponent_email ? true : false),
+                                    ),
+
+                                  Container(
+                                    margin:EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: (snapshot.data.docs[index]['sender_email'] ==
+                                          opponent_email ? Colors.grey.shade200 : Color(0xFFc9b9ec)),
+                                    ),
+
+                                    padding: EdgeInsets.all(16),
+                                    //child: Text(messages[index].messageContent, style: TextStyle(fontSize: 15),),
+                                    child: Text(snapshot.data!.docs[index]['chat'],
+                                      style: TextStyle(fontSize: 15),),
+
                                   ),
+                                      Visibility(child: CircleAvatar(
 
-                                  padding: EdgeInsets.all(16),
-                                  //child: Text(messages[index].messageContent, style: TextStyle(fontSize: 15),),
-                                  child: Text(snapshot.data!.docs[index]['chat'],
-                                    style: TextStyle(fontSize: 15),),
+                                          radius: 20,
+                                          // child:Text
+                                          backgroundImage: (_currentUser==inf ?  MemoryImage(
+                                            Base64Decoder().convert(infImage),
+                                          ) : MemoryImage(
+                                            Base64Decoder().convert(spoImage),
+                                          ))
 
-                                ),
-                              ),
+                                      ),
+                                          visible:(snapshot.data.docs[index]['sender_email'] ==
+                                              opponent_email ? false : true),
+                                      )
+
+
+                                ],
+
+
+                                )
+
                             );
                           },
                         ),
@@ -174,14 +238,17 @@ class _Page3DetailState extends State<Page3Detail> {
                     onTap: (){
                       _controller.jumpTo(_controller.position.maxScrollExtent);
                     },
-                    child: Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFc9b9ec),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Icon(Icons.add, color: Colors.white, size: 20, ),
+                    child: Tooltip(
+                      message:
+                      adlistMessage,
+
+
+                      triggerMode:
+                      TooltipTriggerMode.tap,
+                      showDuration:
+                      Duration(seconds: 15),
+                      child:
+                      Icon(Icons.question_mark,color:Color(0xFFc9b9ec)),
                     ),
                   ),
                   SizedBox(width: 15,),
