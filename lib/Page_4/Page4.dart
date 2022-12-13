@@ -42,6 +42,7 @@ class _Page4State extends State<Page4> {
   String self_auth = '';
   String _collectionPath = '';
   List<dynamic> _filteringTextList = [];
+  dynamic pwController = TextEditingController();
 
   @override
   void initState() {
@@ -482,7 +483,9 @@ class _Page4State extends State<Page4> {
                 height: 90,
                 child: Expanded(
                     child: OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showProfileEditDialog();
+                      },
                       child: const Text('내 정보 수정'),
                     )),
               ),
@@ -511,7 +514,7 @@ class _Page4State extends State<Page4> {
         MaterialPageRoute(builder: (context) => const MainLoginScreen()));
   }
 
-  void showAddFilteringTextDialog() async {
+  void showProfileEditDialog() async {
     pwController.text = '';
     showDialog(
         context: context,
