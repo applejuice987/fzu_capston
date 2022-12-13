@@ -45,6 +45,7 @@ class _Page1SponsorState extends State<Page1Sponsor> {
 
   @override
   Widget build(BuildContext context) {
+    double marginmin = MediaQuery.of(context).size.width * 0.03;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xffC9B9EC),
@@ -89,38 +90,41 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                       fontWeight: FontWeight.bold)),
             ),
             StreamBuilder<dynamic>(
-                stream: tags.isEmpty ?
-                FirebaseFirestore.instance
-                    .collection('userInfoTable')
-                    .doc('user')
-                    .collection('user_influencer')
-                    .snapshots() : 
-                FirebaseFirestore.instance
-                .collection('userInfoTable')
-                .doc('user')
-                .collection('user_influencer')
-                .where("category", arrayContainsAny: tags)
-                    .snapshots(),
+                stream: tags.isEmpty
+                    ? FirebaseFirestore.instance
+                        .collection('userInfoTable')
+                        .doc('user')
+                        .collection('user_influencer')
+                        .snapshots()
+                    : FirebaseFirestore.instance
+                        .collection('userInfoTable')
+                        .doc('user')
+                        .collection('user_influencer')
+                        .where("category", arrayContainsAny: tags)
+                        .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Container(
                       alignment: Alignment.center,
                       height: MediaQuery.of(context).size.height * 0.55,
-                      child: const Text("Loading..."),);
+                      child: const Text("Loading..."),
+                    );
                   }
                   var docs = snapshot.data!.docs;
 
-                  if(docs.toString() == "[]"){
+                  if (docs.toString() == "[]") {
                     return Container(
                       alignment: Alignment.center,
-                        height: MediaQuery.of(context).size.height * 0.55,
-                        child: const Text("해당하는 인플루언서가 없습니다."),);
+                      height: MediaQuery.of(context).size.height * 0.55,
+                      child: const Text("해당하는 인플루언서가 없습니다."),
+                    );
                   }
 
                   return Column(
                     children: [
                       Container(
-                        height : MediaQuery.of(context).size.height * 0.55,
+                        color: Colors.black,
+                        height: MediaQuery.of(context).size.height * 0.55,
                         child: PageView.builder(
                             onPageChanged: (value) {
                               _email = docs[value]['email'];
@@ -138,78 +142,254 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *
-                                              0.4,
+                                              0.55,
                                           width: double.infinity,
                                           alignment: Alignment.center,
                                           child: docs[index]['PRImage'] != ''
-                                              ? Image.memory(const Base64Decoder()
-                                                  .convert(
+                                              ? Image.memory(
+                                                  const Base64Decoder().convert(
                                                       docs[index]['PRImage']))
-                                              : const Text('아직 설정하신 이미지가 없습니다.'),
+                                              : const Text(
+                                                  '아직 설정하신 이미지가 없습니다.'),
                                           //TODO 이미지 크기(정확히는 세로길이)가 너무 크면 OverFlow가 발생한다. 이를 방지해야 함
                                         )
                                       : Container(
-                                          color: Colors.white,
+                                    padding: EdgeInsets.only(top: 30),
+                                          color : Colors.white,
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *
-                                              0.4,
+                                              0.55,
                                           width: double.infinity,
                                           child: Column(
                                             mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
+                                            // mainAxisAlignment:
+                                            // MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.55,
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.55,
-                                                    alignment: Alignment.center,
-                                                    child: docs[index]
-                                                                ['PRImage'] !=
-                                                            ''
-                                                        ? Image.memory(
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.4,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.4,
+                                                // alignment: Alignment.topLeft,
+                                                child: docs[index]['PRImage'] !=
+                                                        ''
+                                                    ? CircleAvatar(
+                                                        backgroundImage: MemoryImage(
                                                             Base64Decoder()
                                                                 .convert(docs[
                                                                         index][
                                                                     'PRImage']))
-                                                        : const Text(
-                                                            '아직 설정하신 이미지가 없습니다.'),
-                                                    //TODO 이미지 크기(정확히는 세로길이)가 너무 크면 OverFlow가 발생한다. 이를 방지해야 함
-                                                  ),
-                                                  Container(
-                                                    width: 100,
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.55,
-                                                    alignment: Alignment.center,
-                                                    child: docs[index]
-                                                                ['PRAny'] !=
-                                                            ''
-                                                        ? Text(docs[index]
-                                                            ['PRAny'])
-                                                        : const Text(
-                                                            "아직 설정하신 추가내용이 없습니다."),
-                                                  )
-                                                ],
+
+                                                        // Image.memory(
+                                                        //     Base64Decoder()
+                                                        //         .convert(docs[
+                                                        //                 index][
+                                                        //             'PRImage'])),
+                                                        )
+                                                    : const Text(
+                                                        '아직 설정하신 이미지가 없습니다.'),
+                                                //TODO 이미지 크기(정확히는 세로길이)가 너무 크면 OverFlow가 발생한다. 이를 방지해야 함
+                                              ),
+                                              SizedBox(
+                                                height: 30,
                                               ),
                                               docs[index]['PRText'] != ''
-                                                  ? Text(docs[index]['PRText'])
-                                                  : const Text("아직 설정하신 인사말이 없습니다.")
+                                                  ? Text(
+                                                      docs[index]['PRText'],
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 25,
+                                                      ),
+                                                    )
+                                                  : const Text(
+                                                      "아직 설정하신 인사말이 없습니다.",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 25,
+                                                      ),
+                                                    ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Container(
+
+                                                width: double.infinity,
+                                                alignment: Alignment.center,
+                                                child: docs[index]['PRAny'] !=
+                                                        ''
+                                                    ? Text(
+                                                        docs[index]['PRAny'],
+                                                        style: TextStyle(
+                                                          fontSize: 20,
+                                                        ),
+                                                  textAlign: TextAlign.center,
+                                                      )
+                                                    : const Text(
+                                                        "아직 설정하신 추가내용이 없습니다.",
+                                                        style: TextStyle(
+                                                          fontSize: 25,
+                                                        ),
+                                                      ),
+                                              ),
+                                              const SizedBox(height: 40,),
+                                              Container(
+                                                margin: EdgeInsets.fromLTRB(
+                                                    marginmin, 0, marginmin, 0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      alignment:
+                                                      Alignment.center,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.2,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.05,
+                                                      child: Text("채널명",
+                                                          style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontWeight: FontWeight.bold
+                                                          )),
+                                                    ),
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.27,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.05,
+                                                      child: Text(docs[index]
+                                                          ['channelName']),
+                                                    ),
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.2,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.05,
+                                                      child: Text("플랫폼", style : TextStyle(fontWeight: FontWeight.bold)),
+                                                    ),
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.27,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.05,
+                                                      child: Text("platform"),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(height: 20),
+                                              Container(
+                                                margin: EdgeInsets.fromLTRB(
+                                                    marginmin, 0, marginmin, 0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      alignment:
+                                                      Alignment.center,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.2,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.05,
+                                                      child: Text("주 컨텐츠",
+                                                          style: TextStyle(
+                                                            fontSize: 15,
+                                                              fontWeight: FontWeight.bold
+                                                          )),
+                                                    ),
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.27,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.05,
+                                                      child: Text(docs[index]
+                                                          ['contents']),
+                                                    ),
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.2,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.05,
+                                                      child: Text("구독자 수", style : TextStyle(fontWeight: FontWeight.bold)),
+                                                    ),
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.27,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.05,
+                                                      child: Text(docs[index]['subscribers']),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -229,7 +409,8 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                                         padding: const EdgeInsets.all(5.0),
                                         child: Text(
                                           docs[index]['platform'],
-                                          style: const TextStyle(fontSize: 15.0),
+                                          style:
+                                              const TextStyle(fontSize: 15.0),
                                         )),
                                   ),
                                   Flexible(
@@ -238,7 +419,8 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                                         padding: const EdgeInsets.all(5.0),
                                         child: Text(
                                           docs[index]['subscribers'],
-                                          style: const TextStyle(fontSize: 15.0),
+                                          style:
+                                              const TextStyle(fontSize: 15.0),
                                         )),
                                   ),
                                   Flexible(
@@ -247,7 +429,8 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                                         padding: const EdgeInsets.all(5.0),
                                         child: Text(
                                           docs[index]['category'].toString(),
-                                          style: const TextStyle(fontSize: 15.0),
+                                          style:
+                                              const TextStyle(fontSize: 15.0),
                                         )),
                                   ),
                                 ],
@@ -264,14 +447,18 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) => detailPage_Influencer(email: _email)));
+                                        builder: (_) => detailPage_Influencer(
+                                            email: _email)));
                               },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
                                   elevation: 15,
                                   shadowColor: Colors.black,
-                                  side: const BorderSide(color: Colors.black, width : 1.5),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))),
+                                  side: const BorderSide(
+                                      color: Colors.black, width: 1.5),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(10.0))),
                               child: Text('자세히 보기')),
                           ElevatedButton(
                             onPressed: () {},
@@ -279,12 +466,15 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                                 backgroundColor: Colors.white,
                                 elevation: 15,
                                 shadowColor: Colors.black,
-                                side: const BorderSide(color: Colors.black, width : 1.5),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))),
+                                side: const BorderSide(
+                                    color: Colors.black, width: 1.5),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0))),
                             child: Text('매칭하기'),
                           ),
                         ],
-                      )],
+                      )
+                    ],
                   );
                 })
           ],
