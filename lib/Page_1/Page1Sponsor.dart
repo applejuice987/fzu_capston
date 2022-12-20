@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:chips_choice/chips_choice.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,8 @@ class _Page1SponsorState extends State<Page1Sponsor> {
 
   // multiple choice default value
   List<String> tags = [];
+  List<dynamic> _blackList = [];
+  String currentUser = '';
 
   // list of string options
   List<String> options = [
@@ -42,6 +45,22 @@ class _Page1SponsorState extends State<Page1Sponsor> {
   ];
 
   String? user;
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      currentUser = auth.currentUser!.email.toString();
+      FirebaseFirestore.instance.collection('userInfoTable').doc('user').collection('user_sponsor').doc(currentUser).get().then((DocumentSnapshot ds) {
+        setState(() {
+          _blackList = ds['blackList'];
+        });
+        // blackList.add('wonjungyoun@naver.com');
+      });
+    });
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,11 +114,13 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                         .collection('userInfoTable')
                         .doc('user')
                         .collection('user_influencer')
+                        .where("email", whereNotIn: _blackList)
                         .snapshots()
                     : FirebaseFirestore.instance
                         .collection('userInfoTable')
                         .doc('user')
                         .collection('user_influencer')
+                        .where("email", whereNotIn: _blackList)
                         .where("category", arrayContainsAny: tags)
                         .snapshots(),
                 builder: (context, snapshot) {
@@ -149,8 +170,8 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                                               ? Image.memory(
                                                   const Base64Decoder().convert(
                                                       docs[index]['PRImage']))
-                                              : const Text(
-                                                  '아직 설정하신 이미지가 없습니다.'),
+                                              : Image.asset(
+                                              "assets/images/default_profile_image.jpg"),
                                           //TODO 이미지 크기(정확히는 세로길이)가 너무 크면 OverFlow가 발생한다. 이를 방지해야 함
                                         )
                                       : Container(
@@ -191,8 +212,7 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                                                         //                 index][
                                                         //             'PRImage'])),
                                                         )
-                                                    : const Text(
-                                                        '아직 설정하신 이미지가 없습니다.'),
+                                                    : CircleAvatar(backgroundImage: AssetImage("assets/images/default_profile_image.jpg"))
                                                 //TODO 이미지 크기(정확히는 세로길이)가 너무 크면 OverFlow가 발생한다. 이를 방지해야 함
                                               ),
                                               SizedBox(
@@ -309,7 +329,7 @@ class _Page1SponsorState extends State<Page1Sponsor> {
                                                                   .size
                                                                   .width *
                                                               0.05,
-                                                      child: Text("platform"),
+                                                      child: Text(docs[index]['platform']),
                                                     )
                                                   ],
                                                 ),

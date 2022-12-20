@@ -72,7 +72,8 @@ class _LoginInfluencerState extends State<LoginInfluencer> {
                       width: double.infinity,
                       height: 40,
                       child: ElevatedButton(onPressed: () {
-                        SignUpDatabaseHelper().loginFunc(in_email_controller.text, in_pw_controller.text, context, true);
+                        String email = in_email_controller.text.replaceAll(' ', '');
+                        SignUpDatabaseHelper().loginFunc(email, in_pw_controller.text, context, true);
                       }, style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             elevation: 15,

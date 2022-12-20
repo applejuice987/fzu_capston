@@ -33,6 +33,8 @@ class _detailPage_InfluencerState extends State<detailPage_Influencer> {
   String subscribers = '';
   List<dynamic> category = [];
   bool isBlock = false;
+  bool isLiked = false;
+  List<String> likeList = [];
   @override
   void initState() {
     super.initState();
@@ -48,6 +50,13 @@ class _detailPage_InfluencerState extends State<detailPage_Influencer> {
           subscribers = ds['subscribers']; //구독자팔로워 등
           category = ds['category']; //카테고리 리스트
         });
+    });
+    db.collection('userInfoTable').doc('user').collection('user_sponsor').doc(_currentUser).get().then((DocumentSnapshot ds) {
+      setState((){
+        if (ds["likeInfList"].contains(widget.email)) {
+          isLiked = true;
+        }
+      });
     });
   }
 
@@ -166,6 +175,35 @@ class _detailPage_InfluencerState extends State<detailPage_Influencer> {
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 5,
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 10.0),
+            child: IconButton(
+              onPressed: () {
+                setState(() {
+                  if (isLiked) {
+                    db.collection('userInfoTable').doc('user').collection(
+                        'user_sponsor').doc(_currentUser).update(
+                        {'likeInfList': FieldValue.arrayRemove([email])
+                        });
+                    isLiked = false;
+                    Fluttertoast.showToast(msg: '관심 목록에서 제거되었어요.');
+                  } else {
+                    print('notlike');
+                    db.collection('userInfoTable').doc('user').collection(
+                        'user_sponsor').doc(_currentUser).update(
+                        {'likeInfList': FieldValue.arrayUnion([email])
+                        });
+                    Fluttertoast.showToast(msg: '관심 목록에 추가되었어요.');
+                    isLiked = true;
+                  }
+                });
+              },
+              icon: isLiked ? Image.asset("assets/images/heart_full_icon_black.png")
+                  : Image.asset("assets/images/heart_empty_icon_black.png"),
+              iconSize: 26.0,
+            )
+        ),],
       ),
       body: Container(
         margin: const EdgeInsets.fromLTRB(30, 10, 30, 0),
@@ -198,7 +236,7 @@ class _detailPage_InfluencerState extends State<detailPage_Influencer> {
                         .of(context)
                         .size
                         .width-140,
-                    child: Text(displayName, textAlign: TextAlign.center,)),
+                    child: Text(channelName, textAlign: TextAlign.center,)),
 
               ],
             ),

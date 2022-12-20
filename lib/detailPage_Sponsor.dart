@@ -31,6 +31,7 @@ class _detailPage_SponsorState extends State<detailPage_Sponsor> {
   String profile = '';
   List<dynamic> adList = [];
   bool isBlock = false;
+  bool isLiked = false;
   @override
   void initState() {
     super.initState();
@@ -42,6 +43,14 @@ class _detailPage_SponsorState extends State<detailPage_Sponsor> {
           adList = ds['adList'];
           profile = ds['profile']; //프사
         });
+    });
+    db.collection('userInfoTable').doc('user').collection('user_influencer').doc(_currentUser).get().then((DocumentSnapshot ds) {
+      setState((){
+        if (ds["likeSpoList"].contains(widget.email)) {
+          isLiked = true;
+
+        }
+      });
     });
   }
 
@@ -160,6 +169,34 @@ class _detailPage_SponsorState extends State<detailPage_Sponsor> {
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 5,
+        actions: [
+          Padding(
+              padding: EdgeInsets.only(right: 10.0),
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    if (isLiked) {
+                      db.collection('userInfoTable').doc('user').collection(
+                          'user_influencer').doc(_currentUser).update(
+                          {'likeSpoList': FieldValue.arrayRemove([widget.email])
+                          });
+                      isLiked = false;
+                      Fluttertoast.showToast(msg: '관심 목록에서 제거되었어요.');
+                    } else {
+                      db.collection('userInfoTable').doc('user').collection(
+                          'user_influencer').doc(_currentUser).update(
+                          {'likeSpoList': FieldValue.arrayUnion([widget.email])
+                          });
+                      Fluttertoast.showToast(msg: '관심 목록에 추가되었어요.');
+                      isLiked = true;
+                    }
+                  });
+                },
+                icon: isLiked ? Image.asset("assets/images/heart_full_icon_black.png")
+                    : Image.asset("assets/images/heart_empty_icon_black.png"),
+                iconSize: 26.0,
+              )
+          ),],
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

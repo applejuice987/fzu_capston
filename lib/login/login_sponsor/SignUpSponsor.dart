@@ -49,13 +49,14 @@ class _SignUpSponsorState extends State<SignUpSponsor> {
                 (Route<dynamic> route) => false);
       }
       SignUpDatabaseHelper().backUpSponsorData(
-          email, password,
+          email,
           companyName, img64, 'spo', ceoName);
       // TODO!! String email, String pw, String company,String image, String type, String ceoName
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("이미 사용중인 이메일입니다.")));
+
         setState(() {
           _reduplicatedEmail = true;
           myFocusNode.requestFocus();

@@ -386,7 +386,10 @@ class _Page4State extends State<Page4> {
                         Expanded(
                           child: OutlinedButton(
                               style: const ButtonStyle(),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => Page4_Notice()));
+                              },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment
                                     .spaceBetween,
@@ -410,7 +413,10 @@ class _Page4State extends State<Page4> {
                         Expanded(
                           child: OutlinedButton(
                               style: const ButtonStyle(),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => Page4_FAQ()));
+                              },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment
                                     .spaceBetween,
@@ -435,7 +441,9 @@ class _Page4State extends State<Page4> {
                         Expanded(
                           child: OutlinedButton(
                               style: const ButtonStyle(),
-                              onPressed: () {},
+                              onPressed: () {
+                                Fluttertoast.showToast(msg: '준비중입니다.');
+                              },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment
                                     .spaceBetween,
@@ -568,10 +576,7 @@ class _Page4State extends State<Page4> {
                         MaterialPageRoute(
                             builder: (context) => isInflu ? Page4_manageInfoInfluencer(currentUser: _currentUser)
                             : Page4_manageInfoSponsor(currentUser: _currentUser,)));
-
                   });
-
-
                 },
               ),
             ],

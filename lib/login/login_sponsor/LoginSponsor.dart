@@ -76,7 +76,8 @@ class _LoginSponsorState extends State<LoginSponsor> {
                       height: 40,
                       child: ElevatedButton(
                           onPressed: () {
-                            SignUpDatabaseHelper().loginFunc(sp_email_controller.text, sp_pw_controller.text, context, false);
+                            String email = sp_email_controller.text.replaceAll(' ', '');
+                            SignUpDatabaseHelper().loginFunc(email, sp_pw_controller.text, context, false);
                             },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,

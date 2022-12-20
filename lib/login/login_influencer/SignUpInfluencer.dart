@@ -55,10 +55,9 @@ class _SignUpInfluencerState extends State<SignUpInfluencer> {
                     (Route<dynamic> route) => false);
           }
           SignUpDatabaseHelper().backUpInfluencerData(
-              email, password,
+              email,
               platformName, img64, 'inf', channel_platformName, main_contents, category);
           // TODO!! String email, String pw, String platform, String img64, String type, String channelName, String contents
-
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("이미 사용중인 이메일입니다.")));
