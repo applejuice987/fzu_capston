@@ -23,11 +23,13 @@ class LoginModel {
     bool isInflu = false;
     MySharedPreferences.instance.getBooleanValue("isInflu").then((value) {
         isInflu = value;
+    }).then((_) {
+      if (isInflu)
+        toJson_Influencer();
+      else
+        toJson_Sponsor();
     });
-    if (isInflu)
-      toJson_Influencer();
-    else
-      toJson_Sponsor();
+
   }
 
   void setData() {
@@ -62,7 +64,7 @@ class LoginModel {
     // return userDB;
   }
 
-  Map<String, dynamic> toJson_Influencer() {
+  void toJson_Influencer() {
     Map<String, dynamic> userDB = {};
     authDB.collection('user_influencer').doc(email).get().catchError((onError) {
       print('toJson_Influencer Error');
@@ -89,9 +91,10 @@ class LoginModel {
         'platform' : ds['platform'],
         'subscribers' : ds['subscribers']
       };
+    }).then((_) {
+      MyApp.loginSession = userDB;
     });
     print('${userDB}' + 'Influencer');
-    return userDB;
   }
 
 }
