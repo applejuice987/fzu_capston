@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fzu/LoginModel.dart';
 import 'package:fzu/MySharedPreferences.dart';
 import 'package:fzu/Page_1/Page1Influencer.dart';
 import 'package:fzu/Page_1/Page1Sponsor.dart';
@@ -26,11 +27,13 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  static Map<String, dynamic> loginSession = {};
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -65,10 +68,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     User? FirebaseUser = FirebaseAuth.instance.currentUser;
-    Widget firstwidget ;
+    Widget firstwidget;
 
 
     if (FirebaseUser != null) {
+      print('${FirebaseUser.email} in myApp');
+      LoginModel loginModel = LoginModel(email: FirebaseUser.email);
+      loginModel.setData();
       firstwidget = const MyHomePage();
     } else {
       firstwidget = const MainLoginScreen();
